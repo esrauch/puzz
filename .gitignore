@@ -3,3 +3,6 @@ dist
 *.log
 .DS_Store
 previews
+
+# Third-party walkthroughs and guides, for design reference only: not ours to redistribute.
+inspiration/
