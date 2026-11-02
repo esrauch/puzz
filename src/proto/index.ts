@@ -86,7 +86,9 @@ function show(p: Proto): void {
   main.replaceChildren(
     h('h1', {}, p.title),
     h('div', { class: 'meta' }, `${p.room} · ${p.kind} · from ${p.from}`),
-    h('div', { class: 'rules' }, p.rules),
+    p.teaches
+      ? h('details', { class: 'rules' }, h('summary', {}, 'Controls and rules'), p.rules)
+      : h('div', { class: 'rules' }, p.rules),
     h('div', { class: 'bar' }, h('button', { onclick: mount }, 'Reset'), status),
     host,
   );

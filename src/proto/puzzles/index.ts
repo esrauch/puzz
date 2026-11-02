@@ -6,19 +6,17 @@ import { eggtree } from './eggtree';
 import { feast } from './feast';
 import { finale } from './finale';
 import { flag } from './flag';
+import { chocolates, cobwebs, starlights, web } from './halloween';
 import { jack } from './jack';
 import { mailbox } from './mailbox';
 import { ornaments } from './ornaments';
 import { parade } from './parade';
 import { pietin } from './pietin';
 import { platterProto } from './platter';
-import { shadows } from './shadows';
 import { stocking } from './stocking';
-import { trade } from './trade';
 import { tree } from './tree';
 import { tuesday } from './tuesday';
 import { weave } from './weave';
-import { web } from './web';
 
 export const PROTOS: Proto[] = [
   // Valentine's
@@ -34,8 +32,9 @@ export const PROTOS: Proto[] = [
   parade,
   finale,
   // Halloween
-  trade,
-  shadows,
+  cobwebs,
+  chocolates,
+  starlights,
   web,
   // Thanksgiving
   platterProto,

@@ -10,11 +10,13 @@ export interface Proto {
   title: string;
   /** The holiday room it's in (or "Tuesday" for the final puzzle). */
   room: string;
-  kind: 'stray' | 'centrepiece' | 'final';
+  kind: 'warm-up' | 'stray' | 'centrepiece' | 'final';
   /** The puzzle it grows from, and the twist. */
   from: string;
   /** How to play, briefly. */
   rules: string;
+  /** The panels teach the rules: keep them folded away (a run of panels). */
+  teaches?: boolean;
   /** Build the puzzle in `host`; call `solved()` when it's done. */
   mount(host: HTMLElement, ctx: Ctx): void;
 }

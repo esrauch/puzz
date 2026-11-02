@@ -11,12 +11,11 @@ import {
   same,
 } from '../../src/proto/puzzles/flag';
 import {
-  LEFT,
-  RIGHT,
-  scrambledTree,
-  solvedTree,
-  sorted,
-  spin,
+  type Spot,
+  LEVELS as TREES,
+  nextHops,
+  spots,
+  toured,
 } from '../../src/proto/puzzles/eggtree';
 import {
   generateWeave,
@@ -91,11 +90,33 @@ describe('woven cornucopia', () => {
 });
 
 describe('egg tree', () => {
-  it('starts sorted when solved, scrambles, and turning back undoes a turn', () => {
-    expect(sorted(solvedTree())).toBe(true);
-    const s = scrambledTree();
-    expect(sorted(s)).toBe(false);
-    expect(spin(spin(s, LEFT, 1), LEFT, -1)).toEqual(s);
-    expect(new Set([...LEFT, ...RIGHT]).size).toBe(22);
+  const tour = (level: (typeof TREES)[number], start: Spot): Spot[] | null => {
+    const path: Spot[] = [start];
+    const go = (): boolean => {
+      if (path.length === spots(level).length) return true;
+      for (const s of nextHops(level, path)) {
+        path.push(s);
+        if (go()) return true;
+        path.pop();
+      }
+      return false;
+    };
+    return go() ? path : null;
+  };
+
+  it('the sapling can be toured from every spot', () => {
+    const sapling = TREES[0] as (typeof TREES)[number];
+    for (const start of spots(sapling)) {
+      const path = tour(sapling, start);
+      expect(path && toured(sapling, path)).toBe(true);
+    }
+  });
+
+  it('rejects a path with a non-hop or a repeat', () => {
+    const sapling = TREES[0] as (typeof TREES)[number];
+    const path = tour(sapling, [0, 2]) as Spot[];
+    expect(toured(sapling, path.slice(1))).toBe(false);
+    expect(toured(sapling, [...path.slice(0, -1), path[0] as Spot])).toBe(false);
+    expect(toured(sapling, [...path].reverse())).toBe(true);
   });
 });

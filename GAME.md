@@ -47,35 +47,93 @@ pops up to grumble when you fix things, leaves notes on puzzles, rigs the
 odd trick, and slowly warms to you. The hall that joins the holidays is
 Tuesday's: plain, beige, utterly ordinary, the joke against all that colour.
 
-## Structure
+## Direction: about 100 small panels (decided 2026-11-02)
 
-**Each holiday room** holds:
+Puzz plays like *The Witness*, made for a phone: **lots of small, clicky
+panels**, each room a run of them in **one big puzzle genre**, the runs
+introducing twists one at a time, and a final area where the genres
+**combine**. (The first round, 19 one-off puzzles in the *7th Guest* way,
+is kept below as material; see "Round one".)
 
-- **Two strays**: items from other holidays, each caught in a puzzle in this
-  room's style. Solving one frees the item (it leaves this room).
-- **Its centrepiece**, dormant until both of this holiday's own items have
-  been brought home, then unlocked as a puzzle. Beat it and the centrepiece
-  is restored.
+- **One genre per room**, from proven pencil-puzzle families (Nikoli, Simon
+  Tatham's collection: `inspiration/nikoli/`), given a theme and twists.
+  Not strict: Valentine's is "anything with letters", a family rather than
+  one puzzle. Hashi for Halloween is the model: a solid base with room for
+  many twists.
+- **Taught by the panels, not by text.** A room's first panels are tiny and
+  can only be solved one way, so each rule is learned by doing it. (The
+  playtests kept finding this: a too-easy first version is a learning level.)
+- **Clicky.** Tap or drag, nothing else. No "check" button: the panel checks
+  as you go, each clue lights when it's satisfied and flashes when broken,
+  and a solved panel snaps, chimes and powers up the next one. Panels take
+  seconds to minutes, not quarter-hours; failing is cheap.
+- **Less environmental than *The Witness*.** The panels carry the game; the
+  dioramas dress them, hide the odd panel, and hold the gags.
 
-**A room is complete** when both its strays are solved (nothing from another
-holiday is left in it) and its centrepiece is restored.
+### Structure, kept: dioramas, items and gating
 
-**Each completed room charges the holiday spirit**: one of six lamps in
-Tuesday's hall lights up. With **all six** lit, Tuesday's door opens on the
-**final puzzle**: putting together a holiday for Tuesday, with a tradition
-borrowed from each of the others. Tuesday gets a party at last.
+The holiday rooms, items, strays, centrepieces, lamps and Tuesday's final
+door all stay; they now organise runs of panels instead of single puzzles.
+Each room holds:
 
-**The flow:** strays are open from the start, in any order. A centrepiece
-waits on its own two items, which are found in other rooms. So there's
-always a choice of things to do, and a holiday's turn comes when you've
-gathered its things.
+1. **The room's warm-up** (about 5 panels): the genre's rules, taught
+   panel by panel. Open from the start; the strays' runs open after it.
+2. **Two stray runs** (about 3 panels each). A stray item is caught in
+   panels of this room's genre, **twisted by the item's own holiday**: the
+   item *is* the twist. Solve the run and the item is freed.
+3. **The centrepiece run** (about 5 panels), unlocked when the room's own two
+   items come home. The genre's hardest panels, with the twists the
+   returned items bring with them; its last panel restores the centrepiece.
 
-## Scope: 19 puzzles
+About 16 panels a room, 6 rooms, plus the final area: **about 100 panels**.
 
-**12 strays** (two per holiday) + **6 centrepieces** + **the final puzzle**.
-That's the scale of *The 7th Guest* (~21) and *The 11th Hour* (~20 and its
-board games); theirs are spread about one per room, ours three per holiday,
-since a holiday is a whole diorama rather than a single room.
+**Items carry twists.** An item's twist is a rule from its home holiday's
+genre, grafted onto the room it's stranded in (the Box of Chocolates brings
+Valentine's letters into Halloween's webs). Where it fits, the same twist
+comes home with the item and appears in its own centrepiece, so a player
+meets each twist abroad first and at home later. The model and the
+diorama show the twist too: the item sits on the panel it's caught in.
+
+### Cross-themes: one per holiday (decided 2026-11-02)
+
+Each holiday has **one** cross-theme, a symbol that sits on top of any
+genre. Its two items carry it into the two rooms where they're stray, and
+it stays the same wherever it goes, so a player who's met it in one room
+recognises it in the next. A room's centrepiece can also have home-only
+extras (Halloween's diagonals, Thanksgiving's horns).
+
+| Holiday | Cross-theme | Goes into (where its items are stray) |
+|---|---|---|
+| **Valentine's** | **Letters for numbers:** the same letter means the same number; a message's numbered blanks fill in from the counts. | Halloween webs (Box of Chocolates, built) · Fourth of July picture grids (Cupid's Bow: clue numbers become letters) |
+| **Christmas** | **Red and green:** pieces joined or touching must alternate colours. | Halloween webs (Tree-Top Star, built) · Thanksgiving carving (Stocking: same-colour portions can't share an edge) |
+| **Halloween** | **The dark:** clues hidden in shadow (any value), with the lantern showing what's lit. | Valentine's words (Jack-o'-Lantern: letters in the dark, unknown until worked out) · Fourth of July picture grids (Witch's Broom: clues in the dark) |
+| **Easter** | **Numbered eggs:** some pieces carry numbers saying when they're visited or read. | Valentine's words (Bunny's Basket: numbered eggs fix some letters' places) · Christmas lights (Golden Egg: the bulb marked 3 is three steps from the plug) |
+| **Fourth of July** | **Clues from the edge:** numbers at the ends of rows and columns, like a parade crowd on the curb. | Easter's bunny hops (Flag: an edge number is the first egg seen from that side) · Thanksgiving carving (Hot Dog: how many portions a line runs through) |
+| **Thanksgiving** | **Fair shares:** the board is split into outlined portions, and each must get the same. | Easter's bunny hops (Cornucopia: courses; the bunny finishes one portion before the next) · Christmas lights (Pumpkin Pie: each portion gets one bulb) |
+
+Chosen for being about the holiday itself (love letters, red and green, the
+dark, egg numbers, the parade crowd, fair portions) rather than its room's
+genre, and for fitting numbers, regions or lines alike, so they also suit
+the final area's crossings. **Second candidate for Halloween:** shadows and
+mirrors (a mirror-symmetric solution, or letters read in a mirror), for
+Halloween-themed things elsewhere.
+
+**A room is complete** when its two stray runs and its centrepiece run are
+done. Each completed room lights one of six lamps in Tuesday's hall (like
+*The Witness*'s lasers into the mountain).
+
+### The final area: genres crossed
+
+With all six lamps lit, Tuesday's door opens on a run where **two genres
+meet in one panel**. Ideas:
+
+- **Both at once:** a panel that is a web *and* a word, placing threads and
+  letters together, each constraining the other.
+- **Two sides of one board:** flip the panel over; the back is another genre,
+  and one move changes both sides.
+- **One solve unlocks the other:** a route's solution reveals letter keys,
+  and the panel's second half is unscrambling them.
+- Ending with one big panel that uses every room, and Tuesday's party.
 
 ### Room left for a lighter layer (later)
 
@@ -100,14 +158,14 @@ notes have somewhere to live.
 Each is a room in the house, a diorama of its day with its own palette and
 music, and its own puzzle style (which every stray caught there uses).
 
-| Holiday | The room | Its puzzle style |
+| Holiday | The room | Its genre (see Direction) |
 |---|---|---|
-| **Valentine's Day** | A pink and red sweetheart parlour: lace, roses, a heart-shaped sofa. | Logic and words: sorting a box of chocolates by clues, love letters with scrambled words, bouncing Cupid's arrows off mirrors. |
-| **Easter** | A spring garden: pastel eggs, tulips, a hutch, a basket-weaver's bench. | Pattern and colour: dyeing eggs by mixing colours, weaving over and under, the bunny's hops across the garden. |
-| **Fourth of July** | A backyard cookout at dusk: picnic tables, a grill, bunting, a fireworks rack. | Timing and order: firework shows set off in the right sequence, lining up a parade, the grill's timings. |
-| **Halloween** | A cosy pumpkin patch at night: friendly ghosts, a porch, a candy bowl. (Spooky-cute, never scary.) | Shape and swaps: carving a pumpkin to a silhouette, sorting out mixed-up costumes, trading candy. |
-| **Thanksgiving** | A harvest dining room: the long table, a hearth, pies cooling. | Measure and fairness: seating the family by everyone's wishes, balancing a recipe on the scales, slicing a pie fairly. |
-| **Christmas** | A snowy living room: the tree, stockings, a toy workshop corner. | Packing and pattern: wrapping presents (fitting shapes in a box), symmetrical ornaments, the workshop's gears. |
+| **Valentine's Day** | A pink and red sweetheart parlour: lace, roses, a heart-shaped sofa. | **Words and letters:** unscrambling, ciphers, letters placed by rules (broader than one puzzle type, but one family). |
+| **Easter** | A spring garden: pastel eggs, tulips, a hutch, a basket-weaver's bench. | **The bunny's hops:** a numbered route (Hidato with knight hops). |
+| **Fourth of July** | A backyard cookout at dusk: picnic tables, a grill, bunting, a fireworks rack. | **Picture grids:** nonograms (fireworks paint a picture from row and column clues). |
+| **Halloween** | A cosy pumpkin patch at night: friendly ghosts, a porch, a candy bowl. (Spooky-cute, never scary.) | **Webs:** Hashi (Bridges): join the knots with threads. |
+| **Thanksgiving** | A harvest dining room: the long table, a hearth, pies cooling. | **Carving:** Shikaku: divide the grid into rectangles, each holding one number equal to its size. |
+| **Christmas** | A snowy living room: the tree, stockings, a toy workshop corner. | **Lights:** Net: turn the connectors so power reaches every bulb. |
 
 (New Year's, St. Patrick's Day and others can join later.)
 
@@ -144,9 +202,183 @@ items stranded in two different rooms.
 | **Thanksgiving** | Hot Dog (Fourth of July), Stocking (Christmas) |
 | **Christmas** | Golden Egg (Easter), Pumpkin Pie (Thanksgiving) |
 
-## The puzzles
+## Halloween: the web run (designed 2026-11-02)
 
-Each grows from a puzzle in the games we're inspired by (`inspiration/`),
+The first room designed as a run of panels. **Genre: Hashi** (Nikoli's
+Hashiwokakero, Tatham's Bridges): the knots are a friendly spider's
+anchor points, the bridges its threads. **The base rules:**
+
+- Each knot's number is how many threads leave it.
+- Threads run straight across or down between two knots, one or two
+  between the same pair, and never cross.
+- The finished web hangs together as one.
+
+**On a phone:** drag from a knot towards a neighbour to spin a thread;
+drag again for a double; tap a thread to cut it. A knot glows when its
+count is right and blushes red when over. When every count is met but the
+web is in pieces, the pieces flash in different colours. There's no
+check button, so the web settles when it's done.
+
+### Warm-up: the porch cobwebs (6 panels, open from the start)
+
+Each panel teaches one rule, and can only be solved the way it teaches.
+
+1. **One thread.** Two knots marked 1, side by side. Drag from one to
+   the other.
+2. **Doubles.** Two knots marked 2: one thread isn't enough, so drag again.
+3. **Sharing out.** A 3 between a 1 and a 2: the threads must be split.
+4. **No crossing.** A web where the thread you'd draw first would cross one
+   that's forced elsewhere.
+5. **One web.** Four 2s on a square: two doubles satisfy every number
+   but leave two pieces (which flash); only the ring of singles hangs
+   together.
+6. **A first real web.** About seven knots, using everything.
+
+### The Box of Chocolates (stray from Valentine's: letters, 3 panels)
+
+The chocolates are knots in a heart-shaped box, and Valentine's genre
+comes with them. **Twist: some knots show a letter instead of a number.**
+The same letter always means the same count, and different letters mean
+different counts.
+
+**Each panel has a little message with numbered blanks.** Blank *n* takes
+the letter whose knots have *n* threads, so words and web help each other:
+guess the word and you know some counts; spin the web and the message fills
+in (gold, when solved). The run ramps how much the words give away.
+
+1. **1OV2** → LOVE: the word gives L = 1 and E = 2 away, which teaches the
+   link.
+2. **B2 M1N2** → BE MINE: E = 2, I = 1.
+3. **I 1234 YOU** → I DARE YOU. The message's own letters (I, Y, O, U)
+   share none with the knots, and it reads two ways: I DARE YOU (D = 1,
+   A = 2, R = 3, E = 4) or I READ YOU (R = 1, E = 2, A = 3, D = 4). The words
+   narrow it to two guesses; only the web says which. (DEAR VALENTINE was
+   too obvious: VALENTINE gave A and E away.)
+
+**Rule for messages:** a message's plain letters mustn't include the knots'
+letters, or they give their counts away.
+
+At home, the twist reappears in Valentine's centrepiece, the Mailbox:
+letters standing for numbers. It's also a first taste of the final area's
+crossings (a route that fills in words).
+
+### The Tree-Top Star (stray from Christmas: lights, 3 panels)
+
+The star's caught in a web of Christmas lights, and Christmas's genre
+comes with it. **Twist: the knots are bulbs, red or green, and a thread
+only joins a red bulb to a green one.**
+
+1. A small web where one tempting thread would join two reds.
+2. A bigger one, where the colours do most of the work.
+3. **A string of lights:** the web must also be one unbranched string,
+   from the plug to the star. Solved, it lights bulb by bulb, and the star
+   comes free.
+
+### Centrepiece: the Spider's Web (5 panels; unlocked by the Jack-o'-Lantern and the Witch's Broom)
+
+The spider re-spins its web, and the returned items bring Halloween's own
+twists.
+
+1. **The big web:** plain Hashi, the largest yet (the 9×9 web of round one).
+2. **The Jack-o'-Lantern: in the dark.** Knots outside the lantern's light
+   show no number and may have any count. (Halloween's cross-theme, the
+   dark, at home.)
+3. **The Witch's Broom: corner to corner.** Threads may also run
+   diagonally, and still never cross. (A home-only extra: abroad, the broom
+   carries the dark like the lantern.)
+4. **Dark and diagonal together.**
+5. **The spider's web:** a big web with everything. Solved, the spider
+   spins it in, the web glows in the moonlight, and Halloween's lamp lights.
+
+**Halloween's items abroad** (both carry the dark):
+- **Jack-o'-Lantern (in Valentine's):** letters in the dark.
+- **Witch's Broom (in the Fourth of July):** picture-grid clues in the dark.
+
+Halloween's genre (threads joining points) is also a candidate for the
+final area's crossings: threads that spell, or webs whose solved shape
+reveals keys.
+
+**To build and check:** each panel needs exactly one answer. That's easy for
+plain webs (round one's solver). The letter, colour, string, dark-knot and
+diagonal rules need the solver extended, then searched levels pinned by tests,
+as before.
+
+## Thanksgiving: the carving run (designed 2026-11-02)
+
+**Genre: Shikaku** (Nikoli; Tatham's Rectangles). The grid is the feast to
+carve into portions. **The base rules:**
+
+- Divide the grid into rectangles.
+- Each rectangle holds exactly one number, and the number is its size in
+  squares.
+
+Chosen because drawing a rectangle is the clickiest thing on a phone (drag
+corner to corner), and the family has room for twists (Sashigane's
+L-shapes, the round-one Platter's fair shares).
+
+**On a phone:** drag from one square to another to carve the rectangle
+between them; tap a portion to lift it off. A portion glows when it holds
+one number of its own size, and blushes red when it holds two numbers, or
+the wrong number of squares. When the grid is full and right, it's carved.
+
+### Warm-up: the bread board (5 panels, open from the start)
+
+1. **One portion.** A 2×2 board with a 4: drag corner to corner.
+2. **Size counts.** A 2 and a 4 in a 2×3: the number is the size.
+3. **Shape matters.** A 4 that could be a 2×2 or a 1×4, and only one fits.
+4. **No gaps, no overlaps.** Every square in exactly one portion.
+5. **A first real board.**
+
+### The Hot Dog (stray from the Fourth of July: clues from the edge, 3 panels)
+
+The hot dog's on the turkey platter, and the Fourth of July's clues from
+the edge come with it. **Twist: grill marks.** A number at the end of a
+row or column says how many portions that line runs through. Some portions
+then have no number inside, so the grill marks have to make up for them.
+
+1. A small board with one grill mark doing the work.
+2. Row and column marks together.
+3. Few numbers inside; mostly grill marks.
+
+### The Stocking (stray from Christmas: red and green, 3 panels)
+
+A stocking's hung by the hearth, and Christmas's twist comes with it, the
+same one the Tree-Top Star brings to Halloween. **Twist: each number is red
+or green, and two portions of the same colour may not share an edge**
+(like the stripes on a stocking).
+
+1. A small board where an obvious portion would put two reds side by side.
+2. A bigger one, where the colours settle the shapes.
+3. A full stocking, with a few numbers left uncoloured (any colour).
+
+### Centrepiece: the Feast (5 panels; unlocked by the Cornucopia and the Pumpkin Pie)
+
+The table's laid, and the returned items bring Thanksgiving's own twists.
+
+1. **The big carve:** plain Shikaku, the largest yet.
+2. **The Pumpkin Pie: fair shares.** The board has dishes on it (turkey,
+   pie, cranberries), and every portion must have exactly one of each,
+   with no numbers. This is the round-one Platter you liked, as panels.
+3. **The Cornucopia: the horn.** Portions may also be L-shaped, one square
+   wide, like a horn of plenty (from Nikoli's Sashigane). A home-only extra;
+   abroad, the Cornucopia carries fair shares like the pie.
+4. **Fair shares and horns together.**
+5. **The Feast:** a big table with everything. Solved, the dishes slide into
+   place, Tuesday grudgingly takes a seat, and Thanksgiving's lamp lights.
+
+**Thanksgiving's items abroad** (both carry fair shares):
+- **Cornucopia (in Easter):** courses: the bunny finishes one outlined
+  portion before starting the next.
+- **Pumpkin Pie (in Christmas):** each outlined portion gets one bulb.
+
+## Round one: 19 one-off puzzles (being replaced room by room)
+
+The first design, one bespoke puzzle per stray and centrepiece, prototyped
+and playtested (status in [PROTOTYPES.md](PROTOTYPES.md)). The new direction
+replaces it a room at a time; what fits a room's genre (the web, the
+picture grid, the tree's lights, the knight's tour, the platter, the letter
+puzzles) becomes panels, and the rest is material for the lighter layer or
+cut. Each grew from a puzzle in the games we're inspired by (`inspiration/`),
 with a twist or a modern turn. A stray's puzzle is in its **room's** style,
 dressed as a mash-up with the stray's **own** holiday; a centrepiece's is
 its own holiday through and through.
@@ -203,16 +435,16 @@ its own holiday through and through.
   weave is far too easy, so it's the learning level; the real one is a 7×7
   weave of four strands that snake round corners and cross each other, every
   tile scrambled.
-- **Centrepiece: the Egg Tree.** Its branches are loops of hanging eggs,
-  and where branches cross they share an egg. Turn a branch and its eggs
-  slide round, carrying the shared ones into the other branch. Sort the
-  colours, one to a branch, with the Golden Egg at the crown. *From* Dr.
-  Brain's Word Surge and 7th Guest's House puzzle (rotating rows);
-  *twist:* rings that interlock, like a Hungarian-rings puzzle. *Prototyped:* too hard as
-  it stands. The trick is a move sequence that disturbs only four eggs (turn
-  the left loop two, the right loop two, then each back two, left first),
-  which works because the crossings sit two apart on both loops; nobody finds
-  that unaided. Hints would need to teach it, or the puzzle needs simplifying.
+- **Centrepiece: the Egg Tree.** The Easter Bunny hops through the tree's
+  branches like a chess knight, hanging an egg on each spot it lands on;
+  hang an egg on every spot without landing on one twice. *From* 7th
+  Guest's and 11th Hour's knight puzzles, where an odd-shaped board hides
+  the knights' paths; *twist:* a knight's tour on a tree-shaped board, and
+  in later levels a few eggs come already numbered with their place in the
+  order (Hidato with knight hops), so there's exactly one tour and it's
+  found by logic. Fills the routes gap. (Replaced interlocking egg rings,
+  Hungarian-rings style: too hard, its one trick unfindable unaided.)
+  *Prototyped:* the learning level, a 16-spot sapling with no numbers.
 
 ### Fourth of July: timing and order
 
@@ -312,7 +544,7 @@ its own holiday through and through.
   now the learning level, and level 2 is a big tree (11 rows) wired with far
   more branches (lots of T-junctions), which is much harder to reason about.
 
-### The final puzzle: a holiday for Tuesday
+### The final puzzle: a holiday for Tuesday (round one)
 
 With all six lamps lit, Tuesday's door opens. Planning Tuesday's very own
 holiday is a puzzle in six short parts, each a remix of one room's style:
@@ -327,8 +559,11 @@ Prototype status, the audit against the inspiration games, and next steps:
 
 ## Design principles
 
-- **Every puzzle is fair and explained.** Its rules can be worked out from
-  the room (or Tuesday's notes), and it can always be reset. The UHS hint
+- **Every panel is fair.** Its rules are learned from earlier panels (and
+  Tuesday's notes), it has one answer reached by logic, and it can always
+  be reset.
+- **Clicky.** Instant feedback on every tap; a panel shows which clue it's
+  unhappy with. The UHS hint
   files in `inspiration/` show how good puzzles are meant to be understood.
 - **Never stuck.** Several things to try at any moment. Hints are always
   available, gently graded from a nudge to the answer.
@@ -342,5 +577,5 @@ Prototype status, the audit against the inspiration games, and next steps:
   characters helping, a hint currency?
 - Whether some strays should be gated (say, only visible once a holiday's
   lights are back on) for a little more structure.
-- The lighter layer's riddles and gags (after the 19 puzzles).
+- The lighter layer's riddles and gags (after the panels).
 - Tuesday's look and voice.
