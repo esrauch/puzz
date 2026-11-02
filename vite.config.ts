@@ -19,6 +19,7 @@ export default defineConfig({
           : {
               devIndex: resolve(import.meta.dirname, 'dev/index.html'),
               devModels: resolve(import.meta.dirname, 'dev/models.html'),
+              devPuzzles: resolve(import.meta.dirname, 'dev/puzzles.html'),
               devAudio: resolve(import.meta.dirname, 'dev/audio.html'),
             }),
       },

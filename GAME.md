@@ -16,7 +16,7 @@ table, Cupid's bow strung up on the Fourth of July fireworks rack.
 Every **stray item** is caught up in a puzzle, in the style of the holiday
 it landed in. **Beat the puzzle, and the item is yours.** Carry it home to
 its own holiday. Bring a holiday back both its items, and its **centrepiece**
-wakes up: the tree to light, the feast to set, the cauldron to brew. Beat
+wakes up: the tree to light, the feast to set, the web to spin. Beat
 that puzzle and the centrepiece is restored.
 
 You choose the order. Every holiday's door is open and every stray is there
@@ -122,7 +122,7 @@ so bringing them home sets up its puzzle.
 | **Valentine's** | Cupid's Bow, Box of Chocolates | **The Valentine Mailbox**, overflowing with love letters to deliver |
 | **Easter** | Golden Egg, Bunny's Basket | **The Egg Tree**, its branches hung with decorated eggs |
 | **Fourth of July** | Star-Spangled Flag, Hot Dog | **The Grand Finale**, the fireworks show |
-| **Halloween** | Jack-o'-Lantern, Witch's Broom | **The Bubbling Cauldron**, a potion to brew |
+| **Halloween** | Jack-o'-Lantern, Witch's Broom | **The Spider's Web**, a friendly spider's web to re-spin |
 | **Thanksgiving** | Cornucopia, Pumpkin Pie | **The Feast**, the roast turkey and a table to set |
 | **Christmas** | Tree-Top Star, Stocking | **The Christmas Tree**, to light (the star goes on last) |
 
@@ -158,7 +158,11 @@ its own holiday through and through.
   wall. Swap and turn the carved letters until the *shadow* on the wall
   reads as a love note: mirrored, as shadows are, so you carve backwards.
   *From* 7th Guest's cans and Threes and Fives (shuffle letters into a
-  sentence); *twist:* you read the message in the light, not the letters.
+  sentence); *twist:* you read the message in the light, not the letters. *Prototyped:* ten letters
+  with no help was too hard to crack (an anagram and a mirror image at once),
+  so it's three notes that ramp up, LOVE, BE MINE, then SWEET ON YOU, each
+  with a little clue, and a letter glows on the wall once it's in the right
+  place and the right way round.
 - **The Bunny's Secret Admirers** (stray, from Easter). The basket is
   stuffed with unsigned valentines from six bunnies. Work out who sent which
   from what you can see on each card (a paw-print smudge, a chocolate
@@ -171,7 +175,11 @@ its own holiday through and through.
   Chocolates each turn out to hold part of the key) and post each letter
   in its cubby. *From* Clandestiny's Cryptic Identity and Dr. Brain's
   cryptograms; *twist:* the key is assembled from the items you brought
-  home, and each letter decoded is a little joke.
+  home, and each letter decoded is a little joke. *Prototyped and confirmed:*
+  three coded letters and two key fragments felt like the right difficulty,
+  and it's solvable before you have everything, so it completes in two
+  layers: find and return the three letters, and beat the two puzzles that
+  give the two keys.
 
 ### Easter: pattern and colour
 
@@ -181,40 +189,53 @@ its own holiday through and through.
   blue makes purple), and a dip in vinegar clears a line. Make the stars
   and stripes. *From* 7th Guest's House puzzle (moves act on whole rows and
   columns) and the Stauf portrait (one click changes several squares);
-  *twist:* colours mix rather than flip.
+  *twist:* colours mix rather than flip. *Prototyped:* on its own
+  this is far too easy, so it's two levels: a small carton with two dyes to
+  learn the mechanic (no tutorial needed), then the real one, a 5×5 carton
+  with three dyes (eight colours) where vinegar has to come at the right
+  moment (8 dips).
 - **The Woven Cornucopia** (stray, from Thanksgiving). The horn of plenty
   is being rewoven as an Easter basket and the wicker's in a tangle. Turn
   the tiles so every strand runs unbroken, over, under, over, from one end
   to the other. *From* 11th Hour's Gems (turn tiles so touching edges
   match); *twist:* the over-under weave must alternate, so a strand's
-  route matters, not just its ends.
+  route matters, not just its ends. *Prototyped:* the simple
+  weave is far too easy, so it's the learning level; the real one is a 7×7
+  weave of four strands that snake round corners and cross each other, every
+  tile scrambled.
 - **Centrepiece: the Egg Tree.** Its branches are loops of hanging eggs,
   and where branches cross they share an egg. Turn a branch and its eggs
   slide round, carrying the shared ones into the other branch. Sort the
   colours, one to a branch, with the Golden Egg at the crown. *From* Dr.
   Brain's Word Surge and 7th Guest's House puzzle (rotating rows);
-  *twist:* rings that interlock, like a Hungarian-rings puzzle.
+  *twist:* rings that interlock, like a Hungarian-rings puzzle. *Prototyped:* too hard as
+  it stands. The trick is a move sequence that disturbs only four eggs (turn
+  the left loop two, the right loop two, then each back two, left first),
+  which works because the crossings sit two apart on both loops; nobody finds
+  that unaided. Hints would need to teach it, or the puzzle needs simplifying.
 
 ### Fourth of July: timing and order
 
 - **Cupid's Firework Bow** (stray, from Valentine's). The bow is strung up
-  as a launcher for heart-shaped fireworks. Each arrow takes its own number
-  of beats to burst; set the order and timing of the shots so the hearts
-  bloom in the sky exactly as the show program shows, on the music.
-  *From* 7th Guest's piano and Safecracker's switches (the right sequence);
-  *twist:* it's a schedule, with fuses of different lengths, set to music.
+  as a launcher, and its arrows paint pictures in the sky. The show program
+  says how many bursts each tube fires and how they bunch at each height;
+  work out the picture. Level 1 (the flag) teaches the knack; level 2 is a
+  heart with Cupid's arrow through it (one answer, solvable by logic alone).
+  *From* modern picture-logic (nonograms); *twist:* Cupid's arrows paint it.
+  *Prototyped:* this was the Grand Finale, but felt like a level 1, too easy
+  for a centrepiece; swapped with the fuse schedule.
 - **The Witch's Parade Float** (stray, from Halloween). The parade is
   jammed and a witch's broom float is stuck in the middle. Slide the floats
   along the street to clear the broom's way out, while the marching band
   takes a step every time you move. *From* 11th Hour's Furniture puzzle (get
   the piano out, Rush Hour style); *twist:* the band keeps time, so every
   move costs a beat.
-- **Centrepiece: the Grand Finale.** The fireworks show, set out on a
-  launch board of tubes and heights. The show program gives how many bursts
-  each tube fires and how they bunch together at each height; work out the
-  full show and the finale paints the flag across the night sky. *From*
-  modern picture-logic (nonograms), set to 11th Hour's sense of a show;
-  *twist:* when you solve it, it plays.
+- **Centrepiece: the Grand Finale.** The fireworks show, one shell launched
+  a beat. Each shell's fuse burns for its own number of beats; schedule the
+  launches so the red, white and blue bursts go off exactly as the show
+  program says, then watch it play. One schedule works. *From* 7th Guest's
+  piano and Safecracker's switches (the right sequence); *twist:* it's a
+  schedule, with fuses of different lengths.
 
 ### Halloween: shape and swaps
 
@@ -231,12 +252,14 @@ its own holiday through and through.
   Clandestiny's 13 Easy Pieces and 7th Guest's Grate (fit the pieces);
   *twist:* the pieces fit in shadow, at depth, and size changes with
   distance.
-- **Centrepiece: the Bubbling Cauldron.** A game against Tuesday: take
-  turns dropping bubbles into the cauldron; a bubble spreads, turning the
-  other side's bubbles round it to yours. Most bubbles when the cauldron's
-  full wins. *From* 7th Guest's Microscope and 11th Hour's Beehive (the
-  host's board game); *twist:* a fair, chatty Tuesday instead of a
-  merciless Stauf, at a level you choose.
+- **Centrepiece: the Spider's Web.** The friendly spider's web needs
+  re-spinning. Each knot says how many threads leave it; threads run straight
+  across or down, one or two between a pair of knots, never crossing, and the
+  finished web must hang together as one. *From* Hashi ("build bridges"), a
+  modern logic classic. Most players won't know it, so it ramps up over four
+  webs, from three knots to a 9×9 web of nineteen, each with one answer.
+  *Prototyped:* this replaced the Bubbling Cauldron (a board game against
+  Tuesday), which wasn't a pure enough puzzle.
 
 ### Thanksgiving: measure and fairness
 
@@ -245,13 +268,18 @@ its own holiday through and through.
   into a share for each of the family, every share with the same mix of
   everything. *From* 7th Guest's Cake (equal pieces with the same
   contents); *twist:* a bit of each dish in every helping, and one cousin
-  who wants the piece nearest them.
-- **The Stuffed Stocking** (stray, from Christmas). The Christmas stocking
-  is full of stuffing, hanging from the kitchen scales. Balance the scales
-  by loading the other pan from the pantry, to the recipe card's amounts.
-  *From* 11th Hour's Cash Register (make the totals equal) and Island of Dr.
-  Brain's balances; *twist:* the recipe's in cups and spoons, the weights in
-  pounds, so measure as a cook would.
+  who wants the piece nearest them. *Prototyped and confirmed:*
+  just right as it is.
+- **The Stuffed Stocking** (stray, from Christmas). A row of identical
+  Christmas stockings in the Thanksgiving kitchen, and one of them is stuffed
+  with the stuffing. Find it with the kitchen scales in only so many
+  weighings: three stockings in one, nine in two, then twelve in three where
+  it might be stuffed (heavier) or empty (lighter) and you must say which.
+  *From* the classic counterfeit-coin weighing puzzle (and 11th Hour's Cash
+  Register and Island of Dr. Brain's balances); *twist:* the scales never let
+  you get lucky: until your weighings pin it down, it could always be
+  another. *Prototyped:* this replaced a recipe-balancing puzzle that could be
+  solved without looking at the weights.
 - **Centrepiece: the Feast.** The table's set but the dishes are in the
   wrong places. Slide the platters round the table to everyone's wishes; a
   dish slides as many seats as there are dishes in its way. *From* 11th
@@ -265,17 +293,24 @@ its own holiday through and through.
   the tree so no two of a colour share a row of branches or a diagonal,
   and the Golden Egg is left with only one place to go. *From* 7th Guest's
   Queens and Bishops (place pieces where none threaten); *twist:* a tree is
-  a triangle, so the rows grow longer down the tree.
+  a triangle, so the rows grow longer down the tree. *Prototyped and confirmed:*
+  just right as it is.
 - **The Pie in a Tin** (stray, from Thanksgiving). Santa's been left pumpkin
   pie, in mismatched slices. Fit them into the round gift tin to make a
   whole pie, no gaps, and no two slices of a flavour side by side. *From*
   Clandestiny's 13 Easy Pieces and Dr. Brain's 3-D Construction (packing);
-  *twist:* wedges round a circle, where the angles have to add up.
+  *twist:* wedges round a circle, where the angles have to add up. *Prototyped:* the
+  six-slice pie is a level 1 (much easier than its inspirations, which are
+  real spatial packing); level 2 has nine slices for a pie of six, so which
+  slices make the pie is half the puzzle (one pie works).
 - **Centrepiece: the Christmas Tree.** Light it: turn the light-string
   connectors so power runs from the plug through every bulb to the top,
   where the Tree-Top Star goes on last and lights the room. *From* 7th
   Guest's Heart Maze (switch the paths) and Shivers' gears; *twist:* every
-  bulb on the way lights up as you go, so you see the circuit grow.
+  bulb on the way lights up as you go, so you see the circuit grow. *Prototyped:* exactly the
+  right kind of puzzle, but too easy for a centrepiece as a small tree; it's
+  now the learning level, and level 2 is a big tree (11 rows) wired with far
+  more branches (lots of T-junctions), which is much harder to reason about.
 
 ### The final puzzle: a holiday for Tuesday
 
@@ -286,6 +321,9 @@ a card for Tuesday (Valentine's), Tuesday's colours (Easter), a parade
 and the presents (Christmas). Finish them all and Tuesday's party begins.
 *From* the meta-puzzles of The Fool's Errand and 7th Guest's last puzzle;
 *twist:* the end is a celebration, not a defeat.
+
+Prototype status, the audit against the inspiration games, and next steps:
+[PROTOTYPES.md](PROTOTYPES.md).
 
 ## Design principles
 

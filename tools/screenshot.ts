@@ -8,6 +8,8 @@
  *   WAIT=8000 npm run screenshot          → let it run 8 s before capturing (default 1.5 s)
  *   KEY=Space HOLD=700 npm run screenshot → hold a key 700 ms: captures <name>-hold.png while it's
  *                                           down, then <name>.png just after letting go
+ *   PAGE=/dev/puzzles.html?p=jack npm run screenshot -- 0 "" name   → capture another page
+ *   VIEW=1200x800 npm run screenshot      → a different viewport (CSS pixels; @2x as usual)
  *
  * Uses the system Chrome through playwright-core.
  */
@@ -32,12 +34,14 @@ const browser = await chromium.launch({
   ],
 });
 try {
-  const page = await browser.newPage({
-    viewport: { width: 375, height: 812 },
-    deviceScaleFactor: 2,
-  });
+  const [vw = 375, vh = 812] = (process.env.VIEW ?? '375x812').split('x').map(Number);
+  const page = await browser.newPage({ viewport: { width: vw, height: vh }, deviceScaleFactor: 2 });
   page.on('pageerror', (e) => console.error(`page error: ${e.message}`));
-  await page.goto(`http://localhost:${port}/?seed=${seed}${extraQuery ? `&${extraQuery}` : ''}`);
+  await page.goto(
+    process.env.PAGE
+      ? `http://localhost:${port}${process.env.PAGE}`
+      : `http://localhost:${port}/?seed=${seed}${extraQuery ? `&${extraQuery}` : ''}`,
+  );
   await page.waitForTimeout(Number(process.env.WAIT ?? 1500));
   if (process.env.TAP) {
     await page.mouse.click(187, 400);

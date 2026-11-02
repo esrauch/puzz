@@ -1,0 +1,103 @@
+/**
+ * The prototype kit: what every puzzle prototype is (a title, where it sits
+ * in the game, its rules, and a mount function that builds it in a box),
+ * and small DOM helpers. Prototypes are functional, not themed: plain
+ * shapes and labels, to find out whether each puzzle is fun.
+ */
+
+export interface Proto {
+  id: string;
+  title: string;
+  /** The holiday room it's in (or "Tuesday" for the final puzzle). */
+  room: string;
+  kind: 'stray' | 'centrepiece' | 'final';
+  /** The puzzle it grows from, and the twist. */
+  from: string;
+  /** How to play, briefly. */
+  rules: string;
+  /** Build the puzzle in `host`; call `solved()` when it's done. */
+  mount(host: HTMLElement, ctx: Ctx): void;
+}
+
+export interface Ctx {
+  solved(): void;
+  /** A line of feedback under the puzzle ("3 moves", "not yet"…). */
+  status(text: string): void;
+}
+
+type Child = Node | string | null | undefined | false;
+
+/** Make an element: h('button', { class: 'x', onclick: … }, 'Label'). */
+export function h<K extends keyof HTMLElementTagNameMap>(
+  tag: K,
+  attrs: Record<string, unknown> = {},
+  ...children: Child[]
+): HTMLElementTagNameMap[K] {
+  const el = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (v === undefined || v === null || v === false) continue;
+    if (k.startsWith('on') && typeof v === 'function')
+      el.addEventListener(k.slice(2), v as EventListener);
+    else if (k === 'style' && typeof v === 'object') Object.assign(el.style, v);
+    else el.setAttribute(k, String(v));
+  }
+  for (const c of children) if (c !== null && c !== undefined && c !== false) el.append(c);
+  return el;
+}
+
+/** A seeded random number generator (mulberry32), for repeatable scrambles. */
+export function rng(seed: number): () => number {
+  let a = seed >>> 0;
+  return () => {
+    a = (a + 0x6d2b79f5) >>> 0;
+    let t = a;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+/**
+ * Breadth-first search over a puzzle's states: the fewest moves from
+ * `start` to a solved state (null if none within `limit` states). For the
+ * tests, which prove each level can be solved.
+ */
+export function bfs<S, M>(
+  start: S,
+  moves: (s: S) => M[],
+  apply: (s: S, m: M) => S | null,
+  solved: (s: S) => boolean,
+  key: (s: S) => string,
+  limit = 2_000_000,
+): M[] | null {
+  const seen = new Map<string, { prev: string | null; move: M | null }>();
+  const startKey = key(start);
+  seen.set(startKey, { prev: null, move: null });
+  let frontier: [string, S][] = [[startKey, start]];
+  const path = (k: string): M[] => {
+    const out: M[] = [];
+    for (
+      let at = seen.get(k);
+      at?.move !== null && at?.move !== undefined;
+      at = seen.get(at.prev ?? '')
+    )
+      out.unshift(at.move);
+    return out;
+  };
+  if (solved(start)) return [];
+  while (frontier.length && seen.size < limit) {
+    const next: [string, S][] = [];
+    for (const [k, s] of frontier)
+      for (const m of moves(s)) {
+        const t = apply(s, m);
+        if (!t) continue;
+        const tk = key(t);
+        if (seen.has(tk)) continue;
+        seen.set(tk, { prev: k, move: m });
+        if (solved(t)) return path(tk);
+        next.push([tk, t]);
+      }
+    frontier = next;
+  }
+  return null;
+}
