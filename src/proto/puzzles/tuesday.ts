@@ -6,7 +6,30 @@
  * Tuesday's party begins.
  */
 import { type Proto, h, rng } from '../kit';
-import { BLUE, RED, dip, same } from './flag';
+
+/** Dye bits for Tuesday's colours: red 1, blue 4; mixes are their sums (red + blue = purple 5). */
+export const RED = 1;
+export const BLUE = 4;
+
+export interface Dip {
+  line: 'row' | 'col';
+  index: number;
+  /** RED, BLUE, or 0 for vinegar. */
+  dye: number;
+}
+
+/** Dip a whole row or column: the dye mixes into every egg in it (vinegar clears them). */
+export function dip(grid: number[][], d: Dip): number[][] {
+  return grid.map((row, r) =>
+    row.map((egg, c) => {
+      if ((d.line === 'row' ? r : c) !== d.index) return egg;
+      return d.dye === 0 ? 0 : egg | d.dye;
+    }),
+  );
+}
+
+export const same = (a: number[][], b: number[][]): boolean =>
+  a.every((row, r) => row.every((v, c) => v === b[r]?.[c]));
 
 // --- Parts' rules, plain (tested) ---
 

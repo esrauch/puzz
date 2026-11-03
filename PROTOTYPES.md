@@ -15,9 +15,10 @@ Prototypes are deliberately unthemed: they test whether each puzzle is fun.
 | Valentine's | Jack-o'-Lantern (`jack`) | stray | **Built:** 3 Strands panels with letters in the dark (Halloween). Needs playing. |
 | Valentine's | Bunny's Basket (`basket`) | stray | **Built:** 3 Strands panels with numbered eggs (a letter's place in its word; Easter). Needs playing. |
 | Valentine's | Valentine Mailbox (`mailbox`) | centrepiece | **Built:** 5 Strands panels with letters written as numbers (a codeword key fills in), 1 to 6 coded letters, ending on "Dear Valentine" (spangram BE MY VALENTINE). Needs playing. |
-| Easter | Egg-Carton Flag (`flag`) | stray | **Reworked:** original too easy, now level 1; level 2 is 5×5, three dyes, 8 dips (every dip needed). Needs replaying. |
-| Easter | Woven Cornucopia (`weave`) | stray | **Reworked:** original too easy, now level 1; level 2 is a generated 7×7 weave of 4 snaking strands. Needs replaying. |
-| Easter | Egg Tree (`eggtree`) | centrepiece | **Replaced:** the egg rings were too hard. Now a knight's tour: the Easter Bunny hops like a knight, an egg on every spot of a tree-shaped board. Built: the learning level only (16-spot sapling, no numbers; a tour starts from any spot). **Next:** harder trees with a few eggs numbered in order, searched to have exactly one tour. Needs playing. |
+| Easter | The Hutch (`hutch`) | warm-up | **New direction, built (switched to Numbrix):** 5 panels (one step, a little run, every spot, numbered eggs, a first real hunt). Knight hops were too hard. Needs playing. |
+| Easter | Star-Spangled Flag (`flag`) | stray | **Built:** 3 panels with parade flags (a flag gives the number of the bunny's first visit to its row or column). Needs playing. |
+| Easter | Cornucopia (`cornucopia`) | stray | **Built:** 3 panels of courses (any connected shapes; finish each before the next). Needs playing. |
+| Easter | Egg Tree (`eggtree`) | centrepiece | **Built:** 5 tree panels, burrows (joined pairs) on two of them, the Golden Egg the last hop at the top. Needs playing. |
 | Fourth of July | Cupid's Firework Bow (`bow`) | stray | **Swapped in:** the picture-logic grid (was the Grand Finale; felt like a level 1). Level 1 the flag, level 2 a heart with Cupid's arrow (one answer, logic alone). Needs replaying. |
 | Fourth of July | Witch's Parade (`parade`) | stray | Not yet played. Rush Hour plus a marching band; 27 moves at best (10 without the band). Risk: tedious search. |
 | Fourth of July | Grand Finale (`finale`) | centrepiece | **Swapped in:** the fuse schedule (was Cupid's Bow), now red, white and blue shells; one schedule works. Not yet judged as a centrepiece. |
@@ -94,6 +95,12 @@ How it's built, for the other rooms to follow:
   hand-written; tests check every word has exactly one spelling. Round one's
   Jack-o'-Lantern, Secret Admirers and Mailbox are in git history at 4d830bc.
   No hints yet (Strands' non-theme-word hints need a dictionary).
+- Easter: `src/proto/hops.ts` (Numbrix rules, twists, solver checked against
+  brute force, with dead-end, reachability and connectivity pruning, and a
+  step budget for the level search; random routes), `src/proto/hopsBoard.ts`
+  (drag to draw the trail), `src/proto/puzzles/easter.ts`.
+  Round one's Egg-Carton Flag, Woven Cornucopia and Egg Tree are in git
+  history at a2d466c.
 - Panels were found by searching generated webs for one answer, plus the
   property each teaches (the rule must matter: relax it and there are more
   answers). Big diagonal webs are rarely unique (~1 in 100); search for a
@@ -103,6 +110,11 @@ How it's built, for the other rooms to follow:
 ## For the UX pass (later)
 
 - Pumpkin Pie: the per-slice serving badge ("1") reads oddly.
+- Easter: difficulty wants further tuning. Knight hops were far too hard;
+  plain steps with over-clued boards were trivial; minimal clues with the
+  hardest-of-many search came out a little too hard; adding an egg marked 1
+  to every panel is the current state. Lever: the per-panel cap on solver
+  work in the search (scratch script hard.ts; see GAME.md, Easter).
 
 ## Next steps (round one; largely superseded by the new direction)
 

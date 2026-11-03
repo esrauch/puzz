@@ -163,7 +163,7 @@ music, and its own puzzle style (which every stray caught there uses).
 | Holiday | The room | Its genre (see Direction) |
 |---|---|---|
 | **Valentine's Day** | A pink and red sweetheart parlour: lace, roses, a heart-shaped sofa. | **Strands:** a grid of letters that is entirely themed words; drag through touching letters to find them (like the New York Times' Strands). |
-| **Easter** | A spring garden: pastel eggs, tulips, a hutch, a basket-weaver's bench. | **The bunny's hops:** a numbered route (Hidato with knight hops). |
+| **Easter** | A spring garden: pastel eggs, tulips, a hutch, a basket-weaver's bench. | **The bunny's hops:** Numbrix, a numbered route of plain steps. |
 | **Fourth of July** | A backyard cookout at dusk: picnic tables, a grill, bunting, a fireworks rack. | **Picture grids:** nonograms (fireworks paint a picture from row and column clues). |
 | **Halloween** | A cosy pumpkin patch at night: friendly ghosts, a porch, a candy bowl. (Spooky-cute, never scary.) | **Webs:** Hashi (Bridges): join the knots with threads. |
 | **Thanksgiving** | A harvest dining room: the long table, a hearth, pies cooling. | **Carving:** Shikaku: divide the grid into rectangles, each holding one number equal to its size. |
@@ -203,6 +203,108 @@ items stranded in two different rooms.
 | **Halloween** | Box of Chocolates (Valentine's), Tree-Top Star (Christmas) |
 | **Thanksgiving** | Hot Dog (Fourth of July), Stocking (Christmas) |
 | **Christmas** | Golden Egg (Easter), Pumpkin Pie (Thanksgiving) |
+
+## Fourth of July: the fireworks run (designed 2026-11-02)
+
+**Genre: picture grids** (nonograms; round one's Cupid's Bow). Numbers at
+the end of each row and column give the runs of filled squares in that line,
+in order; fill the grid to match, and a firework picture appears. The
+Fourth of July's cross-theme, clues from the edge, is this genre's own
+nature, which is why its flags travel so naturally to other rooms.
+
+**On a phone:** tap a square to fill it, tap again to cross it out, again to
+clear; drag to fill (or cross) a run in one stroke. A line's numbers go grey
+when that line matches. Every panel has one answer, reached by logic alone
+(checked with a line-by-line solver, no guessing).
+
+### Warm-up: sparklers (5 panels)
+
+1. **A full line:** one row, clue 5.
+2. **A gap:** clue 1 1, and a small plus sign.
+3. **Runs in order:** a 5×5 heart.
+4. **Crossing clues:** a 5×5 star where rows and columns work together.
+5. **A first picture:** about 8×8.
+
+### Cupid's Bow (stray from Valentine's: letters for numbers, 3 panels)
+
+**Twist: some clue numbers are letters**; the same letter is the same
+number, and a little message's numbered blanks fill in from them, as with
+the Box of Chocolates. Real words in the message (no puns).
+
+### The Witch's Broom (stray from Halloween: the dark, 3 panels)
+
+**Twist: some clues are in the dark** (unknown): at most one per line, and
+never a line's only clue. Witch-and-broom pictures.
+
+### Centrepiece: the Grand Finale (5 panels; unlocked by the Star-Spangled Flag and the Hot Dog)
+
+The Fourth of July's own extra at home: **colour**. Clues come in red and
+blue, and a red run and a blue run can touch without a gap (a known nonogram
+variant). The finale's fireworks go off in colour.
+
+1. **The big picture:** a plain one, bigger (about 10×10).
+2. **Red and blue:** a small two-colour picture.
+3. **A bigger one in colour.**
+4. **Three colours:** red, blue and gold.
+5. **The Grand Finale:** a full fireworks picture in colour; solved, it
+   bursts, and the last lamp lights.
+
+## Easter: the bunny-hop run (designed 2026-11-02; switched to Numbrix)
+
+**Genre: Numbrix** (Hidato with plain steps). The Easter Bunny hops to a
+neighbouring spot (up, down, left or right) and must land on every spot of
+the board exactly once, hiding an egg on each; some eggs are already
+numbered with their place in the order. **The rules:**
+
+- Visit every spot once, each step to a neighbour.
+- A numbered egg must be the bunny's step of that number.
+
+(First built with knight hops, Hidato-style: fundamentally too hard for
+quick panels; every hop was a puzzle in itself. Fine for an 11th Hour set
+piece, not for this game.)
+
+**On a phone:** drag from the bunny through neighbouring spots to lay its
+trail, like a line in *The Witness*; drag back over it to rub it out; tap the
+bunny to take a step back, or an earlier spot to go back to it. If there's an
+egg marked 1, the bunny starts on it. A numbered egg glows when the bunny
+lands on it on time and turns red if it's early or passed by.
+
+**Difficulty:** plain steps made the first set of panels mostly trivial
+(every step forced). Panels are now made by starting from every number and
+taking eggs away while there's still one answer (a minimal set), then the
+hardest of many candidates is kept, measured by how much work the solver
+needs, under a cap per panel. Most panels end with 2 to 5 numbered eggs.
+That came out a little too hard, so **every panel has an egg marked 1**: the
+bunny always starts on it, and the hard first choice of where to begin is gone.
+
+### Warm-up: the hutch (5 panels)
+
+1. **One step.** 2. **A little run.** 3. **Every spot:** a 3×3, any route
+wins. 4. **Numbered eggs:** a 3×4. 5. **A first real hunt:** a 5×5.
+
+### The Star-Spangled Flag (stray from the Fourth of July: clues from the edge, 3 panels)
+
+The Fourth of July's flags, as **parade viewers**: **a flag at the end of a
+row or column gives the number of the bunny's first visit to that line**
+(the lowest number in it). 5×5, 6×6 and 7×7, with 2 numbered eggs each.
+
+### The Cornucopia (stray from Thanksgiving: fair shares, 3 panels)
+
+Fair shares as **courses**: **the board is outlined in portions, and the bunny
+must finish each before starting the next.** Portions are any connected
+shapes (cut from the bunny's route). Two courses on a 5×5, three on a 6×6,
+five on a 7×7.
+
+### Centrepiece: the Egg Tree (5 panels; unlocked by the Golden Egg and the Bunny's Basket)
+
+Easter's numbered eggs on tree-shaped boards, plus a home-only extra:
+**burrows**, two holes joined underground (popping down one and up the other
+is a step). The last step is always the Golden Egg at the top. (Only some tree
+shapes allow a route ending at the top with plain steps: the board's a
+chessboard of colours; the 9-row tree does.)
+
+1. **The tree.** 2. **A burrow.** 3. **A taller tree** (the 9-row tree).
+4. **Two pairs of burrows.** 5. **The Egg Tree:** the 9-row tree with burrows.
 
 ## Valentine's: the love-letter run (designed 2026-11-02)
 

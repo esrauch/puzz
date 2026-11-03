@@ -1,122 +1,57 @@
 import { describe, expect, it } from 'vitest';
-import { bfs } from '../../src/proto/kit';
-import {
-  type Dip,
-  BLUE,
-  LEVELS,
-  RED,
-  YELLOW,
-  blankLike,
-  dip,
-  same,
-} from '../../src/proto/puzzles/flag';
-import {
-  type Spot,
-  LEVELS as TREES,
-  nextHops,
-  spots,
-  toured,
-} from '../../src/proto/puzzles/eggtree';
-import {
-  generateWeave,
-  scramble,
-  scrambledWeave,
-  solvedWeave,
-  turn,
-  woven,
-} from '../../src/proto/puzzles/weave';
+import { type Panel, countSolutions, key, parse, solve } from '../../src/proto/hops';
+import { CORNUCOPIA, EGGTREE, FLAG, HUTCH } from '../../src/proto/puzzles/easter';
 
-const level = (i: number): (typeof LEVELS)[number] => LEVELS[i] as (typeof LEVELS)[number];
+const count = (p: Panel, rules = {}): number => countSolutions(parse(p), 2, rules);
 
-describe('egg-carton flag', () => {
-  it('level 1 can be dyed in 5 dips, and no fewer', () => {
-    const { target, dyes } = level(0);
-    const moves: Dip[] = [];
-    for (const line of ['row', 'col'] as const)
-      for (let i = 0; i < (line === 'row' ? target.length : (target[0]?.length ?? 0)); i++)
-        for (const dye of [...dyes, 0]) moves.push({ line, index: i, dye });
-    const solution = bfs(
-      blankLike(target),
-      () => moves,
-      dip,
-      (g) => same(g, target),
-      (g) => g.flat().join(''),
-    );
-    expect(solution).toHaveLength(5);
-  });
+describe('Easter bunny-hop run', () => {
+  const all = [...HUTCH, ...FLAG, ...CORNUCOPIA, ...EGGTREE];
 
-  it('level 2 can be dyed in its par of 8, and every one of those dips matters', () => {
-    const recipe: Dip[] = [
-      { line: 'col', index: 3, dye: RED },
-      { line: 'row', index: 2, dye: BLUE },
-      { line: 'col', index: 0, dye: 0 },
-      { line: 'row', index: 0, dye: YELLOW },
-      { line: 'col', index: 4, dye: RED },
-      { line: 'col', index: 0, dye: RED },
-      { line: 'col', index: 1, dye: BLUE },
-      { line: 'row', index: 4, dye: 0 },
-    ];
-    const { target, par } = level(1);
-    const run = (steps: Dip[]): number[][] => steps.reduce(dip, blankLike(target));
-    expect(same(run(recipe), target)).toBe(true);
-    expect(recipe).toHaveLength(par);
-    recipe.forEach((_, k) =>
-      expect(same(run(recipe.filter((__, j) => j !== k)), target)).toBe(false),
-    );
-  });
-});
-
-describe('woven cornucopia', () => {
-  it('level 1 is woven when solved, and not when scrambled', () => {
-    expect(woven(solvedWeave())).toBe(true);
-    expect(woven(scrambledWeave())).toBe(false);
-  });
-
-  it('notices a crossing that breaks the over-under', () => {
-    const g = solvedWeave();
-    const row = g[1];
-    if (row) row[1] = turn(row[1] as never);
-    expect(woven(g)).toBe(false);
-  });
-
-  it('generates real levels that are woven, with plenty of crossings, scrambled to start', () => {
-    for (let seed = 1; seed <= 20; seed++) {
-      const g = generateWeave(seed);
-      expect(woven(g)).toBe(true);
-      expect(g.flat().filter((t) => t.kind === 'cross').length).toBeGreaterThanOrEqual(4);
+  it('every panel has exactly one answer (free panels: at least one)', () => {
+    for (const p of all) {
+      if (p.free) expect(count(p), p.name).toBeGreaterThan(0);
+      else expect(count(p), p.name).toBe(1);
     }
-    expect(woven(scramble(generateWeave()))).toBe(false);
-  });
-});
+  }, 120_000);
 
-describe('egg tree', () => {
-  const tour = (level: (typeof TREES)[number], start: Spot): Spot[] | null => {
-    const path: Spot[] = [start];
-    const go = (): boolean => {
-      if (path.length === spots(level).length) return true;
-      for (const s of nextHops(level, path)) {
-        path.push(s);
-        if (go()) return true;
-        path.pop();
+  it('no clue is pointless: taking away any egg or flag leaves more than one answer', () => {
+    for (const p of all.filter((x) => !x.free)) {
+      for (const g of p.given) {
+        // The start egg and the Golden Egg are there by design, not as clues.
+        if (g[2] === 1 || (p.golden && key([g[0], g[1]]) === key(p.golden))) continue;
+        expect(
+          count({ ...p, given: p.given.filter((x) => x !== g) }),
+          `${p.name}: egg ${g.join(',')}`,
+        ).toBe(2);
       }
-      return false;
-    };
-    return go() ? path : null;
-  };
-
-  it('the sapling can be toured from every spot', () => {
-    const sapling = TREES[0] as (typeof TREES)[number];
-    for (const start of spots(sapling)) {
-      const path = tour(sapling, start);
-      expect(path && toured(sapling, path)).toBe(true);
+      for (const k of ['rowFlags', 'colFlags'] as const)
+        (p[k] ?? []).forEach((f, i) => {
+          if (f === null) return;
+          const flags = [...(p[k] ?? [])];
+          flags[i] = null;
+          expect(count({ ...p, [k]: flags }), `${p.name}: ${k} ${i}`).toBe(2);
+        });
     }
-  });
+  }, 120_000);
 
-  it('rejects a path with a non-hop or a repeat', () => {
-    const sapling = TREES[0] as (typeof TREES)[number];
-    const path = tour(sapling, [0, 2]) as Spot[];
-    expect(toured(sapling, path.slice(1))).toBe(false);
-    expect(toured(sapling, [...path.slice(0, -1), path[0] as Spot])).toBe(false);
-    expect(toured(sapling, [...path].reverse())).toBe(true);
-  });
+  it('the flags and the courses matter', () => {
+    for (const p of FLAG) expect(count(p, { noFlags: true }), p.name).toBe(2);
+    for (const p of CORNUCOPIA) expect(count(p, { noPortions: true }), p.name).toBe(2);
+  }, 120_000);
+
+  it('every burrow is used, and the Golden Egg is the last hop', () => {
+    for (const p of EGGTREE) {
+      const b = parse(p);
+      const route = solve(b, 1)[0] ?? [];
+      for (const [a, z] of p.burrows ?? []) {
+        const i = b.index.get(key(a)) as number;
+        const j = b.index.get(key(z)) as number;
+        const used = route.some(
+          (x, n) => n > 0 && ((x === i && route[n - 1] === j) || (x === j && route[n - 1] === i)),
+        );
+        expect(used, `${p.name}: burrow ${key(a)}`).toBe(true);
+      }
+      if (p.golden) expect(route[route.length - 1], p.name).toBe(b.index.get(key(p.golden)));
+    }
+  }, 120_000);
 });

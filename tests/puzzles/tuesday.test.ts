@@ -14,8 +14,11 @@ import {
   paradeOk,
   porchStart,
   turnCells,
+  BLUE,
+  RED,
+  dip,
+  same,
 } from '../../src/proto/puzzles/tuesday';
-import { BLUE, RED, dip, same } from '../../src/proto/puzzles/flag';
 
 function permutations<T>(xs: readonly T[]): T[][] {
   if (xs.length <= 1) return [[...xs]];
