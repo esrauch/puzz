@@ -41,6 +41,12 @@ export interface Panel {
   eggs?: Spot[];
   /** Letters written as numbers (the first letter is 1, and so on). */
   code?: string;
+  /** Red and green: each square's colour, row by row ('r', 'g', 'w' plain); a word is all one colour, and two words of a colour never touch (plain ones can). */
+  colours?: string[];
+  /** Fair shares: the board's portions, a letter per square; each holds the same number of words, none crossing an edge. */
+  portions?: string[];
+  /** Bows: the letters that show their word's colour (the rest are plain to look at). */
+  bows?: Spot[];
 }
 
 export const key = ([r, c]: Spot): string => `${r},${c}`;
@@ -101,7 +107,22 @@ export function spellings(p: Panel, word: string, dark: Spot[] = []): string[] {
     path.pop();
   };
   for (let r = 0; r < H; r++) for (let c = 0; c < W; c++) go([r, c], 0);
-  return [...found];
+  // Fair shares and red and green rule out spellings that cross a portion's edge or mix colours.
+  const same = (cells: string[], grid: string[] | undefined): boolean =>
+    !grid ||
+    new Set(
+      cells.map((k) => {
+        const [r, c] = k.split(',').map(Number) as Spot;
+        return grid[r]?.[c];
+      }),
+    ).size === 1;
+  // Colours count only where the player can see them: on the bows.
+  const bowColour = new Map((p.bows ?? []).map(([r, c]) => [key([r, c]), p.colours?.[r]?.[c]]));
+  return [...found].filter((set) => {
+    const cells = set.split(' ');
+    const seen = new Set(cells.flatMap((k) => (bowColour.has(k) ? [bowColour.get(k)] : [])));
+    return same(cells, p.portions) && (p.bows ? seen.size <= 1 : same(cells, p.colours));
+  });
 }
 
 /** Two diagonal steps that cross each other (an X between four squares). */
@@ -260,4 +281,103 @@ export function wellFormed(p: Panel): boolean {
     }
   }
   return seen.size === p.rows.length * (p.rows[0]?.length ?? 0);
+}
+
+/** Red and green, and fair shares, hold: each word one colour and in one portion; same-colour words never touch; every portion holds the same number of words. */
+export function sharesAndColours(p: Panel): boolean {
+  const colour = ([r, c]: Spot): string => p.colours?.[r]?.[c] ?? '';
+  const portion = ([r, c]: Spot): string => p.portions?.[r]?.[c] ?? '';
+  const owner = new Map<string, number>();
+  p.words.forEach((w, i) => w.cells.forEach((s) => owner.set(key(s), i)));
+  for (const [i, w] of p.words.entries()) {
+    if (p.colours && new Set(w.cells.map(colour)).size !== 1) return false;
+    if (p.portions && new Set(w.cells.map(portion)).size !== 1) return false;
+    if (p.colours)
+      for (const [r, c] of w.cells)
+        for (const t of [
+          [r + 1, c],
+          [r - 1, c],
+          [r, c + 1],
+          [r, c - 1],
+        ] as Spot[]) {
+          const j = owner.get(key(t));
+          // Plain ('w') words can touch anything.
+          if (j !== undefined && j !== i && colour(t) !== 'w' && colour(t) === colour([r, c]))
+            return false;
+        }
+  }
+  if (p.portions) {
+    const counts = new Map<string, number>();
+    for (const w of p.words)
+      counts.set(portion(w.cells[0] as Spot), (counts.get(portion(w.cells[0] as Spot)) ?? 0) + 1);
+    if (new Set(counts.values()).size > 1) return false;
+  }
+  return true;
+}
+
+export interface Rules {
+  /** Ignore the bows and colours (to check that they matter). */
+  noColours?: boolean;
+  /** Ignore the portions. */
+  noPortions?: boolean;
+}
+
+/**
+ * Whole-grid answers: up to `limit` ways to lay every word on its own squares,
+ * filling the grid, with the twists the player can see: no word crosses a
+ * portion's edge, no word carries bows of two colours, and two words with
+ * bows of one colour never touch.
+ */
+export function tilings(p: Panel, limit = 2, rules: Rules = {}): string[][] {
+  const plain: Panel = { name: p.name, theme: p.theme, rows: p.rows, words: p.words };
+  if (p.portions && !rules.noPortions) plain.portions = p.portions;
+  const options = p.words.map((w) => spellings(plain, w.word).map((s) => s.split(' ')));
+  const bowColour = new Map(
+    rules.noColours ? [] : (p.bows ?? []).map(([r, c]) => [key([r, c]), p.colours?.[r]?.[c] ?? '']),
+  );
+  const order = p.words
+    .map((_, i) => i)
+    .sort((a, b) => (options[a]?.length ?? 0) - (options[b]?.length ?? 0));
+  const taken = new Map<string, number>();
+  const tone: string[] = [];
+  const pick: string[][] = [];
+  const found: string[][] = [];
+  const near = (k: string): string[] => {
+    const [r, c] = k.split(',').map(Number) as Spot;
+    return [key([r + 1, c]), key([r - 1, c]), key([r, c + 1]), key([r, c - 1])];
+  };
+  const go = (n: number): void => {
+    if (found.length >= limit) return;
+    if (n === order.length) {
+      found.push(p.words.map((_, i) => [...(pick[i] ?? [])].sort().join(' ')));
+      return;
+    }
+    const i = order[n] as number;
+    for (const cells of options[i] ?? []) {
+      if (cells.some((k) => taken.has(k))) continue;
+      const seen = new Set(
+        cells.flatMap((k) => (bowColour.has(k) ? [bowColour.get(k) as string] : [])),
+      );
+      if (seen.size > 1) continue;
+      const mine = [...seen][0] ?? '';
+      // Two words bowed the same colour can't touch (checked against words already laid).
+      if (
+        mine &&
+        cells.some((k) =>
+          near(k).some((t) => {
+            const j = taken.get(t);
+            return j !== undefined && tone[j] === mine;
+          }),
+        )
+      )
+        continue;
+      for (const k of cells) taken.set(k, i);
+      tone[i] = mine;
+      pick[i] = cells;
+      go(n + 1);
+      for (const k of cells) taken.delete(k);
+    }
+  };
+  go(0);
+  return found;
 }

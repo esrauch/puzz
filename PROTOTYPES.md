@@ -19,9 +19,10 @@ Prototypes are deliberately unthemed: they test whether each puzzle is fun.
 | Easter | Star-Spangled Flag (`flag`) | stray | **Built:** 3 panels with parade flags (a flag gives the number of the bunny's first visit to its row or column). Needs playing. |
 | Easter | Cornucopia (`cornucopia`) | stray | **Built:** 3 panels of courses (any connected shapes; finish each before the next). Needs playing. |
 | Easter | Egg Tree (`eggtree`) | centrepiece | **Built:** 5 tree panels, burrows (joined pairs) on two of them, the Golden Egg the last hop at the top. Needs playing. |
-| Fourth of July | Cupid's Firework Bow (`bow`) | stray | **Swapped in:** the picture-logic grid (was the Grand Finale; felt like a level 1). Level 1 the flag, level 2 a heart with Cupid's arrow (one answer, logic alone). Needs replaying. |
-| Fourth of July | Witch's Parade (`parade`) | stray | Not yet played. Rush Hour plus a marching band; 27 moves at best (10 without the band). Risk: tedious search. |
-| Fourth of July | Grand Finale (`finale`) | centrepiece | **Swapped in:** the fuse schedule (was Cupid's Bow), now red, white and blue shells; one schedule works. Not yet judged as a centrepiece. |
+| Fourth of July | Sparklers (`sparklers`) | warm-up | **New direction, built:** 5 picture-grid panels (a full line, a gap, a heart, a star, a rocket). Needs playing. |
+| Fourth of July | Cupid's Bow (`bow`) | stray | **Built:** 3 panels with letter clues (Valentine's) and messages LOVE, KISS ME, HUGS. Needs playing. |
+| Fourth of July | Witch's Broom (`broom`) | stray | **Built:** 3 panels with dark clues (Halloween): pumpkin, broom, bat. Needs playing. |
+| Fourth of July | Grand Finale (`finale`) | centrepiece | **Built:** 5 panels: a big burst, then colour (red and blue, a rocket, three colours, the Grand Finale). Needs playing. |
 | Halloween | Porch Cobwebs (`cobwebs`) | warm-up | **New direction, built:** 6 Hashi panels, one rule each (one thread, doubles, sharing out, no crossing, one web, a first web). Needs playing. |
 | Halloween | Box of Chocolates (`chocolates`) | stray | **Built, reworked once:** 3 panels, Valentine's letters (same letter, same count), each with a message of numbered blanks (blank n = the letter with n threads): 1OV2, B2 M1N2, I 1234 YOU (I DARE YOU, or is it I READ YOU?). Words and web help each other. Needs playing. |
 | Halloween | Tree-Top Star (`starlights`) | stray | **Built:** 3 panels, Christmas bulbs (threads only red to green); the last is one string from plug to star. Needs playing. |
@@ -34,7 +35,7 @@ Prototypes are deliberately unthemed: they test whether each puzzle is fun.
 | Christmas | Golden Egg (`goldenegg`) | stray | **Built:** 3 panels on egg-shaped boards, Easter's numbered eggs (reach the egg in exactly its number of steps). Panel 3's eggs are far up (14, 15): playtest. |
 | Christmas | Pumpkin Pie (`pumpkinpie`) | stray | **Built, reworked once:** one serving per slice (no wires between slices; each slice gets exactly one wire from the middle), on pies of 2, 4, 6 slices. Was "same number of wires into every slice": far too hard. Needs playing. |
 | Christmas | Christmas Tree (`tree`) | centrepiece | **Built, reworked once:** colours only make Net easier, so it now ramps: a little plain tree, red and green strings (each from its own plug), a taller one, then white lights (either string) on a wreath and the big tree (~40% white). Needs playing. |
-| Tuesday | A Holiday for Tuesday (`tuesday`) | final | Not yet played. Six short standalone parts (card, dyeing, parade order, pumpkin peg-jumping, gravy jugs, packing presents); doesn't yet reuse the rooms' real puzzles. |
+| Tuesday | A Holiday for Tuesday (`tuesday`) | final | **Tentative, built:** twelve panels, two per genre (an intro, then a level where each twist rules out at least two more answers), each with two new twists (webs: eggs and flags; carving: code and the dark; lights: the dark and flags; words: red, green and portions; two bunnies with letter eggs; a picture with eggs and portions). Grand finale still to design. Needs playing. |
 
 Pattern from playtesting: a first version often makes a good **learning level**
 before a real one; puzzles now ramp over 2–4 levels.
@@ -101,6 +102,21 @@ How it's built, for the other rooms to follow:
   (drag to draw the trail), `src/proto/puzzles/easter.ts`.
   Round one's Egg-Carton Flag, Woven Cornucopia and Egg Tree are in git
   history at a2d466c.
+- Fourth of July: `src/proto/picture.ts` (clues, colour runs, a line-logic
+  solver checked against brute force; letters checked by trying every value),
+  `src/proto/pictureBoard.ts` (tap or drag to paint, colour bar),
+  `src/proto/puzzles/fourth.ts`. Pictures hand-drawn, nudged a few squares by
+  a search until line logic alone solves them. Round one's Cupid's Bow, Witch's
+  Parade and Grand Finale are in git history at 202ad1c.
+- Tuesday: twists added to each engine (hashi eggs/flags, shikaku coded and
+  dark sizes, net dark pieces/flags, strands colours/portions, picture eggs
+  and portions with a full-search uniqueness check), and a new two-bunny
+  engine `src/proto/twohops.ts` (checked against brute force) with its board.
+  `src/proto/puzzles/tuesday.ts` holds the twelve panels in one mixed run (pairs: X, then X_2); round
+  one's Tuesday is in git history at 202ad1c. Strands has a whole-grid
+  solver (`tilings`) for checking twists; pictures list their answers once
+  (`pictures`). Searches list every plain answer once, then test twists
+  against that list in memory, with a deadline and step budgets.
 - Panels were found by searching generated webs for one answer, plus the
   property each teaches (the rule must matter: relax it and there are more
   answers). Big diagonal webs are rarely unique (~1 in 100); search for a

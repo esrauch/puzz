@@ -39,6 +39,12 @@ export interface Panel {
   ends?: [Spot, Spot];
   /** A message with numbered blanks: blank n takes the letter whose knots have n threads. */
   message?: string;
+  /** The spider's home knot, and numbered eggs: [row, column, threads from home]. */
+  home?: Spot;
+  eggs?: [number, number, number][];
+  /** Edge flags: how many threads run along each row / column (null: no flag). */
+  rowFlags?: (number | null)[];
+  colFlags?: (number | null)[];
 }
 
 export type Clue =
@@ -71,9 +77,17 @@ export interface Web {
   height: number;
   /** The string's plug and star (knot indices), if the panel is a string. */
   ends?: [number, number];
+  /** The home knot, and eggs as [knot, threads from home]. */
+  home?: number;
+  eggs: [number, number][];
+  rowFlags: (number | null)[];
+  colFlags: (number | null)[];
 }
 
 export interface Rules {
+  /** Ignore the eggs / the flags (to check they matter). */
+  noEggs?: boolean;
+  noFlags?: boolean;
   /** Threads may not cross (default true). */
   noCrossing?: boolean;
   /** The web must be one piece (default true). */
@@ -131,8 +145,19 @@ export function parse(panel: Panel): Web {
     if (i === undefined) throw new Error(`${panel.name}: no knot at ${s.join(',')}`);
     return i;
   };
-  const web: Web = { knots, links, crosses, incident, width, height };
+  const web: Web = {
+    knots,
+    links,
+    crosses,
+    incident,
+    width,
+    height,
+    eggs: (panel.eggs ?? []).map(([r, c, n]) => [knotAt([r, c]), n]),
+    rowFlags: panel.rowFlags ?? panel.rows.map(() => null),
+    colFlags: panel.colFlags ?? [...(panel.rows[0] ?? '')].map(() => null),
+  };
   if (panel.ends) web.ends = [knotAt(panel.ends[0]), knotAt(panel.ends[1])];
+  if (panel.home) web.home = knotAt(panel.home);
   return web;
 }
 
@@ -202,6 +227,41 @@ export function fillMessage(message: string, values: Map<string, number>): strin
 }
 
 /** Is the panel solved under every one of its rules? */
+/** How many threads run along each row and each column (a double counts two). */
+export function threadsAlong(web: Web, threads: number[]): { rows: number[]; cols: number[] } {
+  const rows = new Array<number>(web.height).fill(0);
+  const cols = new Array<number>(web.width).fill(0);
+  web.links.forEach((l, i) => {
+    const n = threads[i] ?? 0;
+    if (!n) return;
+    const a = web.knots[l.a] as Knot;
+    const b = web.knots[l.b] as Knot;
+    if (a.r === b.r) rows[a.r] = (rows[a.r] ?? 0) + n;
+    else if (a.c === b.c) cols[a.c] = (cols[a.c] ?? 0) + n;
+  });
+  return { rows, cols };
+}
+
+/** Threads (joins) from a knot to every knot, along the web (-1: not reached). */
+export function distances(web: Web, threads: number[], from: number): number[] {
+  const d = web.knots.map(() => -1);
+  d[from] = 0;
+  const queue = [from];
+  while (queue.length) {
+    const x = queue.shift() as number;
+    for (const i of web.incident[x] ?? []) {
+      if (!threads[i]) continue;
+      const l = web.links[i] as Link;
+      const y = l.a === x ? l.b : l.a;
+      if (d[y] === -1) {
+        d[y] = (d[x] ?? 0) + 1;
+        queue.push(y);
+      }
+    }
+  }
+  return d;
+}
+
 export function solved(web: Web, threads: number[], rules: Rules = {}): boolean {
   const t = totals(web, threads);
   if (web.knots.some((k, i) => (k.clue.kind === 'count' ? t[i] !== k.clue.n : (t[i] ?? 0) < 1)))
@@ -215,6 +275,15 @@ export function solved(web: Web, threads: number[], rules: Rules = {}): boolean 
     if (web.knots.some((_, k) => d[k] !== (web.ends?.includes(k) ? 1 : 2))) return false;
   }
   if (rules.connected !== false && new Set(pieces(web, threads)).size > 1) return false;
+  if (!rules.noFlags) {
+    const { rows, cols } = threadsAlong(web, threads);
+    if (web.rowFlags.some((f, r) => f !== null && f !== rows[r])) return false;
+    if (web.colFlags.some((f, c) => f !== null && f !== cols[c])) return false;
+  }
+  if (!rules.noEggs && web.home !== undefined) {
+    const d = distances(web, threads, web.home);
+    if (web.eggs.some(([k, n]) => d[k] !== n)) return false;
+  }
   return true;
 }
 
@@ -329,6 +398,33 @@ export function solve(web: Web, limit = 2, rules: Rules = {}): number[][] {
         }
         if (changed) break;
       }
+    }
+    if (!rules.noFlags && [...web.rowFlags, ...web.colFlags].some((f) => f !== null)) {
+      // Each flag: threads already along its line can't pass it, and what's left must still reach it.
+      const lo = {
+        rows: new Array<number>(web.height).fill(0),
+        cols: new Array<number>(web.width).fill(0),
+      };
+      const hi = {
+        rows: new Array<number>(web.height).fill(0),
+        cols: new Array<number>(web.width).fill(0),
+      };
+      web.links.forEach((l, i) => {
+        const a = web.knots[l.a] as Knot;
+        const b = web.knots[l.b] as Knot;
+        const line =
+          a.r === b.r ? (['rows', a.r] as const) : a.c === b.c ? (['cols', a.c] as const) : null;
+        if (!line) return;
+        const v = val[i] ?? -1;
+        lo[line[0]][line[1]] = (lo[line[0]][line[1]] ?? 0) + Math.max(v, 0);
+        hi[line[0]][line[1]] = (hi[line[0]][line[1]] ?? 0) + (v === -1 ? 2 : v);
+      });
+      for (const [flags, k] of [
+        [web.rowFlags, 'rows'],
+        [web.colFlags, 'cols'],
+      ] as const)
+        for (const [line, f] of flags.entries())
+          if (f !== null && ((lo[k][line] ?? 0) > f || (hi[k][line] ?? 0) < f)) return false;
     }
     if (connected) {
       // A finished piece with knots left outside it can never join up.

@@ -56,6 +56,36 @@ export function mountCarving(host: HTMLElement, panel: Panel, hooks: CarveHooks)
     Object.assign(recipe.style, { fontSize: '18px', margin: '0 0 8px', fontWeight: '600' });
     host.append(recipe);
   }
+  // A message's numbered blanks (coded sizes), filled in when the board's carved.
+  const note = panel.message ? document.createElement('div') : null;
+  const drawNote = (solved: boolean): void => {
+    if (!note || !panel.message) return;
+    note.replaceChildren(
+      ...[...panel.message].map((ch) => {
+        const tile = document.createElement('span');
+        const letter = ch === ' ' ? ' ' : (panel.sizeLetters?.[Number(ch) - 1] ?? '?');
+        tile.textContent = solved ? letter : ch;
+        Object.assign(tile.style, {
+          display: 'inline-grid',
+          placeItems: 'center',
+          width: '30px',
+          height: '38px',
+          margin: '0 4px 8px 0',
+          borderRadius: '6px',
+          border: '2px dashed #c9a2b0',
+          fontWeight: '700',
+          fontSize: solved ? '22px' : '14px',
+          background: solved ? '#ffd54f' : '#fff',
+          color: solved ? '#7a1f3d' : '#9a8a96',
+        });
+        return tile;
+      }),
+    );
+  };
+  if (note) {
+    host.append(note);
+    drawNote(false);
+  }
   host.append(svg);
   let rects: Rect[] = [];
   let drag: { r: number; c: number; to: [number, number] } | null = null;
@@ -158,6 +188,7 @@ export function mountCarving(host: HTMLElement, panel: Panel, hooks: CarveHooks)
       [660, 880, 1100].forEach((f, i) => setTimeout(() => blip(f, 160), i * 110));
       navigator.vibrate?.([20, 40, 20]);
       render();
+      drawNote(true);
       hooks.solved();
     } else render();
   };
@@ -257,7 +288,20 @@ export function mountCarving(host: HTMLElement, panel: Panel, hooks: CarveHooks)
         const x = c * cell + cell / 2;
         const y = r * cell + cell / 2;
         if (cl.colour) add('circle', { cx: x, cy: y, r: cell * 0.3, fill: INK[cl.colour] });
-        if (cl.n !== undefined)
+        if (cl.letter || cl.dark)
+          add(
+            'text',
+            {
+              x,
+              y: y + cell * 0.14,
+              'text-anchor': 'middle',
+              'font-size': cell * 0.4,
+              'font-weight': 700,
+              fill: cl.letter ? '#c2185b' : '#8a7f72',
+            },
+            cl.letter ?? '?',
+          );
+        else if (cl.n !== undefined)
           add(
             'text',
             {

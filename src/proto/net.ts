@@ -46,9 +46,16 @@ export interface Panel {
   slices?: string[];
   /** The pieces as they start, row by row (default: turned at random from the panel's name). */
   start?: string[];
+  /** Pieces in the dark: hidden until the power reaches them. */
+  dark?: Spot[];
+  /** Edge flags: how many wires join squares along each row / column (null: no flag). */
+  rowFlags?: (number | null)[];
+  colFlags?: (number | null)[];
 }
 
 export interface Board {
+  rowFlags: (number | null)[];
+  colFlags: (number | null)[];
   height: number;
   width: number;
   /** Solved pieces (-1 off the board). */
@@ -85,6 +92,8 @@ export function parse(panel: Panel): Board {
     plug: panel.plug,
     colour,
     eggs: panel.eggs ?? [],
+    rowFlags: panel.rowFlags ?? panel.rows.map(() => null),
+    colFlags: panel.colFlags ?? [...(panel.rows[0] ?? '')].map(() => null),
     servings: panel.slices !== undefined,
     slice: (r, c) => {
       const ch = panel.slices?.[r]?.[c];
@@ -220,7 +229,21 @@ export function servings(
   return { feeds, walls };
 }
 
+/** How many wires join squares along each row and each column. */
+export function joinsAlong(b: Board, grid: number[][]): { rows: number[]; cols: number[] } {
+  const rows = new Array<number>(b.height).fill(0);
+  const cols = new Array<number>(b.width).fill(0);
+  for (let r = 0; r < b.height; r++)
+    for (let c = 0; c < b.width; c++) {
+      if (joined(grid, r, c, E)) rows[r] = (rows[r] ?? 0) + 1;
+      if (joined(grid, r, c, S)) cols[c] = (cols[c] ?? 0) + 1;
+    }
+  return { rows, cols };
+}
+
 export interface Rules {
+  /** Ignore the flags (to check they matter). */
+  noFlags?: boolean;
   /** Ignore the eggs / the servings, to check they matter. */
   noEggs?: boolean;
   noServings?: boolean;
@@ -241,6 +264,11 @@ export function solved(b: Board, grid: number[][], rules: Rules = {}): boolean {
   grid.forEach((row) => row.forEach((m) => (count += m >= 0 ? 1 : 0)));
   if (loose.length || (loop && !rules.loops) || dist.size !== count) return false;
   if (!rules.noEggs && b.eggs.some(([r, c, n]) => dist.get(key(r, c)) !== n)) return false;
+  if (!rules.noFlags) {
+    const { rows, cols } = joinsAlong(b, grid);
+    if (b.rowFlags.some((f, r) => f !== null && f !== rows[r])) return false;
+    if (b.colFlags.some((f, c) => f !== null && f !== cols[c])) return false;
+  }
   if (!rules.noServings && b.servings) {
     const { feeds, walls } = servings(b, grid);
     if (walls.length || [...feeds.values()].some((v) => v !== 1)) return false;

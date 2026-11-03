@@ -124,18 +124,50 @@ Halloween-themed things elsewhere.
 done. Each completed room lights one of six lamps in Tuesday's hall (like
 *The Witness*'s lasers into the mountain).
 
-### The final area: genres crossed
+### The final area: Tuesday's party (tentative, 2026-11-02)
 
-With all six lamps lit, Tuesday's door opens on a run where **two genres
-meet in one panel**. Ideas:
+With all six lamps lit, Tuesday's door opens on a run of six panels, **one per
+puzzle genre, each with two holiday twists it hasn't had in its own room or
+as a stray** (each twist appears exactly twice). Not mashing two puzzles
+together: one familiar puzzle, two familiar twists, newly combined. A last
+grand finale may still mash genres (to design after these are played).
 
-- **Both at once:** a panel that is a web *and* a word, placing threads and
-  letters together, each constraining the other.
-- **Two sides of one board:** flip the panel over; the back is another genre,
-  and one move changes both sides.
-- **One solve unlocks the other:** a route's solution reveals letter keys,
-  and the panel's second half is unscrambling them.
-- Ending with one big panel that uses every room, and Tuesday's party.
+| Panel | Base puzzle | Twist 1 | Twist 2 |
+|---|---|---|---|
+| 1 | Hashi | Numbered eggs: an egg on a knot is how many threads it is from the spider's home knot | Edge flags: how many threads run along that row or column |
+| 2 | Shikaku | Letters for numbers: some sizes are letters (with a message) | The dark: some sizes are hidden |
+| 3 | Net | The dark: some pieces stay hidden, and turn blind, until the whole panel is solved | Edge flags: how many wires join squares along that row or column |
+| 4 | Strands | Red and green: words are red, green or plain; a bow on one letter shows a word's colour; two of a colour can't touch | Fair shares: two outlined portions of three words each, none crossing an edge |
+| 5 | Numbrix | Letters for numbers: some eggs show letters; each bunny's message (numbered blanks) spells its word (JOY, FUN) | Red and green: two bunnies, one route each over their own colour (white squares either) |
+| 6 | Picture grid (two balloons and confetti) | Numbered eggs: which filled square it is in its row, counting from the left | Fair shares: every outlined portion holds the same number of filled squares |
+
+Playtest round one: the web's egg needed explaining (a legend, and a numbered
+path from the spider) and, with one egg and one flag each ruling out a single
+near-identical web, the twists did no real work (now each must rule out at
+least three webs, and every clue is needed); the dark lit up straight away
+(now pieces stay dark, turning blind, until the panel is solved); whole-word colours plus portions made the words a scramble (now
+bows on a few letters, bigger portions); a word for each bunny; the random
+picture became balloons, its egg counting filled squares from the left.
+
+**Doubled (2026-11-03): twelve panels, two per genre.** The first of each
+pair introduces its two twists (without either one, two or more answers fit);
+the second is a bigger board where each twist does more work (without either
+one, three or more fit), with a far egg (3 or more) where eggs appear. Second
+levels: a web with an egg 3 threads from home; a PARTY carving; a 7×7 lights
+with six dark pieces; eight words side by side in two portions with three
+bows; two bunnies spelling CAKE and GIFT; three balloons in three portions.
+Strands counts whole-grid answers: words pin each other down, so a twist only
+matters if, without it, the whole grid could be filled another way (round
+one's words panel turned out to have one answer with no twists at all).
+
+**Grand finale (agreed in outline): a board relay on one board**, building
+Tuesday's party cake: picture (the cake) → words (full Strands on the cake)
+→ carving (slices that never cut a word) → bunny route (eat it slice by slice,
+reading the message) → lights (plug where the bunny finished; one wire per
+slice) → webs (bunting between the candles, the light string's bulbs).
+
+(Earlier ideas, set aside: crossing two genres in every panel, which made rules
+too hard to explain; a number relay between six panels, too arbitrary.)
 
 ### Room left for a lighter layer (later)
 
@@ -204,13 +236,21 @@ items stranded in two different rooms.
 | **Thanksgiving** | Hot Dog (Fourth of July), Stocking (Christmas) |
 | **Christmas** | Golden Egg (Easter), Pumpkin Pie (Thanksgiving) |
 
-## Fourth of July: the fireworks run (designed 2026-11-02)
+## Fourth of July: the fireworks run (designed and built 2026-11-02)
 
 **Genre: picture grids** (nonograms; round one's Cupid's Bow). Numbers at
 the end of each row and column give the runs of filled squares in that line,
 in order; fill the grid to match, and a firework picture appears. The
 Fourth of July's cross-theme, clues from the edge, is this genre's own
 nature, which is why its flags travel so naturally to other rooms.
+
+**Pictures are drawn to solve exactly as drawn.** One-square-wide diagonal
+lines can't be settled by line logic (each pair of diagonal steps can swap
+without changing a clue), so they're designed out: bursts are filled stars,
+Cupid's arrow runs straight across, the broom stands upright, and colour
+breaks ties (a diagonal in alternating colours is fine). An earlier search
+nudged squares to make pictures solvable and left stray marks; that's no
+longer allowed.
 
 **On a phone:** tap a square to fill it, tap again to cross it out, again to
 clear; drag to fill (or cross) a run in one stroke. A line's numbers go grey
@@ -229,12 +269,15 @@ when that line matches. Every panel has one answer, reached by logic alone
 
 **Twist: some clue numbers are letters**; the same letter is the same
 number, and a little message's numbered blanks fill in from them, as with
-the Box of Chocolates. Real words in the message (no puns).
+the Box of Chocolates: XOXO (2 letters), HUGS, LOVE (4 each; KISS ME's 5 letters
+were a little too hard). The letters can be worked out by
+trying values (every wrong value leads to a contradiction line logic finds),
+or guessed from the message.
 
 ### The Witch's Broom (stray from Halloween: the dark, 3 panels)
 
 **Twist: some clues are in the dark** (unknown): at most one per line, and
-never a line's only clue. Witch-and-broom pictures.
+never a line's only clue. A pumpkin, a broom, a bat.
 
 ### Centrepiece: the Grand Finale (5 panels; unlocked by the Star-Spangled Flag and the Hot Dog)
 

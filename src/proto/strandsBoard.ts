@@ -145,6 +145,18 @@ export function mountStrands(host: HTMLElement, panel: Panel, hooks: StrandsHook
   svg.addEventListener('pointerup', release);
   svg.addEventListener('pointercancel', release);
 
+  /** Red and green: a letter's tint (plain letters white), and a ring in its colour. */
+  // With bows, only the bowed letters show their colour.
+  const bowed = new Set((panel.bows ?? []).map(key));
+  const shows = (s: Spot): boolean => !panel.bows || bowed.has(key(s));
+  const tint = ([r, c]: Spot): string =>
+    (shows([r, c])
+      ? { r: '#fde0dd', g: '#dff3df' }[panel.colours?.[r]?.[c] as 'r' | 'g']
+      : undefined) ?? '#fff';
+  const ring = ([r, c]: Spot): string =>
+    (shows([r, c])
+      ? { r: '#d9534f', g: '#43a35c' }[panel.colours?.[r]?.[c] as 'r' | 'g']
+      : undefined) ?? '#d8d0dc';
   const render = (): void => {
     svg.replaceChildren();
     const add = (
@@ -178,6 +190,30 @@ export function mountStrands(host: HTMLElement, panel: Panel, hooks: StrandsHook
       }
     };
     const colourOf = (i: number): string => (panel.spangram && i === 0 ? '#f5c542' : '#8ec5ff');
+    // Fair shares: thick edges between portions.
+    if (panel.portions)
+      for (let r = 0; r < H; r++)
+        for (let c = 0; c < Wd; c++) {
+          const mine = panel.portions[r]?.[c];
+          if (c + 1 < Wd && panel.portions[r]?.[c + 1] !== mine)
+            add('line', {
+              x1: (c + 1) * cell,
+              y1: r * cell,
+              x2: (c + 1) * cell,
+              y2: (r + 1) * cell,
+              stroke: '#b07a2a',
+              'stroke-width': 4,
+            });
+          if (r + 1 < H && panel.portions[r + 1]?.[c] !== mine)
+            add('line', {
+              x1: c * cell,
+              y1: (r + 1) * cell,
+              x2: (c + 1) * cell,
+              y2: (r + 1) * cell,
+              stroke: '#b07a2a',
+              'stroke-width': 4,
+            });
+        }
     for (const i of found) strand(panel.words[i]?.cells ?? [], colourOf(i));
     strand(path, '#c9b6e8');
     const inFound = new Map<string, number>();
@@ -204,8 +240,8 @@ export function mountStrands(host: HTMLElement, panel: Panel, hooks: StrandsHook
                   ? '#3a3340'
                   : coded
                     ? '#fde7ef'
-                    : '#fff',
-          stroke: coded ? '#c2185b' : 'none',
+                    : tint(s),
+          stroke: coded ? '#c2185b' : panel.colours ? ring(s) : 'none',
           'stroke-width': 2,
         });
         add(

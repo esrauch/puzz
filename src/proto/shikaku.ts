@@ -30,10 +30,18 @@ export interface Panel {
   colMarks?: (number | null)[];
   /** What each portion's fair share is, as dish letters (default: one of each dish on the board). */
   share?: string;
+  /** Letters for sizes: the letter for size 1 first, and so on (' ' for none). A size token that's one of these letters is a coded size. */
+  sizeLetters?: string;
+  /** A message with numbered blanks (blank n is the letter for size n). */
+  message?: string;
 }
 
 export interface Cell {
   n?: number;
+  /** A coded size (same letter, same size; different letters, different sizes). */
+  letter?: string;
+  /** A size in the dark (any). */
+  dark?: boolean;
   dish?: string;
   colour?: 'r' | 'g';
 }
@@ -67,6 +75,8 @@ export function parse(panel: Panel): Board {
       .map((t, c): Cell => {
         const cell: Cell = {};
         if (/^[0-9]+$/.test(t)) cell.n = Number(t);
+        else if (t === '?') cell.dark = true;
+        else if (panel.sizeLetters?.includes(t)) cell.letter = t;
         else if (t !== '.') cell.dish = t;
         const colour = panel.colours?.[r]?.[c];
         if (colour === 'r' || colour === 'g') cell.colour = colour;
@@ -102,9 +112,11 @@ const cellsOf = (b: Board, x: Rect): Cell[] => {
 /** What's wrong with a portion on its own (null if nothing). */
 export function problem(b: Board, x: Rect): Problem | null {
   const inside = cellsOf(b, x);
+  // A coded or dark size counts as the portion's number, of a size worked out later.
+  const sized = inside.filter((cell) => cell.n !== undefined || cell.letter || cell.dark);
   const numbers = inside.flatMap((cell) => (cell.n === undefined ? [] : [cell.n]));
-  if (numbers.length > 1) return 'two numbers';
-  if (numbers.length === 0 && !b.numberless) return 'no number';
+  if (sized.length > 1) return 'two numbers';
+  if (sized.length === 0 && !b.numberless) return 'no number';
   if (numbers.length === 1 && numbers[0] !== x.h * x.w) return 'wrong size';
   if (b.dishes.length) {
     const here = inside.flatMap((cell) => (cell.dish ? [cell.dish] : [])).sort();
@@ -167,8 +179,22 @@ export function covers(b: Board, rects: Rect[]): boolean {
   return seen.size === b.height * b.width;
 }
 
+/** The size each letter stands for, if consistent (same letter same size, different letters different sizes). */
+export function letterSizes(b: Board, rects: Rect[]): Map<string, number> | null {
+  const sizes = new Map<string, number>();
+  for (const x of rects) {
+    const letter = cellsOf(b, x).find((cell) => cell.letter)?.letter;
+    if (!letter) continue;
+    const had = sizes.get(letter);
+    if (had !== undefined && had !== x.h * x.w) return null;
+    sizes.set(letter, x.h * x.w);
+  }
+  return new Set(sizes.values()).size === sizes.size ? sizes : null;
+}
+
 export function solved(b: Board, rects: Rect[]): boolean {
   if (!covers(b, rects) || rects.some((x) => problem(b, x))) return false;
+  if (!letterSizes(b, rects)) return false;
   if (colourClashes(b, rects).length) return false;
   const { rows, cols } = lineCounts(b, rects);
   return (
@@ -242,6 +268,7 @@ export function solve(board: Board, limit = 2, rules: Rules = {}): Rect[][] {
       if (!fits(x)) continue;
       const colour = colourOf(b, x);
       if (colour && placed.some((y) => touching(x, y) && colourOf(b, y) === colour)) continue;
+      if (cellsOf(b, x).some((cell) => cell.letter) && !letterSizes(b, [...placed, x])) continue;
       mark(x, true);
       const over =
         rowMarks.some((m, r) => m !== null && (rowCount[r] ?? 0) > m) ||

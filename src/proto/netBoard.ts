@@ -15,6 +15,7 @@ import {
   STEP,
   type Spot,
   key,
+  joinsAlong,
   light,
   parse,
   servings,
@@ -40,9 +41,17 @@ export function mountLights(host: HTMLElement, panel: LightsPanel, hooks: Lights
   const b = parse(panel);
   const grid = startGrid(panel);
   const avail = Math.min(host.clientWidth || 360, 560);
-  const cell = Math.max(30, Math.min(64, Math.floor((avail - 8) / b.width)));
-  const W = b.width * cell;
-  const H = b.height * cell;
+  const flagged = [...b.rowFlags, ...b.colFlags].some((f) => f !== null);
+  const cell = Math.max(
+    30,
+    Math.min(64, Math.floor((avail - 8) / (b.width + (flagged ? 0.8 : 0)))),
+  );
+  const pad = flagged ? cell * 0.8 : 0;
+  const darkSet = new Set((panel.dark ?? []).map(([r, c]) => key(r, c)));
+  /** Dark pieces stay dark (and turn blind) until the whole panel is solved. */
+  const revealed = (): Set<string> => (done ? darkSet : new Set<string>());
+  const W = b.width * cell + pad;
+  const H = b.height * cell + pad;
   if (b.servings) {
     const recipe = document.createElement('div');
     recipe.textContent =
@@ -67,6 +76,7 @@ export function mountLights(host: HTMLElement, panel: LightsPanel, hooks: Lights
     const r = Math.floor(((e.clientY - box.top) * H) / box.height / cell);
     const c = Math.floor(((e.clientX - box.left) * W) / box.width / cell);
     if (!b.inside(r, c)) return;
+    // A piece in the dark turns blind: you can't see it until it's joined into the lit string.
     const row = grid[r] as number[];
     row[c] = turn(row[c] ?? 0);
     blip(520, 30, 6);
@@ -97,6 +107,7 @@ export function mountLights(host: HTMLElement, panel: LightsPanel, hooks: Lights
       return el;
     };
     const { dist, string, loose } = light(b, grid);
+    const shownNow = revealed();
     const sparks = new Set(loose.map(([r, c, d]) => `${key(r, c)}:${d}`));
     const { feeds, walls } = b.servings
       ? servings(b, grid)
@@ -162,6 +173,20 @@ export function mountLights(host: HTMLElement, panel: LightsPanel, hooks: Lights
     grid.forEach((row, r) =>
       row.forEach((m, c) => {
         if (m < 0) return;
+        if (darkSet.has(key(r, c)) && !shownNow.has(key(r, c))) {
+          add(
+            'text',
+            {
+              x: c * cell + cell / 2,
+              y: r * cell + cell * 0.62,
+              'text-anchor': 'middle',
+              'font-size': cell * 0.4,
+              fill: '#8a8fa6',
+            },
+            '?',
+          );
+          return;
+        }
         const lit = dist.has(key(r, c));
         const own = b.colour(r, c);
         // A white light (on a red-and-green board) takes the colour of the string that reaches it.
@@ -320,6 +345,49 @@ export function mountLights(host: HTMLElement, panel: LightsPanel, hooks: Lights
             String(have),
           );
         }
+    }
+    // Edge flags: green when the line has that many joins, red when it has more.
+    if (flagged) {
+      const along = joinsAlong(b, grid);
+      const flag = (f: number | null, have: number, x: number, y: number): void => {
+        if (f === null) return;
+        const colour = have === f ? '#2f8a45' : have > f ? '#d9534f' : '#6b5f52';
+        add('rect', {
+          x: x - cell * 0.28,
+          y: y - cell * 0.2,
+          width: cell * 0.56,
+          height: cell * 0.4,
+          rx: 3,
+          fill: '#fff',
+          stroke: colour,
+          'stroke-width': 2,
+        });
+        add('rect', {
+          x: x - cell * 0.28 + 1,
+          y: y - cell * 0.2 + 1,
+          width: cell * 0.16,
+          height: cell * 0.14,
+          fill: '#3c5aa6',
+        });
+        add(
+          'text',
+          {
+            x: x + cell * 0.05,
+            y: y + cell * 0.12,
+            'text-anchor': 'middle',
+            'font-size': cell * 0.28,
+            'font-weight': 700,
+            fill: colour,
+          },
+          String(f),
+        );
+      };
+      b.rowFlags.forEach((f, r) =>
+        flag(f, along.rows[r] ?? 0, b.width * cell + pad / 2, r * cell + cell / 2),
+      );
+      b.colFlags.forEach((f, c) =>
+        flag(f, along.cols[c] ?? 0, c * cell + cell / 2, b.height * cell + pad / 2),
+      );
     }
     let total = 0;
     grid.forEach((row) => row.forEach((m) => (total += m >= 0 ? 1 : 0)));

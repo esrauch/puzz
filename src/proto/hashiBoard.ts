@@ -18,6 +18,8 @@ import {
   pieces,
   solved,
   totals,
+  distances,
+  threadsAlong,
 } from './hashi';
 import { blip } from './kit';
 
@@ -33,9 +35,14 @@ export function mountWeb(host: HTMLElement, panel: Panel, hooks: BoardHooks): vo
   const web = parse(panel);
   const threads = web.links.map(() => 0);
   const avail = Math.min(host.clientWidth || 360, 560);
-  const cell = Math.max(34, Math.min(60, Math.floor((avail - 8) / web.width)));
-  const W = web.width * cell;
-  const H = web.height * cell;
+  const flagged = [...web.rowFlags, ...web.colFlags].some((f) => f !== null);
+  const cell = Math.max(
+    34,
+    Math.min(60, Math.floor((avail - 8) / (web.width + (flagged ? 0.8 : 0)))),
+  );
+  const pad = flagged ? cell * 0.8 : 0;
+  const W = web.width * cell + pad;
+  const H = web.height * cell + pad;
   const svg = document.createElementNS(NS, 'svg');
   svg.setAttribute('width', String(W));
   svg.setAttribute('height', String(H));
@@ -47,6 +54,13 @@ export function mountWeb(host: HTMLElement, panel: Panel, hooks: BoardHooks): vo
     userSelect: 'none',
     display: 'block',
   });
+  if (web.home !== undefined && web.eggs.length) {
+    const legend = document.createElement('div');
+    legend.textContent =
+      '🕷 is home. An egg’s number is how many threads it takes to reach it from home.';
+    Object.assign(legend.style, { fontSize: '16px', fontWeight: '600', margin: '0 0 8px' });
+    host.append(legend);
+  }
   host.append(svg);
   const centre = (k: Knot): [number, number] => [k.c * cell + cell / 2, k.r * cell + cell / 2];
   const flashing = new Set<string>(); // 'k3', 'l5': things to flash red briefly
@@ -381,6 +395,128 @@ export function mountWeb(host: HTMLElement, panel: Panel, hooks: BoardHooks): vo
           '★',
         );
     });
+    // The spider's home, numbered eggs (green when the threads put them that far from home), and edge flags.
+    if (web.home !== undefined) {
+      const [hx, hy] = centre(web.knots[web.home] as Knot);
+      add(
+        'text',
+        { x: hx - r * 0.95, y: hy - r * 0.55, 'font-size': r * 0.9, 'text-anchor': 'middle' },
+        '🕷',
+      );
+    }
+    if (web.eggs.length) {
+      const d = web.home === undefined ? [] : distances(web, threads, web.home);
+      // Count each egg out: the shortest thread path from home to it, each step numbered.
+      if (web.home !== undefined)
+        for (const [k] of web.eggs) {
+          if ((d[k] ?? -1) < 1) continue;
+          const path = [k];
+          while ((d[path[path.length - 1] as number] ?? 0) > 0) {
+            const x = path[path.length - 1] as number;
+            const back = (web.incident[x] ?? [])
+              .filter((i) => threads[i])
+              .map((i) => {
+                const l = web.links[i] as Link;
+                return l.a === x ? l.b : l.a;
+              })
+              .find((y) => d[y] === (d[x] ?? 0) - 1);
+            if (back === undefined) break;
+            path.push(back);
+          }
+          path.reverse().forEach((x, step) => {
+            if (!step) return;
+            const [x1, y1] = centre(web.knots[path[step - 1] as number] as Knot);
+            const [x2, y2] = centre(web.knots[x] as Knot);
+            add('line', {
+              x1,
+              y1,
+              x2,
+              y2,
+              stroke: '#ffd54f',
+              'stroke-width': 2,
+              'stroke-dasharray': '3 4',
+            });
+            add(
+              'text',
+              {
+                x: (x1 + x2) / 2 + 4,
+                y: (y1 + y2) / 2 - 4,
+                'font-size': r * 0.55,
+                'font-weight': 700,
+                fill: '#ffd54f',
+              },
+              String(step),
+            );
+          });
+        }
+      for (const [k, n] of web.eggs) {
+        const [ex, ey] = centre(web.knots[k] as Knot);
+        const at = d[k] ?? -1;
+        add('ellipse', {
+          cx: ex + r * 0.95,
+          cy: ey - r * 0.75,
+          rx: r * 0.42,
+          ry: r * 0.52,
+          fill: at === n ? '#a5d6a7' : at > n ? '#ff8a80' : '#fff6dc',
+          stroke: '#c9a227',
+          'stroke-width': 1.5,
+        });
+        add(
+          'text',
+          {
+            x: ex + r * 0.95,
+            y: ey - r * 0.6,
+            'text-anchor': 'middle',
+            'font-size': r * 0.5,
+            'font-weight': 700,
+            fill: '#4a3a20',
+          },
+          String(n),
+        );
+      }
+    }
+    if (flagged) {
+      const along = threadsAlong(web, threads);
+      const flag = (f: number | null, have: number, x: number, y: number): void => {
+        if (f === null) return;
+        const colour = have === f ? '#7ed37e' : have > f ? '#ff5a4f' : '#cfc9da';
+        add('rect', {
+          x: x - cell * 0.28,
+          y: y - cell * 0.2,
+          width: cell * 0.56,
+          height: cell * 0.4,
+          rx: 3,
+          fill: '#2b2a33',
+          stroke: colour,
+          'stroke-width': 2,
+        });
+        add('rect', {
+          x: x - cell * 0.28 + 1,
+          y: y - cell * 0.2 + 1,
+          width: cell * 0.16,
+          height: cell * 0.14,
+          fill: '#3c5aa6',
+        });
+        add(
+          'text',
+          {
+            x: x + cell * 0.05,
+            y: y + cell * 0.12,
+            'text-anchor': 'middle',
+            'font-size': cell * 0.28,
+            'font-weight': 700,
+            fill: colour,
+          },
+          String(f),
+        );
+      };
+      web.rowFlags.forEach((f, rr) =>
+        flag(f, along.rows[rr] ?? 0, web.width * cell + pad / 2, rr * cell + cell / 2),
+      );
+      web.colFlags.forEach((f, c) =>
+        flag(f, along.cols[c] ?? 0, c * cell + cell / 2, web.height * cell + pad / 2),
+      );
+    }
     hooks.status(
       done
         ? 'Spun!'
