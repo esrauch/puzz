@@ -11,9 +11,10 @@ Prototypes are deliberately unthemed: they test whether each puzzle is fun.
 
 | Room | Puzzle (`?p=`) | Kind | Status |
 |---|---|---|---|
-| Valentine's | Jack-o'-Lantern (`jack`) | stray | **Reworked:** 10 letters with no help was too hard; now 3 notes (LOVE, BE MINE, SWEET ON YOU) with a clue each, and letters glow when right. Needs replaying. |
-| Valentine's | Secret Admirers (`admirers`) | stray | Not yet played. 4×4 logic grid, one answer. |
-| Valentine's | Mailbox (`mailbox`) | centrepiece | **Confirmed.** 3 coded letters, 2 key fragments; two-layer completion (find and return the letters; beat two puzzles for the keys). **Open:** which two puzzles give the keys: the ones freeing Cupid's Bow and the Chocolates (as built), or the Valentine room's own two strays? |
+| Valentine's | Love Notes (`lovenotes`) | warm-up | **New direction, built:** 5 Strands panels (LOVE on a 2×2, up to a 6×6 with a spangram). Needs playing. |
+| Valentine's | Jack-o'-Lantern (`jack`) | stray | **Built:** 3 Strands panels with letters in the dark (Halloween). Needs playing. |
+| Valentine's | Bunny's Basket (`basket`) | stray | **Built:** 3 Strands panels with numbered eggs (a letter's place in its word; Easter). Needs playing. |
+| Valentine's | Valentine Mailbox (`mailbox`) | centrepiece | **Built:** 5 Strands panels with letters written as numbers (a codeword key fills in), 1 to 6 coded letters, ending on "Dear Valentine" (spangram BE MY VALENTINE). Needs playing. |
 | Easter | Egg-Carton Flag (`flag`) | stray | **Reworked:** original too easy, now level 1; level 2 is 5×5, three dyes, 8 dips (every dip needed). Needs replaying. |
 | Easter | Woven Cornucopia (`weave`) | stray | **Reworked:** original too easy, now level 1; level 2 is a generated 7×7 weave of 4 snaking strands. Needs replaying. |
 | Easter | Egg Tree (`eggtree`) | centrepiece | **Replaced:** the egg rings were too hard. Now a knight's tour: the Easter Bunny hops like a knight, an egg on every spot of a tree-shaped board. Built: the learning level only (16-spot sapling, no numbers; a tour starts from any spot). **Next:** harder trees with a few eggs numbered in order, searched to have exactly one tour. Needs playing. |
@@ -24,12 +25,14 @@ Prototypes are deliberately unthemed: they test whether each puzzle is fun.
 | Halloween | Box of Chocolates (`chocolates`) | stray | **Built, reworked once:** 3 panels, Valentine's letters (same letter, same count), each with a message of numbered blanks (blank n = the letter with n threads): 1OV2, B2 M1N2, I 1234 YOU (I DARE YOU, or is it I READ YOU?). Words and web help each other. Needs playing. |
 | Halloween | Tree-Top Star (`starlights`) | stray | **Built:** 3 panels, Christmas bulbs (threads only red to green); the last is one string from plug to star. Needs playing. |
 | Halloween | Spider's Web (`web`) | centrepiece | **Built:** 5 panels: the big plain web, dark knots (Jack-o'-Lantern), diagonals (Witch's Broom), both, then a 9×8 web with everything. Needs playing. |
-| Thanksgiving | Hot Dog Platter (`platter`) | stray | **Confirmed.** (The "cousin wants the nearest piece" twist isn't in.) |
-| Thanksgiving | Stuffed Stocking (`stocking`) | stray | **Replaced:** the recipe balance was trivial (set the ratio, scale up). Now the weighing puzzle: 3 stockings/1 weighing, 9/2, 12/3 heavy-or-light; the scales tip adversarially, so no lucky guesses. Needs playing. |
-| Thanksgiving | Feast (`feast`) | centrepiece | Not yet played. 10 passes at best. Probably now easier than its own stray (stocking level 3); see the audit. |
-| Christmas | Golden Egg Ornament (`ornaments`) | stray | **Confirmed.** |
-| Christmas | Pie in a Tin (`pietin`) | stray | **Reworked:** too easy (6 slices, ~120 orders); now level 1; level 2 has 9 slices for a pie of 6, one pie (4 flavours, 3 decoys). Needs replaying. |
-| Christmas | Christmas Tree (`tree`) | centrepiece | **Reworked:** right kind of puzzle, too easy for a centrepiece; now level 1; level 2 is an 11-row tree wired with lots of T-junctions. Needs replaying. |
+| Thanksgiving | Bread Board (`breadboard`) | warm-up | **New direction, built:** 5 Shikaku panels (one portion, size counts, shape matters, every square, a first board). Needs playing. |
+| Thanksgiving | Hot Dog (`hotdog`) | stray | **Built, reworked twice:** clues from the edge are cookout flags on skewers (how many pieces the skewer goes through; was "grill marks"). 2 training panels with no numbers come first (5 panels); a wrong skewer is counted out with numbered badges and a message; tapping a flag counts its line. Needs playing. |
+| Thanksgiving | Stocking (`stocking`) | stray | **Built:** 3 panels, Christmas's red and green (same-colour portions can't touch; plain ones can). Needs playing. |
+| Thanksgiving | Feast (`feast`) | centrepiece | **Built, reworked once:** 5 panels, fair shares only (a centrepiece uses only its own twist; red and green there confused): big plain carve, one of each dish, with sizes, seconds (two cranberries each), a 7×7 table with no numbers. The share is shown above the board. Needs playing. |
+| Christmas | Fairy Lights (`fairylights`) | warm-up | **New direction, built:** 6 Net panels (one turn, corners, a branch, no loose ends, everything lit, a first string). Needs playing. |
+| Christmas | Golden Egg (`goldenegg`) | stray | **Built:** 3 panels on egg-shaped boards, Easter's numbered eggs (reach the egg in exactly its number of steps). Panel 3's eggs are far up (14, 15): playtest. |
+| Christmas | Pumpkin Pie (`pumpkinpie`) | stray | **Built, reworked once:** one serving per slice (no wires between slices; each slice gets exactly one wire from the middle), on pies of 2, 4, 6 slices. Was "same number of wires into every slice": far too hard. Needs playing. |
+| Christmas | Christmas Tree (`tree`) | centrepiece | **Built, reworked once:** colours only make Net easier, so it now ramps: a little plain tree, red and green strings (each from its own plug), a taller one, then white lights (either string) on a wreath and the big tree (~40% white). Needs playing. |
 | Tuesday | A Holiday for Tuesday (`tuesday`) | final | Not yet played. Six short standalone parts (card, dyeing, parade order, pumpkin peg-jumping, gravy jugs, packing presents); doesn't yet reuse the rooms' real puzzles. |
 
 Pattern from playtesting: a first version often makes a good **learning level**
@@ -75,11 +78,31 @@ How it's built, for the other rooms to follow:
   flash, pieces coloured when split, chime and buzz when solved).
 - `src/proto/run.ts`: a room's run of panels (strip, ticks, Next); any genre
   can use it.
+- Thanksgiving follows the same pattern: `src/proto/shikaku.ts` (rules,
+  twists, exact-cover solver, carving generator), `src/proto/shikakuBoard.ts`
+  (drag a rectangle, tap to lift), `src/proto/puzzles/thanksgiving.ts`.
+  Round one's Hot Dog Platter, Stuffed Stocking (weighings) and Feast are
+  in git history at 4d830bc; the Platter lives on as fair shares.
+- Christmas: `src/proto/net.ts` (rules, twists, solver checked against brute
+  force, tree/egg/pie/wreath shapes, generator), `src/proto/netBoard.ts`
+  (tap to turn, long-press to pin), `src/proto/puzzles/christmas.ts`. Round
+  one's Golden Egg Ornament (queens), Pie in a Tin and Christmas Tree are in
+  git history at 4d830bc.
+- Valentine's: `src/proto/strands.ts` (rules, checks, a generator that lays
+  words out to fill the grid without crossing), `src/proto/strandsBoard.ts`
+  (drag through letters), `src/proto/puzzles/valentines.ts`. Word lists are
+  hand-written; tests check every word has exactly one spelling. Round one's
+  Jack-o'-Lantern, Secret Admirers and Mailbox are in git history at 4d830bc.
+  No hints yet (Strands' non-theme-word hints need a dictionary).
 - Panels were found by searching generated webs for one answer, plus the
   property each teaches (the rule must matter: relax it and there are more
   answers). Big diagonal webs are rarely unique (~1 in 100); search for a
   unique web first, then darken knots one at a time while it stays unique.
   Tests pin it all (tests/puzzles/halloween.test.ts).
+
+## For the UX pass (later)
+
+- Pumpkin Pie: the per-slice serving badge ("1") reads oddly.
 
 ## Next steps (round one; largely superseded by the new direction)
 

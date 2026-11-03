@@ -103,3 +103,23 @@ export function bfs<S, M>(
   }
   return null;
 }
+
+let audio: AudioContext | null = null;
+/** A short blip (and a buzz on phones). */
+export function blip(freq: number, ms = 60, buzz = 0): void {
+  try {
+    audio ??= new AudioContext();
+    const o = audio.createOscillator();
+    const g = audio.createGain();
+    o.frequency.value = freq;
+    o.type = 'triangle';
+    g.gain.setValueAtTime(0.12, audio.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, audio.currentTime + ms / 1000);
+    o.connect(g).connect(audio.destination);
+    o.start();
+    o.stop(audio.currentTime + ms / 1000);
+  } catch {
+    // No audio: silent.
+  }
+  if (buzz) navigator.vibrate?.(buzz);
+}

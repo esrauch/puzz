@@ -19,29 +19,10 @@ import {
   solved,
   totals,
 } from './hashi';
+import { blip } from './kit';
 
 const NS = 'http://www.w3.org/2000/svg';
 const PIECE_COLOURS = ['#e8e4f0', '#8fd3ff', '#ffb36b', '#c79bff', '#7fe0a8', '#ff8fb6'];
-
-let audio: AudioContext | null = null;
-/** A short blip (and a buzz on phones). */
-export function blip(freq: number, ms = 60, buzz = 0): void {
-  try {
-    audio ??= new AudioContext();
-    const o = audio.createOscillator();
-    const g = audio.createGain();
-    o.frequency.value = freq;
-    o.type = 'triangle';
-    g.gain.setValueAtTime(0.12, audio.currentTime);
-    g.gain.exponentialRampToValueAtTime(0.001, audio.currentTime + ms / 1000);
-    o.connect(g).connect(audio.destination);
-    o.start();
-    o.stop(audio.currentTime + ms / 1000);
-  } catch {
-    // No audio: silent.
-  }
-  if (buzz) navigator.vibrate?.(buzz);
-}
 
 export interface BoardHooks {
   solved(web: Web, threads: number[]): void;

@@ -1,54 +1,47 @@
 import { describe, expect, it } from 'vitest';
-import { BUNNIES, CARDS, type Bunny, type Card, satisfies } from '../../src/proto/puzzles/admirers';
-import { LEVELS, type Slot, glowing, reads, scrambled, shadow } from '../../src/proto/puzzles/jack';
-import { LETTERS, cipher, encode } from '../../src/proto/puzzles/mailbox';
+import { type Panel, find, key, letterAt, spellings, wellFormed } from '../../src/proto/strands';
+import { BASKET, JACK, LOVENOTES, MAILBOX } from '../../src/proto/puzzles/valentines';
 
-function permutations<T>(xs: T[]): T[][] {
-  if (xs.length <= 1) return [xs];
-  return xs.flatMap((x, i) =>
-    permutations([...xs.slice(0, i), ...xs.slice(i + 1)]).map((p) => [x, ...p]),
-  );
-}
+const all: Panel[] = [...LOVENOTES, ...JACK, ...BASKET, ...MAILBOX];
 
-describe('jack-o-lantern', () => {
-  it('each note reads when carved backwards and mirrored, and starts mostly dark', () => {
-    for (const { phrase } of LEVELS) {
-      const letters = phrase.replaceAll(' ', '');
-      const solved: Slot[] = letters
-        .split('')
-        .reverse()
-        .map((ch) => ({ ch, flipped: true }));
-      expect(reads(phrase, solved)).toBe(true);
+describe("Valentine's love-letter run", () => {
+  it('the words fill each grid exactly, each along touching squares', () => {
+    for (const p of all) expect(wellFormed(p), p.name).toBe(true);
+  });
+
+  it('each theme word can be spelled only one way', () => {
+    for (const p of all)
+      for (const w of p.words) expect(spellings(p, w.word), `${p.name}: ${w.word}`).toHaveLength(1);
+  });
+
+  it('a word is found by its own path, and not backwards', () => {
+    for (const p of all)
+      p.words.forEach((w, i) => {
+        expect(find(p, w.cells)).toBe(i);
+        if (w.word.length > 1 && [...w.word].reverse().join('') !== w.word)
+          expect(find(p, [...w.cells].reverse())).toBe(-1);
+      });
+  });
+
+  it('spangrams run from one side to the other', () => {
+    for (const p of all.filter((x) => x.spangram)) {
+      const cells = p.words[0]?.cells ?? [];
+      const rows = cells.map(([r]) => r);
+      const cols = cells.map(([, c]) => c);
+      const H = p.rows.length - 1;
+      const W = (p.rows[0]?.length ?? 1) - 1;
       expect(
-        shadow(solved)
-          .map((s) => s.ch)
-          .join(''),
-      ).toBe(letters);
-      const start = scrambled(phrase);
-      expect(reads(phrase, start)).toBe(false);
-      expect(glowing(phrase, start).filter(Boolean).length).toBeLessThanOrEqual(1);
+        (cols.includes(0) && cols.includes(W)) || (rows.includes(0) && rows.includes(H)),
+        p.name,
+      ).toBe(true);
     }
   });
-});
 
-describe('secret admirers', () => {
-  it('has exactly one answer', () => {
-    const answers = permutations(CARDS).filter((cards) =>
-      satisfies(
-        Object.fromEntries(BUNNIES.map((b, i) => [b, cards[i] as Card])) as Record<Bunny, Card>,
-      ),
-    );
-    expect(answers).toHaveLength(1);
-    expect(answers[0]?.map((c) => c.id).join('')).toBe('BCDA');
-  });
-});
-
-describe('mailbox', () => {
-  it('codes every letter, and the letters only use what the key can decode', () => {
-    const key = cipher();
-    expect(new Set(key.values()).size).toBe(26);
-    const coded = encode(LETTERS[0] ?? '', key);
-    expect(coded).not.toBe(LETTERS[0]);
-    expect(coded.length).toBe(LETTERS[0]?.length);
+  it('dark squares, eggs and codes are on the board', () => {
+    for (const p of all) {
+      for (const s of [...(p.dark ?? []), ...(p.eggs ?? [])])
+        expect(letterAt(p, s), `${p.name} ${key(s)}`).not.toBe('');
+      for (const ch of p.code ?? '') expect(p.rows.join(''), p.name).toContain(ch);
+    }
   });
 });

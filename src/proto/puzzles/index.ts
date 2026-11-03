@@ -1,27 +1,22 @@
 /** Every puzzle prototype, in the order the page lists them (by room). */
 import type { Proto } from '../kit';
-import { admirers } from './admirers';
 import { bow } from './bow';
 import { eggtree } from './eggtree';
-import { feast } from './feast';
 import { finale } from './finale';
 import { flag } from './flag';
 import { chocolates, cobwebs, starlights, web } from './halloween';
-import { jack } from './jack';
-import { mailbox } from './mailbox';
-import { ornaments } from './ornaments';
+import { fairylights, goldenegg, pumpkinpie, tree } from './christmas';
 import { parade } from './parade';
-import { pietin } from './pietin';
-import { platterProto } from './platter';
-import { stocking } from './stocking';
-import { tree } from './tree';
+import { breadboard, feast, hotdog, stocking } from './thanksgiving';
 import { tuesday } from './tuesday';
+import { basket, jack, lovenotes, mailbox } from './valentines';
 import { weave } from './weave';
 
 export const PROTOS: Proto[] = [
   // Valentine's
+  lovenotes,
   jack,
-  admirers,
+  basket,
   mailbox,
   // Easter
   flag,
@@ -37,12 +32,14 @@ export const PROTOS: Proto[] = [
   starlights,
   web,
   // Thanksgiving
-  platterProto,
+  breadboard,
+  hotdog,
   stocking,
   feast,
   // Christmas
-  ornaments,
-  pietin,
+  fairylights,
+  goldenegg,
+  pumpkinpie,
   tree,
   // The final puzzle
   tuesday,

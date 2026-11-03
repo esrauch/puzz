@@ -84,6 +84,8 @@ Each room holds:
 3. **The centrepiece run** (about 5 panels), unlocked when the room's own two
    items come home. The genre's hardest panels, with the twists the
    returned items bring with them; its last panel restores the centrepiece.
+   It uses **only its own holiday's twists** (and home-only extras), never a
+   stray's: a player can reach it without having played the room's strays.
 
 About 16 panels a room, 6 rooms, plus the final area: **about 100 panels**.
 
@@ -100,7 +102,7 @@ Each holiday has **one** cross-theme, a symbol that sits on top of any
 genre. Its two items carry it into the two rooms where they're stray, and
 it stays the same wherever it goes, so a player who's met it in one room
 recognises it in the next. A room's centrepiece can also have home-only
-extras (Halloween's diagonals, Thanksgiving's horns).
+extras (Halloween's diagonals).
 
 | Holiday | Cross-theme | Goes into (where its items are stray) |
 |---|---|---|
@@ -108,7 +110,7 @@ extras (Halloween's diagonals, Thanksgiving's horns).
 | **Christmas** | **Red and green:** pieces joined or touching must alternate colours. | Halloween webs (Tree-Top Star, built) · Thanksgiving carving (Stocking: same-colour portions can't share an edge) |
 | **Halloween** | **The dark:** clues hidden in shadow (any value), with the lantern showing what's lit. | Valentine's words (Jack-o'-Lantern: letters in the dark, unknown until worked out) · Fourth of July picture grids (Witch's Broom: clues in the dark) |
 | **Easter** | **Numbered eggs:** some pieces carry numbers saying when they're visited or read. | Valentine's words (Bunny's Basket: numbered eggs fix some letters' places) · Christmas lights (Golden Egg: the bulb marked 3 is three steps from the plug) |
-| **Fourth of July** | **Clues from the edge:** numbers at the ends of rows and columns, like a parade crowd on the curb. | Easter's bunny hops (Flag: an edge number is the first egg seen from that side) · Thanksgiving carving (Hot Dog: how many portions a line runs through) |
+| **Fourth of July** | **Clues from the edge:** little flags at the ends of rows and columns, each with a number about the line it points into. | Easter's bunny hops (Flag: parade viewers; an edge number is the first egg seen from that side) · Thanksgiving carving (Hot Dog: flag skewers; how many pieces the skewer goes through) |
 | **Thanksgiving** | **Fair shares:** the board is split into outlined portions, and each must get the same. | Easter's bunny hops (Cornucopia: courses; the bunny finishes one portion before the next) · Christmas lights (Pumpkin Pie: each portion gets one bulb) |
 
 Chosen for being about the holiday itself (love letters, red and green, the
@@ -160,7 +162,7 @@ music, and its own puzzle style (which every stray caught there uses).
 
 | Holiday | The room | Its genre (see Direction) |
 |---|---|---|
-| **Valentine's Day** | A pink and red sweetheart parlour: lace, roses, a heart-shaped sofa. | **Words and letters:** unscrambling, ciphers, letters placed by rules (broader than one puzzle type, but one family). |
+| **Valentine's Day** | A pink and red sweetheart parlour: lace, roses, a heart-shaped sofa. | **Strands:** a grid of letters that is entirely themed words; drag through touching letters to find them (like the New York Times' Strands). |
 | **Easter** | A spring garden: pastel eggs, tulips, a hutch, a basket-weaver's bench. | **The bunny's hops:** a numbered route (Hidato with knight hops). |
 | **Fourth of July** | A backyard cookout at dusk: picnic tables, a grill, bunting, a fireworks rack. | **Picture grids:** nonograms (fireworks paint a picture from row and column clues). |
 | **Halloween** | A cosy pumpkin patch at night: friendly ghosts, a porch, a candy bowl. (Spooky-cute, never scary.) | **Webs:** Hashi (Bridges): join the knots with threads. |
@@ -201,6 +203,60 @@ items stranded in two different rooms.
 | **Halloween** | Box of Chocolates (Valentine's), Tree-Top Star (Christmas) |
 | **Thanksgiving** | Hot Dog (Fourth of July), Stocking (Christmas) |
 | **Christmas** | Golden Egg (Easter), Pumpkin Pie (Thanksgiving) |
+
+## Valentine's: the love-letter run (designed 2026-11-02)
+
+**Genre: Strands** (the New York Times' Strands, itself in the word-search
+family). A grid of letters, a theme ("Cupid's kit"), and every letter
+belongs to exactly one themed word. **The rules:**
+
+- Drag through touching letters (diagonals too) to spell a theme word; let go
+  to check it.
+- Every letter is in exactly one theme word, so the words fill the grid.
+- Bigger boards have a **spangram**: a theme word that runs from one side of
+  the board to the other (it names the theme).
+
+Logic as well as vocabulary: the words fill the grid exactly, so leftover
+letters, corners and awkward clusters narrow down what's left. Each theme
+word can be spelled only one way in its grid (checked when the panels are
+made), so a word you find is always the right one.
+
+**On a phone:** drag through letters; the word builds above the board as you
+go, and sliding back undoes a letter. A theme word locks in (blue, the
+spangram gold) with a chime; anything else shakes. The theme and how many
+words are left are shown above the board. (Strands' hints for non-theme words
+can come in the UX pass.)
+
+### Warm-up: love notes (5 panels, open from the start)
+
+1. **One word:** a 2×2 that spells LOVE.
+2. **Two words:** a 3×3 of two words.
+3. **Three words:** a 4×4.
+4. **Side to side:** a 5×5 with its first spangram.
+5. **A full note:** a 6×6.
+
+### The Jack-o'-Lantern (stray from Halloween: the dark, 3 panels)
+
+Halloween's dark comes with it. **Twist: some letters are in the dark**,
+shown as blanks; they could be anything, and light up when a word through
+them is found. Theme words with a Halloween bite ("Love bites": FANG,
+BOO…).
+
+### The Bunny's Basket (stray from Easter: numbered eggs, 3 panels)
+
+Easter's numbered eggs come with it. **Twist: some letters carry an egg with
+their place in their word** (an egg marked 1 starts a word). Theme words with
+a spring hop ("Some bunny loves you").
+
+### Centrepiece: the Valentine Mailbox (5 panels; unlocked by Cupid's Bow and the Box of Chocolates)
+
+Valentine's own letters-for-numbers, at home: the round-one Mailbox's cipher
+as panels. **Twist: some letters are written as numbers; the same number is
+always the same letter.** Finding a word through a number reveals that
+letter everywhere it appears, like a codeword, and a key fills in above the
+board. The run ramps from one coded letter to the last panel, a love letter
+mostly in code ("Sealed with a kiss"), and its spangram is the letter's
+message.
 
 ## Halloween: the web run (designed 2026-11-02)
 
@@ -313,8 +369,10 @@ carve into portions. **The base rules:**
   squares.
 
 Chosen because drawing a rectangle is the clickiest thing on a phone (drag
-corner to corner), and the family has room for twists (Sashigane's
-L-shapes, the round-one Platter's fair shares).
+corner to corner) and the rule fits in one line, so a new player gets it at
+once. (Also considered: Galaxies/Tentai Show, delightful but too complex to
+grok; the round-one Platter's fair shares as the base, kept instead as the
+Pumpkin Pie's twist; Fillomino and Double Choco, less clicky.)
 
 **On a phone:** drag from one square to another to carve the rectangle
 between them; tap a portion to lift it off. A portion glows when it holds
@@ -329,23 +387,48 @@ the wrong number of squares. When the grid is full and right, it's carved.
 4. **No gaps, no overlaps.** Every square in exactly one portion.
 5. **A first real board.**
 
-### The Hot Dog (stray from the Fourth of July: clues from the edge, 3 panels)
+### The Hot Dog (stray from the Fourth of July: clues from the edge, 5 panels)
 
 The hot dog's on the turkey platter, and the Fourth of July's clues from
-the edge come with it. **Twist: grill marks.** A number at the end of a
-row or column says how many portions that line runs through. Some portions
-then have no number inside, so the grill marks have to make up for them.
+the edge come with it. **Twist: flag skewers.** A little cookout flag at the
+end of a row or column tops a skewer pushed straight through that line; its
+number is **how many pieces (portions) the skewer goes through**. Some
+portions then have no number inside, so the flags make up for them.
 
-1. A small board with one grill mark doing the work.
-2. Row and column marks together.
-3. Few numbers inside; mostly grill marks.
+**The Fourth of July's symbol is a flag at the edge of the board** (the
+Star-Spangled Flag is one of its items, and the flag-on-a-toothpick is the
+cookout garnish). The flag always means "a clue about the line it points
+into"; what it's planted on suits the room: skewers here, parade viewers in
+Easter (the first egg seen from that side). Earlier name: grill marks,
+which didn't explain the counting.
+
+The flags are the one number on the board that isn't a size, so they're
+taught by failing safely (there's precedent in custom Fillomino variants,
+but they're not a standard Shikaku rule):
+- **A wrong skewer is counted out:** when a line is carved right across and
+  its count is off (or it's already over), its skewer is drawn right
+  through it in red, each piece on it gets a numbered badge (1, 2, 3…), and
+  the flag turns red. The status line spells it out ("The skewer through
+  row 1 goes through 2 pieces, but its flag says 1").
+- **Tap a flag** to see its skewer counted out in gold, any time.
+
+1. **Count the pieces** (training): a 2×2 with no numbers, rows flagged 1
+   and 2. The only answer is a bar on top and two squares below.
+2. **Down the columns** (training): a 2×3 with no numbers, columns flagged
+   1, 2, 1.
+3. **A flag skewer:** numbers inside, and one flag doing the work.
+4. **Across and down:** row and column flags together.
+5. **Kebabs:** two numbers inside; the flags do the rest.
 
 ### The Stocking (stray from Christmas: red and green, 3 panels)
 
 A stocking's hung by the hearth, and Christmas's twist comes with it, the
-same one the Tree-Top Star brings to Halloween. **Twist: each number is red
-or green, and two portions of the same colour may not share an edge**
-(like the stripes on a stocking).
+same one the Tree-Top Star brings to Halloween. **Twist: some portions are
+marked red or green, and two portions of the same colour may not share an
+edge; plain portions can touch anything** (like the stripes on a stocking).
+Not every portion can be coloured: where three rectangles meet at a T, all
+three touch, so a full red-and-green colouring is impossible. The plain
+portions are what makes it work.
 
 1. A small board where an obvious portion would put two reds side by side.
 2. A bigger one, where the colours settle the shapes.
@@ -353,23 +436,127 @@ or green, and two portions of the same colour may not share an edge**
 
 ### Centrepiece: the Feast (5 panels; unlocked by the Cornucopia and the Pumpkin Pie)
 
-The table's laid, and the returned items bring Thanksgiving's own twists.
+The table's laid, and the returned items bring Thanksgiving's fair shares
+home. **A centrepiece uses only its own holiday's twist**: the player may
+reach it without ever having played the room's strays, so no red and green
+here. (An earlier version used the Stocking's colours in panels 4 and 5,
+and they read as unexplained.) Everything stays rectangles, so a new player
+always knows what a portion is (the Cornucopia's L-shaped horns were
+dropped for that reason). The fair share is always spelled out above the
+board ("Each portion gets: 🦃 🥧 🍒").
 
-1. **The big carve:** plain Shikaku, the largest yet.
-2. **The Pumpkin Pie: fair shares.** The board has dishes on it (turkey,
-   pie, cranberries), and every portion must have exactly one of each,
-   with no numbers. This is the round-one Platter you liked, as panels.
-3. **The Cornucopia: the horn.** Portions may also be L-shaped, one square
-   wide, like a horn of plenty (from Nikoli's Sashigane). A home-only extra;
-   abroad, the Cornucopia carries fair shares like the pie.
-4. **Fair shares and horns together.**
-5. **The Feast:** a big table with everything. Solved, the dishes slide into
-   place, Tuesday grudgingly takes a seat, and Thanksgiving's lamp lights.
+1. **The big carve:** plain Shikaku, the largest yet (7×7).
+2. **Fair shares:** dishes on the board (turkey, pie, cranberries), and every
+   portion must hold exactly one of each, with no numbers. This is the
+   round-one Platter you liked, as panels.
+3. **Fair shares, some sizes:** a bigger table, with a few size numbers to
+   pin it down.
+4. **Seconds:** every portion gets one turkey, one pie and *two* cranberries.
+5. **The Feast:** a 7×7 table of fair shares, no numbers at all. Solved, the
+   dishes slide into place, Tuesday grudgingly takes a seat, and
+   Thanksgiving's lamp lights.
 
 **Thanksgiving's items abroad** (both carry fair shares):
 - **Cornucopia (in Easter):** courses: the bunny finishes one outlined
   portion before starting the next.
 - **Pumpkin Pie (in Christmas):** each outlined portion gets one bulb.
+
+## Christmas: the lights run (designed and built 2026-11-02)
+
+**Genre: Net** (Tatham's Net; the round-one Christmas Tree, confirmed as
+"exactly the right kind of puzzle"). Every square holds a piece of the
+light string; turn them so the power flows from the plug to every bulb.
+**The base rules:**
+
+- Turn the pieces so the power from the plug reaches every square.
+- No loose ends: every wire end must meet another.
+
+(No loops needs no rule: the pieces always have exactly enough wire ends for
+one tree, so any join-up that reaches every square without loose ends is
+loop-free. Plain Net on a board with edges is also almost always unique,
+which is why the stray panels below start from the rare ambiguous boards.)
+
+**On a phone:** tap a piece to turn it a quarter clockwise, always the same
+way (four taps go all the way round; a turn-back half and long-press pinning
+were tried and dropped: taps either side of the middle undid each other,
+and slow taps pinned pieces by accident). Power spreads from the
+plug (its square ringed in its string's colour) and every piece it reaches
+lights up, so you watch the string grow. A lit wire end that meets nothing
+sparks red. Solved, the lights turn gold, the tree-top star lights, and it
+chimes. Boards are shaped: trees and a wreath here, an egg and a pie for
+the strays.
+
+### Warm-up: the fairy lights (6 panels, open from the start)
+
+1. **One turn:** three pieces in a row, the middle one turned the wrong way.
+2. **Corners:** a bend in the string.
+3. **A branch:** a T-piece feeds two ways.
+4. **No loose ends.**
+5. **Everything lit:** two end pieces that could face each other and light
+   only themselves (replacing "no loops", which can't come up).
+6. **A first string**, 4×4.
+
+### The Golden Egg (stray from Easter: numbered eggs, 3 panels)
+
+The Golden Egg's hung among the lights, and Easter's numbered eggs come
+with it. The board's egg-shaped. **Twist: some bulbs carry a numbered egg,
+and the power must reach that egg in exactly that many steps from the plug**
+(counting squares along the wire). An egg glows green when the power
+reaches it on its number, and red when it arrives on the wrong one.
+
+1. One egg settles the board.
+2. Two eggs.
+3. A big egg with two eggs far up (14 and 15 steps): the weakest of the
+   three; wants a playtest.
+
+### The Pumpkin Pie (stray from Thanksgiving: fair shares, 3 panels)
+
+The pie's been plugged into the lights, and Thanksgiving's fair shares come
+with it. The board's a round pie, cut in slices round the middle, where
+the plug is. **Twist: one serving per slice.** No wire may cross the solid
+wall between two slices (each slice's lights are their own little string),
+and every slice gets exactly one wire from the middle across its dashed
+edge. The rule is spelled out above the board; each slice shows its
+servings so far (green at one, red over), and a wire through a wall shows
+red.
+
+(First tried: "the same number of wires crosses into every slice". Far too
+hard: counting crossings isn't about the pieces, each crossing counts twice,
+and big targets don't point anywhere.)
+
+Tiny pies, so the rule is the whole puzzle (pies up to 8×8 with six slices
+were still too confusing):
+
+1. Two slices (5×5, the plug alone in the middle).
+2. Three slices (5×5).
+3. Four slices (6×6).
+
+If it's still confusing at this size, the rule is the problem: swap the idea.
+
+### Centrepiece: the Christmas Tree (5 panels; unlocked by the Tree-Top Star and the Stocking)
+
+**Christmas's red and green, at home: two strings, a red one and a green
+one, each from its own plug; red pieces only join red, green only green, and
+the strings never join.** (Strictly "same colours join", where abroad it's
+"colours alternate": in Net every wire joins neighbouring squares, so an
+alternating rule would just be the chessboard pattern every answer already
+has, and constrain nothing.)
+
+Colours only ever rule moves out, so a red-and-green tree is *easier* than
+the same tree in plain lights. The run therefore starts small, and gets
+harder with **white lights**: a white piece can belong to either string (and
+lights in the colour of whichever reaches it), but still can't join the two.
+The more white lights, the less the colours give away.
+
+1. **A little tree:** plain Net, small (6 rows).
+2. **Red and green:** a small tree, two strings.
+3. **A taller tree** in red and green.
+4. **The wreath, with white lights:** a ring-shaped board, 8 white lights.
+5. **The Christmas Tree:** the big one, about 40% white lights, the star on
+   top.
+
+**Christmas's items abroad** (both carry red and green): the Tree-Top Star
+in Halloween (built), the Stocking in Thanksgiving (built).
 
 ## Round one: 19 one-off puzzles (being replaced room by room)
 
