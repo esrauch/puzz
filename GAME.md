@@ -242,16 +242,23 @@ shown as blanks; they could be anything, and light up when a word through
 them is found. Themes mix the two holidays. **Puns go in the labels only; the words in
 the grid are always real words or phrases** (made-up pun words annoy the
 player): "Boo & you" (BOO, PUMPKIN, TREAT), "Bewitched" (BEWITCHED,
-CHARMED, POTION, HEX), "Ghoulfriend" (UNDYING LOVE, GHOSTED, BITTEN, SOULMATE). The dark squares are chosen so that, reading each one as
-any letter (as the player must), every word still has only one path: a
-word you've worked out can never be traced through the wrong dark square.
+CHARMED, POTION, HEX), "Ghoulfriend" (UNDYING LOVE, GHOSTED, BITTEN, SOULMATE). At most one dark letter per word, never its first or last
+letter; and reading each dark square as any letter (as the player must),
+every word still has only one path, so a word you've worked out can never be
+traced through the wrong dark square.
 
 ### The Bunny's Basket (stray from Easter: numbered eggs, 3 panels)
 
 Easter's numbered eggs come with it. **Twist: some letters carry an egg with
-their place in their word** (an egg marked 1 starts a word). Panels 2 and 3 have a
-couple of extra eggs on word starts (they were a little too hard). Theme words with
-a spring hop ("Some bunny loves you").
+their place in their word** (an egg marked 1 starts a word). Like the Jack,
+the words in the grid are real words that suit both Easter and Valentine's
+(puns only in the labels):
+
+1. **Some bunny** (3×5): SWEETS, DOVE, TULIP.
+2. **Spring fling** (5×5): LOVEBIRDS (spangram), BLOSSOM, RIBBON, BOW.
+3. **Sweet tooth** (5×6): JELLYBEANS (spangram), CHOCOLATE, TREATS, CANDY,
+   with an egg on every word's first letter (the earlier 6×6 Egg hunt was
+   too hard).
 
 ### Centrepiece: the Valentine Mailbox (5 panels; unlocked by Cupid's Bow and the Box of Chocolates)
 

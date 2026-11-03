@@ -22,6 +22,20 @@ describe("Valentine's love-letter run", () => {
       for (const w of p.words) expect(spellings(p, w.word), `${p.name}: ${w.word}`).toHaveLength(1);
   });
 
+  it('at most one dark letter per word, never its first or last', () => {
+    for (const p of all.filter((x) => x.dark))
+      for (const w of p.words) {
+        const dark = w.cells.filter((c) => (p.dark ?? []).some((d) => key(d) === key(c)));
+        expect(dark.length, `${p.name}: ${w.word}`).toBeLessThanOrEqual(1);
+        for (const d of dark) {
+          expect(key(d), `${p.name}: ${w.word} first`).not.toBe(key(w.cells[0] as Spot));
+          expect(key(d), `${p.name}: ${w.word} last`).not.toBe(
+            key(w.cells[w.cells.length - 1] as Spot),
+          );
+        }
+      }
+  });
+
   it('with dark squares read as any letter, each word still has only one path', () => {
     for (const p of all.filter((x) => x.dark))
       for (const w of p.words)
