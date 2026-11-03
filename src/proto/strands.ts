@@ -50,11 +50,14 @@ export const touching = (a: Spot, b: Spot): boolean =>
 /** The letter at a square. */
 export const letterAt = (p: Panel, [r, c]: Spot): string => p.rows[r]?.[c] ?? '';
 
-/** The word a dragged path finds (its index), if it's a theme word laid exactly there. */
+/** The word a dragged path finds (its index), if it spells a theme word over that word's own squares. */
 export function find(p: Panel, path: Spot[]): number {
+  // The path must spell the word over exactly its squares, in any order: with repeated
+  // letters (the Ms of MUMMY) there can be more than one way through the same squares.
+  const squares = path.map(key).sort().join(' ');
+  const spelled = path.map((s) => letterAt(p, s)).join('');
   return p.words.findIndex(
-    (w) =>
-      w.cells.length === path.length && w.cells.every((s, i) => key(s) === key(path[i] as Spot)),
+    (w) => w.word === spelled && w.cells.map(key).sort().join(' ') === squares,
   );
 }
 
@@ -67,14 +70,18 @@ export function placeIn(p: Panel, s: Spot): number {
   return 0;
 }
 
-/** Every way to spell `word` in the grid, as distinct sets of squares. */
-export function spellings(p: Panel, word: string): string[] {
+/**
+ * Every way to spell `word` in the grid, as distinct sets of squares. With
+ * `dark`, those squares match any letter (as they look to the player).
+ */
+export function spellings(p: Panel, word: string, dark: Spot[] = []): string[] {
+  const wild = new Set(dark.map(key));
   const H = p.rows.length;
   const W = p.rows[0]?.length ?? 0;
   const found = new Set<string>();
   const path: Spot[] = [];
   const go = (s: Spot, i: number): void => {
-    if (letterAt(p, s) !== word[i]) return;
+    if (!wild.has(key(s)) && letterAt(p, s) !== word[i]) return;
     path.push(s);
     if (i === word.length - 1) found.add(path.map(key).sort().join(' '));
     else

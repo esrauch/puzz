@@ -1,5 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { type Panel, find, key, letterAt, spellings, wellFormed } from '../../src/proto/strands';
+import {
+  type Panel,
+  type Spot,
+  find,
+  key,
+  letterAt,
+  spellings,
+  wellFormed,
+} from '../../src/proto/strands';
 import { BASKET, JACK, LOVENOTES, MAILBOX } from '../../src/proto/puzzles/valentines';
 
 const all: Panel[] = [...LOVENOTES, ...JACK, ...BASKET, ...MAILBOX];
@@ -12,6 +20,12 @@ describe("Valentine's love-letter run", () => {
   it('each theme word can be spelled only one way', () => {
     for (const p of all)
       for (const w of p.words) expect(spellings(p, w.word), `${p.name}: ${w.word}`).toHaveLength(1);
+  });
+
+  it('with dark squares read as any letter, each word still has only one path', () => {
+    for (const p of all.filter((x) => x.dark))
+      for (const w of p.words)
+        expect(spellings(p, w.word, p.dark), `${p.name}: ${w.word}`).toHaveLength(1);
   });
 
   it('a word is found by its own path, and not backwards', () => {
@@ -43,5 +57,35 @@ describe("Valentine's love-letter run", () => {
         expect(letterAt(p, s), `${p.name} ${key(s)}`).not.toBe('');
       for (const ch of p.code ?? '') expect(p.rows.join(''), p.name).toContain(ch);
     }
+  });
+
+  it('a word counts by any path through its own squares that spells it', () => {
+    // MUMMY's Ms can be visited in either order: M(0,0) U M(0,1) M Y, or M(0,1) U M(0,0) M Y.
+    const p: Panel = {
+      name: 'mummy',
+      theme: '',
+      rows: ['MM', 'UM', 'XY'],
+      words: [
+        {
+          word: 'MUMMY',
+          cells: [
+            [0, 0],
+            [1, 0],
+            [0, 1],
+            [1, 1],
+            [2, 1],
+          ],
+        },
+      ],
+    };
+    const other: Spot[] = [
+      [0, 1],
+      [1, 0],
+      [0, 0],
+      [1, 1],
+      [2, 1],
+    ];
+    expect(find(p, p.words[0]?.cells ?? [])).toBe(0);
+    expect(find(p, other)).toBe(0);
   });
 });

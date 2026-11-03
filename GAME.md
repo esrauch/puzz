@@ -239,13 +239,18 @@ can come in the UX pass.)
 
 Halloween's dark comes with it. **Twist: some letters are in the dark**,
 shown as blanks; they could be anything, and light up when a word through
-them is found. Theme words with a Halloween bite ("Love bites": FANG,
-BOO…).
+them is found. Themes mix the two holidays. **Puns go in the labels only; the words in
+the grid are always real words or phrases** (made-up pun words annoy the
+player): "Boo & you" (BOO, PUMPKIN, TREAT), "Bewitched" (BEWITCHED,
+CHARMED, POTION, HEX), "Ghoulfriend" (UNDYING LOVE, GHOSTED, BITTEN, SOULMATE). The dark squares are chosen so that, reading each one as
+any letter (as the player must), every word still has only one path: a
+word you've worked out can never be traced through the wrong dark square.
 
 ### The Bunny's Basket (stray from Easter: numbered eggs, 3 panels)
 
 Easter's numbered eggs come with it. **Twist: some letters carry an egg with
-their place in their word** (an egg marked 1 starts a word). Theme words with
+their place in their word** (an egg marked 1 starts a word). Panels 2 and 3 have a
+couple of extra eggs on word starts (they were a little too hard). Theme words with
 a spring hop ("Some bunny loves you").
 
 ### Centrepiece: the Valentine Mailbox (5 panels; unlocked by Cupid's Bow and the Box of Chocolates)
