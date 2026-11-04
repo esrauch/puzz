@@ -1,0 +1,54 @@
+{
+  "genre": "webs",
+  "twists": ["eggs", "flags"],
+  "tier": "hard",
+  "panels": [
+    {
+      "seed": 23,
+      "stats": { "plain": 21, "without flags": 5, "without eggs": 6, "steps": 67 },
+      "panel": {
+        "name": "Webs, eggs and flags: hard 1",
+        "rows": [
+          "24.4...32",
+          "....1....",
+          "..1.....2",
+          "..44...1.",
+          "36425...3",
+          "..22.....",
+          ".........",
+          ".2.......",
+          "2..3442.."
+        ],
+        "home": [4, 3],
+        "eggs": [
+          [4, 2, 3],
+          [8, 3, 3]
+        ],
+        "rowFlags": [null, null, null, 2, null, null, null, null, null],
+        "colFlags": [null, 3, null, null, null, null, null, null, null]
+      }
+    },
+    {
+      "seed": 46,
+      "stats": { "plain": 12, "without eggs": 3, "without flags": 4, "steps": 58 },
+      "panel": {
+        "name": "Webs, eggs and flags: hard 2",
+        "rows": [
+          "2..4...53",
+          ".3.3..453",
+          ".......2.",
+          ".......3.",
+          "...1...32",
+          ".5..1.34.",
+          ".........",
+          ".342..33.",
+          "..2.....1"
+        ],
+        "home": [4, 3],
+        "eggs": [[7, 6, 4]],
+        "rowFlags": [6, null, null, null, null, null, null, null, null],
+        "colFlags": [null, null, null, null, null, null, null, null, 3]
+      }
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "genre": "webs",
+  "twists": ["colours", "flags", "eggs"],
+  "tier": "medium",
+  "panels": [
+    {
+      "seed": 6287,
+      "stats": {
+        "plain": 26,
+        "without colours": 3,
+        "without flags": 4,
+        "without eggs": 5,
+        "steps": 61
+      },
+      "panel": {
+        "name": "Webs, colours and flags and eggs: medium 1",
+        "rows": ["3...5.3", "3...5.3", ".24.525", "344....", "4.3....", ".......", "2...2.2"],
+        "colours": ["r...g.r", "g...r.g", "..r.ggr", "rg.....", "g.r....", ".......", "....r.g"],
+        "home": [3, 1],
+        "eggs": [[6, 6, 6]],
+        "rowFlags": [null, null, 5, null, null, null, 1],
+        "colFlags": [null, null, null, null, null, null, null]
+      }
+    }
+  ]
+}

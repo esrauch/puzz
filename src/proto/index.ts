@@ -36,6 +36,7 @@ const ROOMS = [
   'Thanksgiving',
   'Christmas',
   'Tuesday',
+  'Workshop',
 ];
 
 function renderNav(current: string): void {

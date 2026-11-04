@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import * as hashi from '../../src/proto/hashi';
+import * as hashi from '../../src/gen/webs';
 import * as net from '../../src/proto/net';
 import * as picture from '../../src/proto/picture';
 import * as shikaku from '../../src/proto/shikaku';
@@ -19,6 +19,8 @@ import {
   WEBS_2,
   WORDS,
   WORDS_2,
+  WORDS_2_HINTS,
+  WORDS_HINTS,
 } from '../../src/proto/puzzles/tuesday';
 
 // Each genre has an intro (without either twist, two or more answers fit) and a second
@@ -82,23 +84,40 @@ describe("Tuesday's party (tentative)", () => {
   );
 
   it.each([
-    [WORDS, 2],
-    [WORDS_2, 3],
+    [WORDS, 2, WORDS_HINTS],
+    [WORDS_2, 3, WORDS_2_HINTS],
   ] as const)(
-    'words %#: one whole-grid answer; the bows and the portions each do work',
-    (p, need) => {
+    'words %#: one whole-grid answer; the bows and the portions each do work; hints are extra',
+    (p, need, hints) => {
       expect(strands.wellFormed(p)).toBe(true);
       expect(strands.sharesAndColours(p)).toBe(true);
-      const answers = strands.tilings(p);
-      expect(answers).toEqual([p.words.map((w) => w.cells.map(strands.key).sort().join(' '))]);
+      const truth = [p.words.map((w) => w.cells.map(strands.key).sort().join(' '))];
+      const bows = p.bows ?? [];
+      // The core bows alone give one answer; the hints are only hints.
+      const core = { ...p, bows: bows.slice(0, bows.length - hints) };
+      expect(strands.tilings(core)).toEqual(truth);
+      expect(strands.tilings(p)).toEqual(truth);
+      expect(hints).toBe(6);
+      for (const side of ['A', 'B'])
+        expect(
+          bows.slice(bows.length - hints).filter(([r, c]) => p.portions?.[r]?.[c] === side),
+        ).toHaveLength(3);
+      // Even with the hints, both twists do work.
       expect(strands.tilings(p, need, { noColours: true })).toHaveLength(need);
       expect(strands.tilings(p, need, { noPortions: true })).toHaveLength(need);
+      // Each side of the wall has red and green core bows, and they do work there.
+      for (const side of ['A', 'B']) {
+        const mine = (core.bows ?? []).filter(([r, c]) => p.portions?.[r]?.[c] === side);
+        expect(new Set(mine.map(([r, c]) => p.colours?.[r]?.[c]))).toEqual(new Set(['r', 'g']));
+        const rest = (core.bows ?? []).filter((b) => !mine.includes(b));
+        expect(strands.tilings({ ...core, bows: rest }, 2)).toHaveLength(2);
+      }
     },
   );
 
   it.each([
     [BUNNIES, 2, 'JOY', 'FUN'],
-    [BUNNIES_2, 3, 'CAKE', 'GIFT'],
+    [BUNNIES_2, 3, 'WISH', 'GIFT'],
   ] as const)(
     'bunnies %#: one answer; colours and letters each do work; each spells its word',
     (p, need, red, green) => {
@@ -138,5 +157,36 @@ describe("Tuesday's party (tentative)", () => {
       expect(b.rows.length * (b.rows[0]?.length ?? 0)).toBeGreaterThan(
         a.rows.length * (a.rows[0]?.length ?? 0),
       );
+  });
+});
+
+describe("Tuesday's words", () => {
+  it('no word (or its plural) is used twice across the Tuesday panels', () => {
+    const coded = (c: typeof CARVING): string =>
+      [...(c.message ?? '')].map((d) => c.sizeLetters?.[Number(d) - 1]).join('');
+    const spelt = (p: typeof BUNNIES): string[] => {
+      const b = two.parse(p);
+      const [red = [], green = []] = two.solve(b)[0] ?? [];
+      return [two.spell(b, red, 'r'), two.spell(b, green, 'g')];
+    };
+    const words = [
+      ...WORDS.words.map((w) => w.word),
+      ...WORDS_2.words.map((w) => w.word),
+      coded(CARVING),
+      coded(CARVING_2),
+      ...spelt(BUNNIES),
+      ...spelt(BUNNIES_2),
+    ];
+    const stems = words.map((w) => w.replace(/S$/, ''));
+    expect(stems.filter((w, i) => stems.indexOf(w) !== i)).toEqual([]);
+  }, 60_000);
+});
+
+describe("Tuesday's dark pieces", () => {
+  it('never touch each other', () => {
+    for (const l of [LIGHTS, LIGHTS_2])
+      for (const [r, c] of l.dark ?? [])
+        for (const [r2, c2] of l.dark ?? [])
+          expect(Math.abs(r - r2) + Math.abs(c - c2) === 1, `${r},${c} by ${r2},${c2}`).toBe(false);
   });
 });

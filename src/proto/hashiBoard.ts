@@ -20,7 +20,10 @@ import {
   totals,
   distances,
   threadsAlong,
-} from './hashi';
+  strokes,
+  wallsBetween,
+} from '../gen/webs';
+import { inside, mirrorKey } from '../gen/core/mirror';
 import { blip } from './kit';
 
 const NS = 'http://www.w3.org/2000/svg';
@@ -54,6 +57,23 @@ export function mountWeb(host: HTMLElement, panel: Panel, hooks: BoardHooks): vo
     userSelect: 'none',
     display: 'block',
   });
+  if (panel.frame) {
+    const legend = document.createElement('div');
+    const f = panel.frame;
+    const whole =
+      f.top === 0 && f.left === 0 && f.bottom === web.height - 1 && f.right === web.width - 1;
+    legend.textContent = whole
+      ? '❄ The joins mirror across the icy line (singles and doubles needn’t).'
+      : '❄ Inside the frosty frame, the threads are their own mirror image (singles and doubles needn’t match). Outside it, anything goes.';
+    Object.assign(legend.style, { fontSize: '16px', fontWeight: '600', margin: '0 0 8px' });
+    host.append(legend);
+  }
+  if (web.walls.size) {
+    const legend = document.createElement('div');
+    legend.textContent = 'No thread may cross a fence.';
+    Object.assign(legend.style, { fontSize: '16px', fontWeight: '600', margin: '0 0 8px' });
+    host.append(legend);
+  }
   if (web.home !== undefined && web.eggs.length) {
     const legend = document.createElement('div');
     legend.textContent =
@@ -145,6 +165,12 @@ export function mountWeb(host: HTMLElement, panel: Panel, hooks: BoardHooks): vo
     const a = web.knots[from] as Knot;
     const b = web.knots[j];
     if (b && a.colour && a.colour === b.colour) flash([`k${from}`, `k${j}`]);
+    // A cut in the way: flash the wall.
+    const blocked = b ? wallsBetween(a, b).filter((w) => web.walls.has(w)) : [];
+    if (blocked.length) {
+      flash(blocked.map((w) => `w${w}`));
+      blip(150, 80, 25);
+    }
   };
 
   const at = (e: PointerEvent): [number, number] => {
@@ -282,6 +308,89 @@ export function mountWeb(host: HTMLElement, panel: Panel, hooks: BoardHooks): vo
           r: 1.5,
           fill: '#4a4756',
         });
+    // Cuts: walls (a wooden fence) on the squares' edges; no thread may cross one.
+    for (const w of web.walls) {
+      const [r, c, side] = w.split(',');
+      const rr = Number(r);
+      const cc = Number(c);
+      const [x1, y1, x2, y2] =
+        side === 'v'
+          ? [(cc + 1) * cell, rr * cell + 4, (cc + 1) * cell, (rr + 1) * cell - 4]
+          : [cc * cell + 4, (rr + 1) * cell, (cc + 1) * cell - 4, (rr + 1) * cell];
+      add('line', {
+        x1,
+        y1,
+        x2,
+        y2,
+        stroke: flashing.has(`w${w}`) ? '#ff5a4f' : '#c98a3a',
+        'stroke-width': 6,
+        'stroke-linecap': 'round',
+      });
+    }
+    // Snowflakes: the frosty frame, its mirror line with a snowflake at each end,
+    // and a ghost of each drawn segment's mirror image until a thread covers it.
+    if (web.frame) {
+      const f = web.frame;
+      const [fx, fy] = [f.left * cell + 3, f.top * cell + 3];
+      const [fw, fh] = [(f.right - f.left + 1) * cell - 6, (f.bottom - f.top + 1) * cell - 6];
+      add('rect', {
+        x: fx,
+        y: fy,
+        width: fw,
+        height: fh,
+        rx: 10,
+        fill: 'rgba(154, 215, 255, 0.07)',
+        stroke: '#9ad7ff',
+        'stroke-width': 2,
+        'stroke-dasharray': '7 5',
+      });
+      const vertical = f.axis === 'v';
+      const mid = vertical
+        ? ((f.left + f.right + 1) * cell) / 2
+        : ((f.top + f.bottom + 1) * cell) / 2;
+      const [x1, y1, x2, y2] = vertical ? [mid, fy, mid, fy + fh] : [fx, mid, fx + fw, mid];
+      add('line', {
+        x1,
+        y1,
+        x2,
+        y2,
+        stroke: '#9ad7ff',
+        'stroke-width': 1.5,
+        'stroke-dasharray': '3 4',
+        opacity: 0.7,
+      });
+      for (const [x, y] of [
+        [x1, y1],
+        [x2, y2],
+      ])
+        add(
+          'text',
+          {
+            x: (x ?? 0) + (vertical ? 0 : x === x1 ? -2 : 2),
+            y: (y ?? 0) + cell * 0.1,
+            'text-anchor': 'middle',
+            'font-size': cell * 0.3,
+          },
+          '❄',
+        );
+      const drawn = strokes(web, threads);
+      for (const seg of drawn) {
+        if (!inside(f, seg)) continue;
+        const m = mirrorKey(f, seg);
+        if (drawn.has(m)) continue;
+        const [r1 = 0, c1 = 0, r2 = 0, c2 = 0] = m.slice(1).split(',').map(Number);
+        add('line', {
+          x1: c1 * cell + cell / 2,
+          y1: r1 * cell + cell / 2,
+          x2: c2 * cell + cell / 2,
+          y2: r2 * cell + cell / 2,
+          stroke: '#9ad7ff',
+          'stroke-width': 3,
+          'stroke-dasharray': '4 5',
+          opacity: 0.6,
+        });
+      }
+    }
     // On a broom panel, faint crosses between the dots: threads may run corner to corner.
     if (panel.diagonal)
       for (let r = 1; r < web.height; r++)

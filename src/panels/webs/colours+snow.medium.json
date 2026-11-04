@@ -1,0 +1,27 @@
+{
+  "genre": "webs",
+  "twists": ["colours", "snow"],
+  "tier": "medium",
+  "panels": [
+    {
+      "seed": 3825,
+      "stats": { "plain": 14, "without colours": 3, "without snow": 6, "steps": 13 },
+      "panel": {
+        "name": "Webs, colours and snow: medium 1",
+        "rows": ["3.4.3.2", ".......", "2..24.4", "..2....", "2..24.5", ".......", "2.4.4.3"],
+        "colours": ["g.r.g.r", ".......", "r..gr.g", "..g....", "g..g..r", ".......", "..r.g.."],
+        "frame": { "top": 0, "left": 0, "bottom": 6, "right": 6, "axis": "h" }
+      }
+    },
+    {
+      "seed": 3933,
+      "stats": { "plain": 21, "without colours": 3, "without snow": 8, "steps": 22 },
+      "panel": {
+        "name": "Webs, colours and snow: medium 2",
+        "rows": ["1.....1", ".......", "4.3.2.3", "3.435.3", ".......", "2.....2", "3.4.4.3"],
+        "colours": ["g.....g", ".......", "r.g.g.r", "g.rgr.g", ".......", "r.....r", "..g...g"],
+        "frame": { "top": 0, "left": 0, "bottom": 6, "right": 6, "axis": "v" }
+      }
+    }
+  ]
+}

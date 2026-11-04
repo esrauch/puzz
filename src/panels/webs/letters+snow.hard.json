@@ -1,0 +1,47 @@
+{
+  "genre": "webs",
+  "twists": ["letters", "snow"],
+  "tier": "hard",
+  "panels": [
+    {
+      "seed": 9,
+      "stats": { "plain": 3, "without snow": 3, "steps": 16 },
+      "panel": {
+        "name": "Webs, letters and snow: hard 1",
+        "rows": [
+          "4215...6E",
+          ".........",
+          ".......B.",
+          "E..W...E.",
+          ".......EB",
+          "B..E...B.",
+          ".......1.",
+          ".........",
+          "B1B4...43"
+        ],
+        "message": "432",
+        "frame": { "top": 0, "left": 0, "bottom": 8, "right": 8, "axis": "h" }
+      }
+    },
+    {
+      "seed": 31,
+      "stats": { "plain": 4, "without snow": 4, "steps": 10 },
+      "panel": {
+        "name": "Webs, letters and snow: hard 2",
+        "rows": [
+          ".B.....4.",
+          "..W.E.2..",
+          "1.......1",
+          ".........",
+          "24.....E3",
+          "..W.E.4..",
+          "..B.E.4..",
+          ".........",
+          ".4..4..3."
+        ],
+        "message": "263",
+        "frame": { "top": 0, "left": 0, "bottom": 8, "right": 8, "axis": "v" }
+      }
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "genre": "webs",
+  "twists": ["letters", "flags"],
+  "tier": "easy",
+  "panels": [
+    {
+      "seed": 10,
+      "stats": { "plain": 3, "without flags": 3, "steps": 16 },
+      "panel": {
+        "name": "Webs, letters and flags: easy 1",
+        "rows": ["2.5.3", ".....", "O.3.O", ".....", "1...."],
+        "message": "M22N",
+        "rowFlags": [null, null, 2, null, null],
+        "colFlags": [null, null, null, null, null]
+      }
+    },
+    {
+      "seed": 56,
+      "stats": { "plain": 2, "without flags": 2, "steps": 7 },
+      "panel": {
+        "name": "Webs, letters and flags: easy 2",
+        "rows": ["1.2.T", ".....", "T...4", "....1", "2...."],
+        "message": "HEAR3",
+        "rowFlags": [null, null, null, null, null],
+        "colFlags": [2, null, null, null, null]
+      }
+    }
+  ]
+}

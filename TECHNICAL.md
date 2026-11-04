@@ -29,6 +29,38 @@ Nothing game-specific yet: `src/main.ts` shows a placeholder scene (a sunny cel-
 
 - URL options: `?outline=0`. In dev builds the view is `window.view`.
 
+### Puzzle generators (`src/gen/`)
+
+Panels for the base puzzles and their twists (see `PUZZLES.md`) are generated
+at dev time and pinned as JSON; the phone never runs a search.
+
+- `src/gen/core/`: shared infrastructure. `rng.ts` (seeded, wraps
+  `src/sim/rng.ts`), `budget.ts` (step limit plus deadline; `OverBudget`
+  means "try the next seed", never "wait longer"), `clues.ts` (choose twist
+  clues against a list of answers in memory: add while they rule answers
+  out, then drop the spare ones; and each twist's margin), `spec.ts` (tier,
+  twists, results, seed loop, rejection counts for tuning).
+  `mirror.ts` holds the snowflake helpers (frames, mirrored grid features,
+  the symmetry check) that every genre shares.
+- `src/gen/<genre>/`: one folder per base puzzle, so far `webs/` (Hashi):
+  `model.ts` (panel format, parse), `rules.ts` (what threads add up to,
+  `solved`), `solve.ts` (propagation and search, budgeted), `make.ts`
+  (random solution-first webs), `verify.ts` (the checks the generator and
+  tests share: one answer, each twist's margin, nothing pointless),
+  `generate.ts` (the pipeline and tier shapes).
+- Generation is solution-first: grow an answer, write every clue, hide clues
+  for the dark and letters, then list the remaining answers once and add the
+  clue-adding twists (eggs, flags, colours) against that list until one is
+  left. Twists stack: any mix, or none.
+- The same generators run in the browser: `src/gen/client.ts` asks a Web
+  Worker (`src/gen/worker.ts`) for a panel, so a slow search never freezes the
+  page, and cancelling ends the worker. Most specs take under 0.4 s; three
+  clue-adding twists at once can take seconds. The prototypes page's Webs
+  workshop (`?p=webworkshop`) uses it: difficulty, twist checkboxes, Generate.
+- `tools/make-panels.ts` writes `src/panels/<genre>/<twists>.<tier>.json`
+  (with each panel's seed and stats); `tests/panels/` re-checks every pinned
+  panel with the genre's `verify.ts`.
+
 ## 4. Rendering and UI
 
 **The look is sunny cel shading** (as in Schnau): bright saturated colour, two flat tones per surface with a hard edge between them, cool coloured shade, crisp shadows, rounded forms, and coloured ink lines.
@@ -98,6 +130,9 @@ A static site. `.github/workflows/deploy.yml` runs `npm run check` and deploys `
 │  ├─ voxel/             // .voxt parser, meshers, model cache, .vox import
 │  ├─ content/           // palettes, shared tuning
 │  ├─ sim/rng.ts         // seeded RNG
+│  ├─ gen/               // puzzle generators: core/ helpers, one folder per genre (webs/)
+│  ├─ panels/            // generated panels, pinned as JSON (by genre, twists, tier)
+│  ├─ proto/             // puzzle prototypes: boards, runs, engines not yet moved to gen/
 │  ├─ settings.ts        // localStorage settings shell
 │  └─ dev/               // dev page scripts
 ├─ assets-src/           // voxels/, svg/, samples/

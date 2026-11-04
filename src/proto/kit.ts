@@ -10,7 +10,7 @@ export interface Proto {
   title: string;
   /** The holiday room it's in (or "Tuesday" for the final puzzle). */
   room: string;
-  kind: 'warm-up' | 'stray' | 'centrepiece' | 'final';
+  kind: 'warm-up' | 'stray' | 'centrepiece' | 'final' | 'workshop';
   /** The puzzle it grows from, and the twist. */
   from: string;
   /** How to play, briefly. */
@@ -48,16 +48,7 @@ export function h<K extends keyof HTMLElementTagNameMap>(
 }
 
 /** A seeded random number generator (mulberry32), for repeatable scrambles. */
-export function rng(seed: number): () => number {
-  let a = seed >>> 0;
-  return () => {
-    a = (a + 0x6d2b79f5) >>> 0;
-    let t = a;
-    t = Math.imul(t ^ (t >>> 15), t | 1);
-    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
+export { rng } from '../gen/core/rng';
 
 /**
  * Breadth-first search over a puzzle's states: the fewest moves from

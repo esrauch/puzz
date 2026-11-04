@@ -1,0 +1,27 @@
+{
+  "genre": "webs",
+  "twists": ["colours", "cuts"],
+  "tier": "easy",
+  "panels": [
+    {
+      "seed": 196,
+      "stats": { "plain": 4, "without colours": 2, "without cuts": 2, "steps": 4 },
+      "panel": {
+        "name": "Webs, colours and cuts: easy 1",
+        "rows": ["3.3.3", ".....", "3...4", "3.5.3", "..2.1"],
+        "colours": ["r.g.r", ".....", "g...g", "..r..", "..g.r"],
+        "walls": [[3, 4, "h"]]
+      }
+    },
+    {
+      "seed": 632,
+      "stats": { "plain": 3, "without colours": 2, "without cuts": 2, "steps": 1 },
+      "panel": {
+        "name": "Webs, colours and cuts: easy 2",
+        "rows": [".3..4", "133.4", ".....", ".23..", ".2..3"],
+        "colours": [".g..r", "gr..g", ".....", ".gr..", ".g..r"],
+        "walls": [[1, 1, "h"]]
+      }
+    }
+  ]
+}

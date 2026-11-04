@@ -1,0 +1,32 @@
+{
+  "genre": "webs",
+  "twists": ["snow", "eggs"],
+  "tier": "medium",
+  "panels": [
+    {
+      "seed": 45,
+      "stats": { "plain": 15, "without snow": 4, "without eggs": 3, "steps": 25 },
+      "panel": {
+        "name": "Webs, snow and eggs: medium 1",
+        "rows": ["..3.5.2", "3.5.4..", ".......", "4.4...4", ".......", "2.4.3..", "..3.5.3"],
+        "frame": { "top": 0, "left": 0, "bottom": 6, "right": 6, "axis": "h" },
+        "home": [1, 2],
+        "eggs": [[5, 4, 3]]
+      }
+    },
+    {
+      "seed": 499,
+      "stats": { "plain": 15, "without snow": 3, "without eggs": 4, "steps": 25 },
+      "panel": {
+        "name": "Webs, snow and eggs: medium 2",
+        "rows": ["35.4.42", ".3...3.", ".......", "23...42", ".......", ".......", "133.341"],
+        "frame": { "top": 0, "left": 0, "bottom": 6, "right": 6, "axis": "v" },
+        "home": [6, 6],
+        "eggs": [
+          [0, 0, 6],
+          [3, 6, 3]
+        ]
+      }
+    }
+  ]
+}

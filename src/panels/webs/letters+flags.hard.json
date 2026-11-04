@@ -1,0 +1,49 @@
+{
+  "genre": "webs",
+  "twists": ["letters", "flags"],
+  "tier": "hard",
+  "panels": [
+    {
+      "seed": 1,
+      "stats": { "plain": 4, "without flags": 4, "steps": 190 },
+      "panel": {
+        "name": "Webs, letters and flags: hard 1",
+        "rows": [
+          "..3.G....",
+          "3.U33...G",
+          "....G..GG",
+          ".........",
+          ".........",
+          "4.5.4...H",
+          "..H.2....",
+          "3...6.G..",
+          ".G..4.G.."
+        ],
+        "message": "162",
+        "rowFlags": [null, null, null, null, null, null, null, null, null],
+        "colFlags": [null, null, 4, null, null, null, null, null, null]
+      }
+    },
+    {
+      "seed": 3,
+      "stats": { "plain": 3, "without flags": 3, "steps": 25 },
+      "panel": {
+        "name": "Webs, letters and flags: hard 2",
+        "rows": [
+          "35.3.R...",
+          "....1....",
+          ".4..5....",
+          "..1..3...",
+          "444......",
+          "..A......",
+          "4...4H..A",
+          "3..R.5.R.",
+          "A........"
+        ],
+        "message": "6E12T",
+        "rowFlags": [null, null, null, null, null, null, null, null, null],
+        "colFlags": [null, null, null, null, null, 5, null, null, null]
+      }
+    }
+  ]
+}

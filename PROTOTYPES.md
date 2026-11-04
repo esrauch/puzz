@@ -7,6 +7,23 @@ plain functions); tests in `tests/puzzles/` prove each level is solvable
 (and, where it matters, has exactly one answer or a known best solution).
 Prototypes are deliberately unthemed: they test whether each puzzle is fun.
 
+## Where things stand (2026-11-03)
+
+- **Twists revised:** Christmas is now **snowflakes** and the Fourth of July
+  **red, white and blue**; red and green and edge flags are retired. The
+  full puzzle-by-twist map is [PUZZLES.md](PUZZLES.md).
+- **Generators:** `src/gen/` holds the new architecture. Webs is migrated
+  and generates the plain puzzle and its twists (dark, letters, colours,
+  eggs, cuts, snowflakes; flags still there, to remove) at easy, medium and
+  hard (5×5, 7×7, 9×9), offline (`tools/make-panels.ts`) or in the browser
+  (the Webs workshop, `?p=webworkshop`, through a Web Worker).
+- **Not cleaned up yet:** the rooms below were built before the revision;
+  the ones using red and green or flags (Tree-Top Star, Stocking, Christmas
+  Tree, Star-Spangled Flag, Hot Dog, Tuesday) still do.
+- **Next:** continue the generator across the full matrix (each genre
+  migrated into `src/gen/`, every twist at every tier, in any mix), then
+  rebuild the rooms from generated panels.
+
 ## Status by puzzle (after three rounds of playtesting)
 
 | Room | Puzzle (`?p=`) | Kind | Status |

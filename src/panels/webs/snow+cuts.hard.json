@@ -1,0 +1,53 @@
+{
+  "genre": "webs",
+  "twists": ["snow", "cuts"],
+  "tier": "hard",
+  "panels": [
+    {
+      "seed": 177,
+      "stats": { "plain": 16, "without snow": 4, "without cuts": 5, "steps": 22 },
+      "panel": {
+        "name": "Webs, snow and cuts: hard 1",
+        "rows": [
+          "45..4..53",
+          ".........",
+          "344.4.332",
+          ".........",
+          ".1.....1.",
+          "4.3...3.4",
+          "..3...2..",
+          ".........",
+          "333...222"
+        ],
+        "frame": { "top": 0, "left": 0, "bottom": 8, "right": 8, "axis": "v" },
+        "walls": [
+          [5, 2, "h"],
+          [5, 2, "v"]
+        ]
+      }
+    },
+    {
+      "seed": 468,
+      "stats": { "plain": 58, "without snow": 14, "without cuts": 3, "steps": 22 },
+      "panel": {
+        "name": "Webs, snow and cuts: hard 2",
+        "rows": [
+          "3...2.2..",
+          ".2..3.5.2",
+          ".........",
+          "3..3..5..",
+          "...3.25.4",
+          "2..3..3..",
+          ".........",
+          ".2..3.4.3",
+          "2...2.2.."
+        ],
+        "frame": { "top": 0, "left": 0, "bottom": 8, "right": 8, "axis": "h" },
+        "walls": [
+          [0, 4, "h"],
+          [3, 0, "h"]
+        ]
+      }
+    }
+  ]
+}

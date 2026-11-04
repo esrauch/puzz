@@ -1,0 +1,27 @@
+{
+  "genre": "webs",
+  "twists": ["letters", "cuts"],
+  "tier": "medium",
+  "panels": [
+    {
+      "seed": 30,
+      "stats": { "plain": 4, "without cuts": 4, "steps": 10 },
+      "panel": {
+        "name": "Webs, letters and cuts: medium 1",
+        "rows": ["....3.B", ".......", ".......", "B...7B.", "....3OB", "B.33...", "...B..B"],
+        "message": "211",
+        "walls": [[3, 5, "h"]]
+      }
+    },
+    {
+      "seed": 86,
+      "stats": { "plain": 4, "without cuts": 4, "steps": 28 },
+      "panel": {
+        "name": "Webs, letters and cuts: medium 2",
+        "rows": ["3.4...S", "..S....", ".......", ".E4..34", "E......", ".....24", "..S...S"],
+        "message": "2W11T",
+        "walls": [[4, 5, "h"]]
+      }
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "genre": "webs",
+  "twists": ["letters", "cuts"],
+  "tier": "easy",
+  "panels": [
+    {
+      "seed": 56,
+      "stats": { "plain": 2, "without cuts": 2, "steps": 4 },
+      "panel": {
+        "name": "Webs, letters and cuts: easy 1",
+        "rows": ["1.2.T", ".....", "T...4", "....1", "2...."],
+        "message": "HEAR3",
+        "walls": [[1, 0, "h"]]
+      }
+    },
+    {
+      "seed": 60,
+      "stats": { "plain": 2, "without cuts": 2, "steps": 7 },
+      "panel": {
+        "name": "Webs, letters and cuts: easy 2",
+        "rows": ["2...S", "2...S", ".....", ".....", "3..S2"],
+        "message": "KI33",
+        "walls": [[0, 0, "h"]]
+      }
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "genre": "webs",
+  "twists": ["snow", "cuts"],
+  "tier": "medium",
+  "panels": [
+    {
+      "seed": 499,
+      "stats": { "plain": 15, "without snow": 3, "without cuts": 4, "steps": 10 },
+      "panel": {
+        "name": "Webs, snow and cuts: medium 1",
+        "rows": ["35.4.42", ".3...3.", ".......", "23...42", ".......", ".......", "133.341"],
+        "frame": { "top": 0, "left": 0, "bottom": 6, "right": 6, "axis": "v" },
+        "walls": [
+          [3, 3, "v"],
+          [5, 0, "h"]
+        ]
+      }
+    },
+    {
+      "seed": 1367,
+      "stats": { "plain": 32, "without snow": 6, "without cuts": 3, "steps": 13 },
+      "panel": {
+        "name": "Webs, snow and cuts: medium 2",
+        "rows": ["244..44", "..4.43.", ".......", ".....2.", ".......", "..3.33.", "134..33"],
+        "frame": { "top": 0, "left": 0, "bottom": 6, "right": 6, "axis": "h" },
+        "walls": [[2, 2, "h"]]
+      }
+    }
+  ]
+}

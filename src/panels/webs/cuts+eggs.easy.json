@@ -1,0 +1,29 @@
+{
+  "genre": "webs",
+  "twists": ["cuts", "eggs"],
+  "tier": "easy",
+  "panels": [
+    {
+      "seed": 202,
+      "stats": { "plain": 6, "without eggs": 3, "without cuts": 2, "steps": 7 },
+      "panel": {
+        "name": "Webs, cuts and eggs: easy 1",
+        "rows": ["..3.3", ".....", "1.4.2", ".14.1", ".23.."],
+        "home": [2, 0],
+        "eggs": [[3, 4, 5]],
+        "walls": [[3, 1, "h"]]
+      }
+    },
+    {
+      "seed": 383,
+      "stats": { "plain": 4, "without cuts": 2, "without eggs": 2, "steps": 7 },
+      "panel": {
+        "name": "Webs, cuts and eggs: easy 2",
+        "rows": [".13.3", "3.3.4", ".....", "2...4", "1...2"],
+        "home": [1, 0],
+        "eggs": [[4, 0, 4]],
+        "walls": [[0, 2, "h"]]
+      }
+    }
+  ]
+}

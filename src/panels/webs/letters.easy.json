@@ -1,0 +1,34 @@
+{
+  "genre": "webs",
+  "twists": ["letters"],
+  "tier": "easy",
+  "panels": [
+    {
+      "seed": 62,
+      "stats": { "plain": 1, "steps": 7 },
+      "panel": {
+        "name": "Webs, letters: easy 1",
+        "rows": ["3..3.", ".....", "...R.", "4..5R", "1...."],
+        "message": "T2EAT"
+      }
+    },
+    {
+      "seed": 63,
+      "stats": { "plain": 1, "steps": 4 },
+      "panel": {
+        "name": "Webs, letters: easy 2",
+        "rows": ["1.5.2", "W.W..", ".....", ".....", "W..1."],
+        "message": "S3EET"
+      }
+    },
+    {
+      "seed": 67,
+      "stats": { "plain": 1, "steps": 4 },
+      "panel": {
+        "name": "Webs, letters: easy 3",
+        "rows": ["....2", "1....", ".....", "5.A..", "A.A.A"],
+        "message": "HE3RT"
+      }
+    }
+  ]
+}

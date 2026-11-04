@@ -1,0 +1,49 @@
+{
+  "genre": "webs",
+  "twists": ["snow", "flags"],
+  "tier": "hard",
+  "panels": [
+    {
+      "seed": 5,
+      "stats": { "plain": 21, "without snow": 9, "without flags": 4, "steps": 43 },
+      "panel": {
+        "name": "Webs, snow and flags: hard 1",
+        "rows": [
+          "..23.42..",
+          "..1...1..",
+          ".........",
+          "...445...",
+          ".........",
+          ".........",
+          ".2.447.3.",
+          "...3.4...",
+          "254534341"
+        ],
+        "frame": { "top": 0, "left": 0, "bottom": 8, "right": 8, "axis": "v" },
+        "rowFlags": [null, null, null, null, null, null, null, null, null],
+        "colFlags": [null, null, null, null, 2, null, null, null, null]
+      }
+    },
+    {
+      "seed": 16,
+      "stats": { "plain": 35, "without snow": 6, "without flags": 6, "steps": 19 },
+      "panel": {
+        "name": "Webs, snow and flags: hard 2",
+        "rows": [
+          "36.3.1...",
+          "...1...21",
+          "2........",
+          ".5...6.62",
+          ".3...3...",
+          ".3...5.62",
+          "2........",
+          "...2...21",
+          "34.3.1..."
+        ],
+        "frame": { "top": 0, "left": 0, "bottom": 8, "right": 8, "axis": "h" },
+        "rowFlags": [null, 0, null, 5, null, null, null, null, null],
+        "colFlags": [null, null, null, null, null, null, null, null, null]
+      }
+    }
+  ]
+}

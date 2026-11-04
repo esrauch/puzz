@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { type Panel, countSolutions, parse } from '../../src/proto/hashi';
+import { type Panel, countSolutions, parse } from '../../src/gen/webs';
 import {
   CHOCOLATES,
   MESSAGES,

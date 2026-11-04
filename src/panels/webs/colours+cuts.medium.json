@@ -1,0 +1,27 @@
+{
+  "genre": "webs",
+  "twists": ["colours", "cuts"],
+  "tier": "medium",
+  "panels": [
+    {
+      "seed": 2820,
+      "stats": { "plain": 5, "without colours": 3, "without cuts": 3, "steps": 10 },
+      "panel": {
+        "name": "Webs, colours and cuts: medium 1",
+        "rows": ["3...2..", ".......", "5...4.2", "..1.4..", "4...6.5", "12..2..", ".22...3"],
+        "colours": ["g...r..", ".......", "r...g.r", "..g.r..", "g.....g", "rr..g..", "..g...r"],
+        "walls": [[2, 5, "v"]]
+      }
+    },
+    {
+      "seed": 3037,
+      "stats": { "plain": 9, "without colours": 4, "without cuts": 3, "steps": 7 },
+      "panel": {
+        "name": "Webs, colours and cuts: medium 2",
+        "rows": ["..1...2", "2.53..4", "....22.", ".......", "...3445", "..31...", "..2...3"],
+        "colours": ["..g...r", "r.gr..g", "....gr.", ".......", "...grgr", "..rr...", "......g"],
+        "walls": [[2, 4, "v"]]
+      }
+    }
+  ]
+}

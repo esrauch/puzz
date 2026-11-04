@@ -3,7 +3,7 @@
  * party"): twelve panels, two per puzzle genre, each with two holiday twists it
  * hasn't had in its own room or as a stray: an intro, then a level where each twist does more. A grand finale may follow.
  */
-import { type Panel as HashiPanel } from '../hashi';
+import { type Panel as HashiPanel } from '../../gen/webs';
 import { mountWeb } from '../hashiBoard';
 import { type Panel as NetPanel } from '../net';
 import { mountLights } from '../netBoard';
@@ -35,18 +35,17 @@ export const CARVING: ShikakuPanel = {
   message: '6524',
 };
 
-/** 3. Net with pieces in the dark (shown when the power reaches them) and edge flags (joins along a line). */
+/** 3. 5×5 Net with pieces in the dark (they stay dark, turning blind, until the panel is solved) and edge flags (joins along a line). */
 export const LIGHTS: NetPanel = {
   name: 'Lights: the dark and flags',
-  rows: ['2eaaac', '6b86c1', '7c6938', '57d46c', '511791', '3aaba8'],
-  plug: [5, 2],
-  rowFlags: [null, null, null, null, null, null],
-  colFlags: [null, null, null, 3, null, null],
+  rows: ['46e84', '3d3ad', '2b86d', '6ee95', '11129'],
+  plug: [4, 2],
+  rowFlags: [null, null, null, null, null],
+  colFlags: [null, 3, null, null, null],
   dark: [
-    [0, 0],
+    [0, 2],
+    [1, 4],
     [1, 0],
-    [1, 2],
-    [1, 3],
   ],
 };
 
@@ -54,83 +53,93 @@ export const LIGHTS: NetPanel = {
 export const WORDS: StrandsPanel = {
   name: 'Words: red, green and portions',
   theme: "Tuesday's party",
-  rows: ['NOLAGA', 'COLBME', 'ANDLES', 'TNEMDA', 'RSCSUN', 'PEISEC'],
+  rows: ['ELDNAG', 'BAONCA', 'LLOSEM', 'PCISEC', 'RETSUN', 'SENMDA'],
   words: [
     {
       word: 'BALLOON',
       cells: [
-        [1, 3],
-        [0, 3],
-        [0, 2],
-        [1, 2],
-        [0, 1],
+        [1, 0],
         [1, 1],
-        [0, 0],
+        [2, 0],
+        [2, 1],
+        [2, 2],
+        [1, 2],
+        [1, 3],
       ],
     },
     {
       word: 'CANDLE',
       cells: [
-        [1, 0],
-        [2, 0],
-        [2, 1],
-        [2, 2],
-        [2, 3],
-        [2, 4],
+        [1, 4],
+        [0, 4],
+        [0, 3],
+        [0, 2],
+        [0, 1],
+        [0, 0],
       ],
     },
     {
       word: 'GAMES',
       cells: [
-        [0, 4],
         [0, 5],
-        [1, 4],
         [1, 5],
         [2, 5],
+        [2, 4],
+        [2, 3],
       ],
     },
     {
       word: 'PRESENT',
       cells: [
-        [5, 0],
-        [4, 0],
-        [5, 1],
-        [4, 1],
-        [3, 2],
-        [3, 1],
         [3, 0],
-      ],
-    },
-    {
-      word: 'MUSIC',
-      cells: [
-        [3, 3],
-        [4, 4],
-        [4, 3],
+        [4, 0],
+        [4, 1],
+        [5, 0],
+        [5, 1],
         [5, 2],
         [4, 2],
       ],
     },
     {
+      word: 'MUSIC',
+      cells: [
+        [5, 3],
+        [4, 4],
+        [4, 3],
+        [3, 2],
+        [3, 1],
+      ],
+    },
+    {
       word: 'DANCES',
       cells: [
-        [3, 4],
-        [3, 5],
-        [4, 5],
-        [5, 5],
         [5, 4],
-        [5, 3],
+        [5, 5],
+        [4, 5],
+        [3, 5],
+        [3, 4],
+        [3, 3],
       ],
     },
   ],
   portions: ['AAAAAA', 'AAAAAA', 'AAAAAA', 'BBBBBB', 'BBBBBB', 'BBBBBB'],
-  colours: ['rrrrgg', 'wrrrgg', 'wwwwwg', 'rrrgrr', 'rrgggr', 'rrgrrr'],
+  colours: ['rrrrrw', 'ggggrw', 'gggwww', 'wrrggg', 'wwwrrg', 'wwwrgg'],
   bows: [
-    [1, 5],
-    [4, 3],
-    [1, 2],
+    [3, 1],
+    [0, 3],
+    [3, 3],
+    [1, 1],
+    [5, 3],
+    [1, 4],
+    [0, 0],
+    [2, 2],
+    [4, 4],
+    [3, 5],
+    [5, 5],
   ],
 };
+/** The last 6 of its bows are hints only: the others alone give one answer. */
+export const WORDS_HINTS = 6;
 
 /** 5. Numbrix with two bunnies (red and green, white either) and letter eggs: each bunny's message spells a word (JOY, FUN). */
 export const BUNNIES: TwoHopsPanel = {
@@ -170,14 +179,14 @@ export const PICTURE: PicturePanel = {
 
 // Second levels: each twist does more work (without either one, three or more answers fit).
 
-/** 1b. A far egg (3 threads from home) and one row flag. */
+/** 1b. A far egg (4 threads from home) and one column flag. */
 export const WEBS_2: HashiPanel = {
   name: 'Webs: a far egg',
-  rows: ['.......', '2.4..2.', '.......', '..2....', '4.6...3', '3.52..3', '2.4...2'],
-  home: [5, 6],
-  eggs: [[5, 0, 3]],
-  rowFlags: [null, null, null, null, null, null, 2],
-  colFlags: [null, null, null, null, null, null, null],
+  rows: ['1.4...2', '.......', '.36..22', '.......', '..34.3.', '.......', '.3.5.42'],
+  home: [0, 2],
+  eggs: [[6, 5, 4]],
+  rowFlags: [null, null, null, null, null, null, null],
+  colFlags: [null, null, 4, null, null, null, null],
 };
 
 /** 2b. A five-letter code (PARTY) and more sizes in the dark. */
@@ -196,128 +205,138 @@ export const CARVING_2: ShikakuPanel = {
   message: '72459',
 };
 
-/** 3b. Six pieces in the dark, one column flag. */
+/** 3b. 6×6: five pieces in the dark (none touching), one column flag. */
 export const LIGHTS_2: NetPanel = {
   name: 'Lights: deeper in the dark',
-  rows: ['6aaaac4', '7ec42b9', '117bee8', '6ad2978', '54786f8', '7938514', '382aba9'],
-  plug: [6, 3],
-  rowFlags: [null, null, null, null, null, null, null],
-  colFlags: [null, null, null, null, 3, null, null],
+  rows: ['4682c4', '3d687d', '6d3e91', '13ed2c', '429785', '3aaba9'],
+  plug: [5, 3],
+  rowFlags: [null, null, null, null, null, null],
+  colFlags: [null, null, null, 3, null, null],
   dark: [
-    [0, 3],
-    [3, 6],
-    [4, 2],
-    [5, 4],
-    [5, 2],
-    [4, 0],
+    [1, 0],
+    [2, 5],
+    [0, 2],
+    [5, 1],
+    [0, 5],
   ],
 };
 
-/** 4b. Eight words side by side in two portions, three bows. */
+/** 4b. Eight words side by side in two portions; six bows, plus six hints. */
 export const WORDS_2: StrandsPanel = {
   name: 'Words: two big portions',
   theme: "Tuesday's party",
-  rows: ['BAGANUCA', 'LOMSSAFK', 'LONEPRSE', 'THSSKPRE', 'EATRRLST', 'RMAEEENS'],
+  rows: ['HTTSSRAP', 'RAAPDBCO', 'EREAIIPC', 'MRTRYRTO', 'AELKATTN', 'ERTSDHEF'],
   words: [
-    {
-      word: 'BALLOONS',
-      cells: [
-        [0, 0],
-        [0, 1],
-        [1, 0],
-        [2, 0],
-        [2, 1],
-        [1, 1],
-        [2, 2],
-        [3, 3],
-      ],
-    },
     {
       word: 'STREAMER',
       cells: [
-        [3, 2],
-        [4, 2],
-        [4, 3],
         [5, 3],
         [5, 2],
         [5, 1],
-        [4, 0],
         [5, 0],
-      ],
-    },
-    {
-      word: 'GAMES',
-      cells: [
-        [0, 2],
-        [0, 3],
-        [1, 2],
-        [2, 3],
-        [1, 3],
-      ],
-    },
-    {
-      word: 'HAT',
-      cells: [
-        [3, 1],
-        [4, 1],
+        [4, 0],
         [3, 0],
-      ],
-    },
-    {
-      word: 'PRESENTS',
-      cells: [
-        [3, 5],
-        [3, 6],
-        [3, 7],
-        [4, 6],
-        [5, 5],
-        [5, 6],
-        [4, 7],
-        [5, 7],
+        [2, 0],
+        [1, 0],
       ],
     },
     {
       word: 'SPARKLER',
       cells: [
-        [1, 4],
-        [2, 4],
-        [1, 5],
+        [0, 3],
+        [1, 3],
+        [2, 3],
+        [3, 3],
+        [4, 3],
+        [4, 2],
+        [4, 1],
+        [3, 1],
+      ],
+    },
+    {
+      word: 'TREAT',
+      cells: [
+        [3, 2],
+        [2, 1],
+        [2, 2],
+        [1, 2],
+        [0, 2],
+      ],
+    },
+    {
+      word: 'HAT',
+      cells: [
+        [0, 0],
+        [1, 1],
+        [0, 1],
+      ],
+    },
+    {
+      word: 'CONFETTI',
+      cells: [
+        [2, 7],
+        [3, 7],
+        [4, 7],
+        [5, 7],
+        [5, 6],
+        [4, 6],
+        [3, 6],
         [2, 5],
-        [3, 4],
+      ],
+    },
+    {
+      word: 'BIRTHDAY',
+      cells: [
+        [1, 5],
+        [2, 4],
+        [3, 5],
         [4, 5],
+        [5, 5],
         [5, 4],
         [4, 4],
+        [3, 4],
       ],
     },
     {
-      word: 'CAKES',
-      cells: [
-        [0, 6],
-        [0, 7],
-        [1, 7],
-        [2, 7],
-        [2, 6],
-      ],
-    },
-    {
-      word: 'FUN',
+      word: 'CARDS',
       cells: [
         [1, 6],
+        [0, 6],
         [0, 5],
+        [1, 4],
         [0, 4],
+      ],
+    },
+    {
+      word: 'POP',
+      cells: [
+        [0, 7],
+        [1, 7],
+        [2, 6],
       ],
     },
   ],
   portions: ['AAAABBBB', 'AAAABBBB', 'AAAABBBB', 'AAAABBBB', 'AAAABBBB', 'AAAABBBB'],
-  colours: ['ggrrggrr', 'ggrrwwgr', 'gggrwwrr', 'wwrgwggg', 'rwrrwwgg', 'rrrrwggg'],
+  colours: ['rrwrwwwg', 'grwrwwwg', 'gwwrwrgr', 'grwrwwrr', 'grrrwwrr', 'ggggwwrr'],
   bows: [
-    [1, 2],
-    [5, 3],
-    [0, 5],
+    [0, 0],
+    [2, 3],
+    [4, 6],
+    [5, 2],
+    [2, 6],
+    [1, 1],
+    [3, 1],
+    [2, 0],
+    [4, 3],
+    [3, 7],
+    [0, 7],
+    [5, 7],
   ],
 };
+/** The last 6 of its bows are hints only: the others alone give one answer. */
+export const WORDS_2_HINTS = 6;
 
-/** 5b. Two bunnies on a bigger lawn: CAKE and GIFT. */
+/** 5b. Two bunnies on a bigger lawn: WISH and GIFT. */
 export const BUNNIES_2: TwoHopsPanel = {
   name: 'Two bunnies, two longer words',
   rows: ['rrgggg', 'wrrgwg', 'rggggw', 'rgwggg', 'wgwggr', 'rrrrrr'],
@@ -327,10 +346,10 @@ export const BUNNIES_2: TwoHopsPanel = {
     [0, 4, 21],
   ],
   letters: [
-    [5, 5, 'C'],
-    [5, 4, 'A'],
-    [0, 1, 'K'],
-    [3, 0, 'E'],
+    [5, 5, 'W'],
+    [5, 4, 'I'],
+    [0, 1, 'S'],
+    [3, 0, 'H'],
     [2, 3, 'G'],
     [2, 2, 'I'],
     [3, 1, 'F'],

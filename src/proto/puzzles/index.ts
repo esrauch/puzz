@@ -7,6 +7,7 @@ import { fairylights, goldenegg, pumpkinpie, tree } from './christmas';
 import { breadboard, feast, hotdog, stocking } from './thanksgiving';
 import { tuesday } from './tuesday';
 import { basket, jack, lovenotes, mailbox } from './valentines';
+import { webWorkshop } from './workshop';
 
 export const PROTOS: Proto[] = [
   // Valentine's
@@ -41,4 +42,6 @@ export const PROTOS: Proto[] = [
   tree,
   // The final puzzle
   tuesday,
+  // Generated in the browser
+  webWorkshop,
 ];

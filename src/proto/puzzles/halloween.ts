@@ -6,7 +6,7 @@
  * knots, the Witch's Broom's diagonals). Every panel has exactly one answer
  * (tests/puzzles/halloween.test.ts); most were found by a random search.
  */
-import { type Panel, fillMessage, letterValues, parse, solve } from '../hashi';
+import { type Panel, fillMessage, letterValues, parse, solve } from '../../gen/webs';
 import { mountWeb } from '../hashiBoard';
 import { h } from '../kit';
 import { run } from '../run';

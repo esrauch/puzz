@@ -1,0 +1,29 @@
+{
+  "genre": "webs",
+  "twists": ["cuts", "flags"],
+  "tier": "easy",
+  "panels": [
+    {
+      "seed": 19,
+      "stats": { "plain": 15, "without flags": 8, "without cuts": 3, "steps": 22 },
+      "panel": {
+        "name": "Webs, cuts and flags: easy 1",
+        "rows": ["33.31", ".....", ".....", "45.4.", "34.2."],
+        "walls": [[0, 2, "v"]],
+        "rowFlags": [null, null, null, 2, 2],
+        "colFlags": [null, null, null, null, null]
+      }
+    },
+    {
+      "seed": 52,
+      "stats": { "plain": 4, "without cuts": 2, "without flags": 2, "steps": 4 },
+      "panel": {
+        "name": "Webs, cuts and flags: easy 2",
+        "rows": ["4..52", "4.33.", ".....", "2.23.", "...2."],
+        "walls": [[3, 2, "v"]],
+        "rowFlags": [null, null, null, null, null],
+        "colFlags": [3, null, null, null, null]
+      }
+    }
+  ]
+}

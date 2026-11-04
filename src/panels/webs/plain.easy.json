@@ -1,0 +1,31 @@
+{
+  "genre": "webs",
+  "twists": [],
+  "tier": "easy",
+  "panels": [
+    {
+      "seed": 5,
+      "stats": { "plain": 1, "steps": 4 },
+      "panel": {
+        "name": "Webs, plain: easy 1",
+        "rows": ["...1.", ".....", ".....", "13.3.", ".1.32"]
+      }
+    },
+    {
+      "seed": 9,
+      "stats": { "plain": 1, "steps": 1 },
+      "panel": {
+        "name": "Webs, plain: easy 2",
+        "rows": ["4...3", ".....", "...2.", "4..61", "...2."]
+      }
+    },
+    {
+      "seed": 11,
+      "stats": { "plain": 1, "steps": 4 },
+      "panel": {
+        "name": "Webs, plain: easy 3",
+        "rows": ["....2", ".....", "2.3.4", "1....", "..2.2"]
+      }
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "genre": "webs",
+  "twists": ["dark", "snow"],
+  "tier": "easy",
+  "panels": [
+    {
+      "seed": 23,
+      "stats": { "plain": 7, "without snow": 7, "steps": 10 },
+      "panel": {
+        "name": "Webs, dark and snow: easy 1",
+        "rows": ["22323", ".....", ".....", ".....", "?.3.?"],
+        "frame": { "top": 0, "left": 0, "bottom": 4, "right": 4, "axis": "v" }
+      }
+    },
+    {
+      "seed": 63,
+      "stats": { "plain": 12, "without snow": 12, "steps": 4 },
+      "panel": {
+        "name": "Webs, dark and snow: easy 2",
+        "rows": ["1.4.?", "3.5.?", ".....", ".....", "3...2"],
+        "frame": { "top": 0, "left": 0, "bottom": 4, "right": 4, "axis": "v" }
+      }
+    }
+  ]
+}

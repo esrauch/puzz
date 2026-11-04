@@ -1,0 +1,40 @@
+{
+  "genre": "webs",
+  "twists": ["eggs"],
+  "tier": "medium",
+  "panels": [
+    {
+      "seed": 95,
+      "stats": { "plain": 4, "without eggs": 4, "steps": 22 },
+      "panel": {
+        "name": "Webs, eggs: medium 1",
+        "rows": ["2...1..", ".1....1", "45..3..", "43.....", "....4.2", ".......", "3...3.."],
+        "home": [6, 0],
+        "eggs": [[2, 0, 4]]
+      }
+    },
+    {
+      "seed": 108,
+      "stats": { "plain": 4, "without eggs": 4, "steps": 10 },
+      "panel": {
+        "name": "Webs, eggs: medium 2",
+        "rows": ["1...2.3", ".......", "4.5...5", "..4..32", "..1....", ".......", "3.2..1."],
+        "home": [6, 2],
+        "eggs": [
+          [4, 2, 5],
+          [0, 0, 7]
+        ]
+      }
+    },
+    {
+      "seed": 227,
+      "stats": { "plain": 3, "without eggs": 3, "steps": 7 },
+      "panel": {
+        "name": "Webs, eggs: medium 3",
+        "rows": ["...122.", "......1", ".......", ".......", "3...563", "1.....1", "1...22."],
+        "home": [0, 4],
+        "eggs": [[4, 0, 4]]
+      }
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "genre": "webs",
+  "twists": ["dark", "letters"],
+  "tier": "hard",
+  "panels": [
+    {
+      "seed": 11,
+      "stats": { "plain": 1, "steps": 109 },
+      "panel": {
+        "name": "Webs, dark and letters: hard 1",
+        "rows": [
+          "N...2....",
+          ".3...N..E",
+          ".?.......",
+          "........?",
+          "4...E...M",
+          "?..4.N.3.",
+          "..M......",
+          "3N.?.....",
+          ".EN.4..N."
+        ],
+        "message": "B21I32"
+      }
+    },
+    {
+      "seed": 48,
+      "stats": { "plain": 1, "steps": 91 },
+      "panel": {
+        "name": "Webs, dark and letters: hard 2",
+        "rows": [
+          "....H.H..",
+          "......U..",
+          "3...72...",
+          ".....U.?.",
+          "......GGU",
+          "?........",
+          "5..U7G.?.",
+          "3...G.3U.",
+          "........2"
+        ],
+        "message": "234"
+      }
+    }
+  ]
+}

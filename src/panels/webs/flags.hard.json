@@ -1,0 +1,67 @@
+{
+  "genre": "webs",
+  "twists": ["flags"],
+  "tier": "hard",
+  "panels": [
+    {
+      "seed": 12,
+      "stats": { "plain": 3, "without flags": 3, "steps": 13 },
+      "panel": {
+        "name": "Webs, flags: hard 1",
+        "rows": [
+          "311.3.32.",
+          "6...7...3",
+          "54..5..32",
+          ".........",
+          ".......1.",
+          "45.13....",
+          "1........",
+          ".........",
+          ".3..2...."
+        ],
+        "rowFlags": [null, null, null, null, null, null, null, null, null],
+        "colFlags": [7, null, null, null, null, null, null, null, null]
+      }
+    },
+    {
+      "seed": 17,
+      "stats": { "plain": 6, "without flags": 6, "steps": 34 },
+      "panel": {
+        "name": "Webs, flags: hard 2",
+        "rows": [
+          ".42......",
+          "..1......",
+          ".3.......",
+          "2.43...2.",
+          ".........",
+          "...1.....",
+          "4435...4.",
+          "...34..3.",
+          "34..2..21"
+        ],
+        "rowFlags": [null, null, null, null, null, null, null, null, 5],
+        "colFlags": [null, null, null, null, null, null, null, null, null]
+      }
+    },
+    {
+      "seed": 18,
+      "stats": { "plain": 4, "without flags": 4, "steps": 7 },
+      "panel": {
+        "name": "Webs, flags: hard 3",
+        "rows": [
+          "....2..3.",
+          "..3...63.",
+          "..4...7.3",
+          ".....251.",
+          "..5..64.2",
+          ".....3.3.",
+          "..1......",
+          ".........",
+          "2...32.2."
+        ],
+        "rowFlags": [null, null, null, 1, null, null, null, null, null],
+        "colFlags": [null, null, null, null, null, 3, null, null, null]
+      }
+    }
+  ]
+}

@@ -6,6 +6,8 @@ and light-hearted instead of scary**: a sunny, toy-like, cel-shaded house
 (the look of Schnau), warm colours, playful characters, and humour in place
 of dread. The house, characters, story and puzzles are Puzz's own.
 
+`PUZZLES.md` maps every base puzzle against every holiday twist.
+
 ## The idea: the holidays are all mixed up
 
 The holidays live in a house: each one has its own room, a little world
@@ -96,7 +98,7 @@ comes home with the item and appears in its own centrepiece, so a player
 meets each twist abroad first and at home later. The model and the
 diorama show the twist too: the item sits on the panel it's caught in.
 
-### Cross-themes: one per holiday (decided 2026-11-02)
+### Cross-themes: one per holiday (decided 2026-11-02, revised 2026-11-03)
 
 Each holiday has **one** cross-theme, a symbol that sits on top of any
 genre. Its two items carry it into the two rooms where they're stray, and
@@ -107,18 +109,23 @@ extras (Halloween's diagonals).
 | Holiday | Cross-theme | Goes into (where its items are stray) |
 |---|---|---|
 | **Valentine's** | **Letters for numbers:** the same letter means the same number; a message's numbered blanks fill in from the counts. | Halloween webs (Box of Chocolates, built) · Fourth of July picture grids (Cupid's Bow: clue numbers become letters) |
-| **Christmas** | **Red and green:** pieces joined or touching must alternate colours. | Halloween webs (Tree-Top Star, built) · Thanksgiving carving (Stocking: same-colour portions can't share an edge) |
+| **Christmas** | **Snowflakes:** the answer's skeleton mirrors across a line (the whole board where the mechanics allow, as in Webs; otherwise a frame as large and square as possible), while a detail on each side stays free, so neither half solves the other. | To be reassigned (its items carried red and green before: Tree-Top Star, Stocking) |
 | **Halloween** | **The dark:** clues hidden in shadow (any value), with the lantern showing what's lit. | Valentine's words (Jack-o'-Lantern: letters in the dark, unknown until worked out) · Fourth of July picture grids (Witch's Broom: clues in the dark) |
 | **Easter** | **Numbered eggs:** some pieces carry numbers saying when they're visited or read. | Valentine's words (Bunny's Basket: numbered eggs fix some letters' places) · Christmas lights (Golden Egg: the bulb marked 3 is three steps from the plug) |
-| **Fourth of July** | **Clues from the edge:** little flags at the ends of rows and columns, each with a number about the line it points into. | Easter's bunny hops (Flag: parade viewers; an edge number is the first egg seen from that side) · Thanksgiving carving (Hot Dog: flag skewers; how many pieces the skewer goes through) |
-| **Thanksgiving** | **Fair shares:** the board is split into outlined portions, and each must get the same. | Easter's bunny hops (Cornucopia: courses; the bunny finishes one portion before the next) · Christmas lights (Pumpkin Pie: each portion gets one bulb) |
+| **Fourth of July** | **Red, white and blue:** things are red, white, blue or plain; two of the same colour can't join or touch (white is a real colour; plain touches anything). | To be reassigned (its items carried edge flags before: Star-Spangled Flag, Hot Dog) |
+| **Thanksgiving** | **Fair shares and cuts:** the board is split into outlined portions and each must get the same; or short fences (cuts) that nothing may cross. | Easter's bunny hops (Cornucopia: courses; the bunny finishes one portion before the next) · Christmas lights (Pumpkin Pie: each portion gets one bulb) |
 
-Chosen for being about the holiday itself (love letters, red and green, the
-dark, egg numbers, the parade crowd, fair portions) rather than its room's
-genre, and for fitting numbers, regions or lines alike, so they also suit
-the final area's crossings. **Second candidate for Halloween:** shadows and
-mirrors (a mirror-symmetric solution, or letters read in a mirror), for
-Halloween-themed things elsewhere.
+Chosen for being about the holiday itself (love letters, snowflakes, the
+dark, egg numbers, the flag's colours, fair portions) rather than its room's
+genre. **Revised 2026-11-03:** Christmas was red and green and the Fourth of
+July was edge flags; red, white and blue is the more Fourth-of-July colour
+rule, and snowflakes gave Christmas a twist of its own (a mirror). The full
+twist-by-puzzle map is in `PUZZLES.md`.
+
+**Not cleaned up yet:** the room sections below still describe the old
+twists (red and green in the Tree-Top Star, the Stocking and the Christmas
+Tree; flags in the Star-Spangled Flag and the Hot Dog; both in Tuesday's
+panels). They'll be redone from the generators; see `PUZZLES.md`.
 
 **A room is complete** when its two stray runs and its centrepiece run are
 done. Each completed room lights one of six lamps in Tuesday's hall (like
@@ -153,12 +160,21 @@ picture became balloons, its egg counting filled squares from the left.
 pair introduces its two twists (without either one, two or more answers fit);
 the second is a bigger board where each twist does more work (without either
 one, three or more fit), with a far egg (3 or more) where eggs appear. Second
-levels: a web with an egg 3 threads from home; a PARTY carving; a 7×7 lights
-with six dark pieces; eight words side by side in two portions with three
-bows; two bunnies spelling CAKE and GIFT; three balloons in three portions.
+levels: a web with an egg 4 threads from home; a PARTY carving; a 6×6 lights
+with five dark pieces; eight new words (none repeated anywhere in Tuesday) side by side in two
+portions with three bows; two bunnies spelling WISH and GIFT; three balloons in three portions.
 Strands counts whole-grid answers: words pin each other down, so a twist only
 matters if, without it, the whole grid could be filled another way (round
 one's words panel turned out to have one answer with no twists at all).
+Bows: both colours on each side of the wall, and each side must be uncertain
+without its bows (a lone colour on a side, or a side that only fits one way,
+makes its bows decoration). A word may carry two bows: once you find it, its
+colour tells you which of two contested letters is its own.
+On top, three hint bows per side (not needed for the one answer), chosen so
+the portions still do work even with the hints showing.
+
+Dark pieces: never touching each other (a run of them is too annoying to
+turn blind), and panel 5's dark top-right corner was too annoying too.
 
 **Grand finale (agreed in outline): a board relay on one board**, building
 Tuesday's party cake: picture (the cake) → words (full Strands on the cake)

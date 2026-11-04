@@ -1,0 +1,25 @@
+{
+  "genre": "webs",
+  "twists": ["dark", "letters"],
+  "tier": "easy",
+  "panels": [
+    {
+      "seed": 9,
+      "stats": { "plain": 1, "steps": 7 },
+      "panel": {
+        "name": "Webs, dark and letters: easy 1",
+        "rows": ["4...?", ".....", "...M.", "4..61", "...M."],
+        "message": "2OON"
+      }
+    },
+    {
+      "seed": 27,
+      "stats": { "plain": 1, "steps": 10 },
+      "panel": {
+        "name": "Webs, dark and letters: easy 2",
+        "rows": ["E.?..", ".....", "?...3", "....1", "3.E.."],
+        "message": "TR2AT"
+      }
+    }
+  ]
+}

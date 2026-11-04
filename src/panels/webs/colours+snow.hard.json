@@ -1,0 +1,67 @@
+{
+  "genre": "webs",
+  "twists": ["colours", "snow"],
+  "tier": "hard",
+  "panels": [
+    {
+      "seed": 177,
+      "stats": { "plain": 16, "without colours": 5, "without snow": 8, "steps": 22 },
+      "panel": {
+        "name": "Webs, colours and snow: hard 1",
+        "rows": [
+          "45..4..53",
+          ".........",
+          "344.4.332",
+          ".........",
+          ".1.....1.",
+          "4.3...3.4",
+          "..3...2..",
+          ".........",
+          "333...222"
+        ],
+        "colours": [
+          "rg..r..gr",
+          ".........",
+          "gr..g..rg",
+          ".........",
+          ".g.....g.",
+          "r.g...g.r",
+          "..r...g..",
+          ".........",
+          "grg....rg"
+        ],
+        "frame": { "top": 0, "left": 0, "bottom": 8, "right": 8, "axis": "v" }
+      }
+    },
+    {
+      "seed": 777,
+      "stats": { "plain": 26, "without colours": 3, "without snow": 12, "steps": 22 },
+      "panel": {
+        "name": "Webs, colours and snow: hard 2",
+        "rows": [
+          "4.4..4.4.",
+          ".........",
+          ".........",
+          "4..3...53",
+          ".135.1.35",
+          "3..3...43",
+          ".........",
+          ".........",
+          "2.3..3.2."
+        ],
+        "colours": [
+          "g.r..g.r.",
+          ".........",
+          ".........",
+          "r..g....g",
+          ".rgr.g.gr",
+          "g......rg",
+          ".........",
+          ".........",
+          "r.g..r.g."
+        ],
+        "frame": { "top": 0, "left": 0, "bottom": 8, "right": 8, "axis": "h" }
+      }
+    }
+  ]
+}

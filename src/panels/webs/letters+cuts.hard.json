@@ -1,0 +1,53 @@
+{
+  "genre": "webs",
+  "twists": ["letters", "cuts"],
+  "tier": "hard",
+  "panels": [
+    {
+      "seed": 5,
+      "stats": { "plain": 4, "without cuts": 4, "steps": 13 },
+      "panel": {
+        "name": "Webs, letters and cuts: hard 1",
+        "rows": [
+          "1........",
+          "......1..",
+          ".........",
+          "....22RRE",
+          "T...6.E.R",
+          "..2.E....",
+          "..3.3.R..",
+          "E26...R..",
+          "..R..1..."
+        ],
+        "message": "534A5",
+        "walls": [
+          [6, 2, "v"],
+          [7, 1, "v"]
+        ]
+      }
+    },
+    {
+      "seed": 54,
+      "stats": { "plain": 4, "without cuts": 4, "steps": 19 },
+      "panel": {
+        "name": "Webs, letters and cuts: hard 2",
+        "rows": [
+          "..253....",
+          "....3W.63",
+          "E..T.T...",
+          "..E.1....",
+          ".......T2",
+          ".........",
+          "W..3.2...",
+          "T...3..3.",
+          "E......E."
+        ],
+        "message": "S5114",
+        "walls": [
+          [8, 0, "v"],
+          [1, 4, "h"]
+        ]
+      }
+    }
+  ]
+}

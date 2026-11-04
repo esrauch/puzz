@@ -1,0 +1,49 @@
+{
+  "genre": "webs",
+  "twists": ["cuts", "flags"],
+  "tier": "hard",
+  "panels": [
+    {
+      "seed": 24,
+      "stats": { "plain": 7, "without cuts": 3, "without flags": 4, "steps": 31 },
+      "panel": {
+        "name": "Webs, cuts and flags: hard 1",
+        "rows": [
+          "4..54...2",
+          ".........",
+          "5..46.4.3",
+          "4...2....",
+          "..1...623",
+          "4...4.6.2",
+          "....1....",
+          "2.21..2..",
+          "..1......"
+        ],
+        "walls": [[3, 0, "v"]],
+        "rowFlags": [null, null, 5, null, null, null, null, null, null],
+        "colFlags": [null, null, null, null, null, null, 5, null, null]
+      }
+    },
+    {
+      "seed": 69,
+      "stats": { "plain": 16, "without flags": 12, "without cuts": 3, "steps": 25 },
+      "panel": {
+        "name": "Webs, cuts and flags: hard 2",
+        "rows": [
+          "3.5...5.3",
+          "....1.4..",
+          "......3.2",
+          ".36...543",
+          ".1.......",
+          ".........",
+          "...2..554",
+          "3.4..5..2",
+          "..2..6.2."
+        ],
+        "walls": [[2, 8, "h"]],
+        "rowFlags": [null, null, 0, null, null, null, 5, null, null],
+        "colFlags": [null, null, null, null, null, null, 6, null, null]
+      }
+    }
+  ]
+}

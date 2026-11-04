@@ -1,0 +1,27 @@
+{
+  "genre": "webs",
+  "twists": ["letters", "snow"],
+  "tier": "easy",
+  "panels": [
+    {
+      "seed": 40,
+      "stats": { "plain": 3, "without snow": 3, "steps": 22 },
+      "panel": {
+        "name": "Webs, letters and snow: easy 1",
+        "rows": ["..1..", ".....", ".....", "R.5.R", "R.4.2"],
+        "message": "HEA2T",
+        "frame": { "top": 0, "left": 0, "bottom": 4, "right": 4, "axis": "v" }
+      }
+    },
+    {
+      "seed": 85,
+      "stats": { "plain": 3, "without snow": 3, "steps": 13 },
+      "panel": {
+        "name": "Webs, letters and snow: easy 2",
+        "rows": ["....1", "A5..4", "....3", "24..A", "....1"],
+        "message": "C3NDY",
+        "frame": { "top": 0, "left": 0, "bottom": 4, "right": 4, "axis": "h" }
+      }
+    }
+  ]
+}

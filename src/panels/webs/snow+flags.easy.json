@@ -1,0 +1,29 @@
+{
+  "genre": "webs",
+  "twists": ["snow", "flags"],
+  "tier": "easy",
+  "panels": [
+    {
+      "seed": 14,
+      "stats": { "plain": 4, "without snow": 2, "without flags": 2, "steps": 13 },
+      "panel": {
+        "name": "Webs, snow and flags: easy 1",
+        "rows": ["....1", "233.4", ".2...", "244.4", "....1"],
+        "frame": { "top": 0, "left": 0, "bottom": 4, "right": 4, "axis": "h" },
+        "rowFlags": [null, null, null, null, null],
+        "colFlags": [null, null, null, null, 4]
+      }
+    },
+    {
+      "seed": 70,
+      "stats": { "plain": 5, "without snow": 2, "without flags": 2, "steps": 13 },
+      "panel": {
+        "name": "Webs, snow and flags: easy 2",
+        "rows": [".1...", "24..2", ".4..4", "25..3", ".1..."],
+        "frame": { "top": 0, "left": 0, "bottom": 4, "right": 4, "axis": "h" },
+        "rowFlags": [null, null, null, null, null],
+        "colFlags": [null, 5, null, null, null]
+      }
+    }
+  ]
+}
