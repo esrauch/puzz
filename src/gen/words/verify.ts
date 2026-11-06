@@ -83,5 +83,27 @@ export function problems(p: Panel, margin: number, budget = new Budget(4_000_000
     const tones = new Set(p.bows.map(([r, c]) => p.colours?.[r]?.[c]));
     if (tones.size < 2) out.push('the bows use only one colour');
   }
+  // Egg Hunt: eggs = half the words.
+  if (p.eggs?.length) {
+    const want = Math.max(2, Math.floor(p.words.length / 2));
+    if (p.eggs.length < want) out.push(`only ${p.eggs.length} eggs (want at least ${want})`);
+  }
+  // Portions (cuts): at least 8 on easy (5×5), 15 on medium (7×7), 21 on hard (9×9),
+  // and at most 2 fences per square so no letter is boxed in.
+  if (p.walls?.length) {
+    const H = p.rows.length;
+    const minWalls = H <= 5 ? 8 : H <= 7 ? 15 : 21;
+    if (p.walls.length < minWalls)
+      out.push(`only ${p.walls.length} cuts (want at least ${minWalls})`);
+    const cellWalls = new Map<string, number>();
+    for (const [r, c, side] of p.walls) {
+      const a = key([r, c]);
+      const b = key(side === 'v' ? [r, c + 1] : [r + 1, c]);
+      cellWalls.set(a, (cellWalls.get(a) ?? 0) + 1);
+      cellWalls.set(b, (cellWalls.get(b) ?? 0) + 1);
+    }
+    for (const [cell, count] of cellWalls)
+      if (count > 2) out.push(`square ${cell} has ${count} cuts around it (max 2)`);
+  }
   return out;
 }

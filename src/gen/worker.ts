@@ -8,6 +8,7 @@ import type { GenReply, GenRequest } from './client';
 import { type CarveTwist, generate as generateCarving } from './carving';
 import { type HopTwist, generate as generateHops } from './hops';
 import { type LightTwist, generate as generateLights } from './lights';
+import { type PictureTwist, generate as generatePictures } from './pictures';
 import { type WebTwist, generate as generateWebs } from './webs';
 import { type WordTwist, generate as generateWords } from './words';
 
@@ -31,7 +32,9 @@ export function run(req: GenRequest): GenReply {
           ? generateHops(req.spec as Spec<HopTwist>, 1, req.seconds, req.seed, why)
           : req.genre === 'lights'
             ? generateLights(req.spec as Spec<LightTwist>, 1, req.seconds, req.seed, why)
-            : generateWebs(req.spec as Spec<WebTwist>, 1, req.seconds, req.seed, why);
+            : req.genre === 'pictures'
+              ? generatePictures(req.spec as Spec<PictureTwist>, 1, req.seconds, req.seed, why)
+              : generateWebs(req.spec as Spec<WebTwist>, 1, req.seconds, req.seed, why);
   return {
     id: req.id,
     made: made ?? null,

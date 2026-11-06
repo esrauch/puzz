@@ -55,6 +55,8 @@ export interface Panel {
   walls?: Wall[];
   /** Snowflakes (Christmas): inside this frame the threads are their own mirror image (singles and doubles needn't match); outside it, anything goes. */
   frame?: Frame;
+  /** Starting threads already spun on the board: [r1, c1, r2, c2, count]. */
+  start?: [number, number, number, number, 1 | 2][];
 }
 
 /** The unit segments (between neighbouring squares) a straight thread between two squares covers. */

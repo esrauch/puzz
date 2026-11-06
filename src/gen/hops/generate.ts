@@ -15,7 +15,16 @@ import {
   randomSnowRoute,
   splitTwoBunnies,
 } from './make';
-import { type Board, type Panel, type Spot, key, parse, rect, splitRoutes } from './model';
+import {
+  type Board,
+  type Panel,
+  type Spot,
+  key,
+  parse,
+  rect,
+  splitRoutes,
+  treeRows,
+} from './model';
 import { solve } from './solve';
 import { type HopTwist, problems, twistsOf } from './verify';
 
@@ -44,18 +53,23 @@ function makePanel(spec: Spec<HopTwist>, seed: number, why: Rejections): Made<Pa
     for (let i = 0; i < t.length; i++) mixedSeed = (mixedSeed * 33 + t.charCodeAt(i)) >>> 0;
   }
   const random = rng(mixedSeed);
-  const rows = rect(shape.height, shape.width);
+  const isTree = spec.shape === 'tree';
+  const boardH = isTree && shape.height <= 5 ? 7 : shape.height;
+  const boardW = isTree && shape.width <= 5 ? 7 : shape.width;
+  const rows = isTree ? treeRows(boardH, boardW, 0.5) : rect(boardH, boardW);
+  const golden: Spot | undefined = isTree ? [0, Math.floor(boardW / 2)] : undefined;
 
-  // Burrows: pick underground pairs at distance >= 2
+  // Burrows: pick underground pairs at distance >= 2 on lawn squares (avoiding the golden egg)
   let burrowsList: [Spot, Spot][] | undefined;
   if (twists.has('burrows')) {
     burrowsList = [];
-    const usedBurrowSpots = new Set<string>();
-    for (let attempt = 0; attempt < 40 && burrowsList.length < shape.burrows; attempt++) {
-      const r1 = Math.floor(random() * shape.height);
-      const c1 = Math.floor(random() * shape.width);
-      const r2 = Math.floor(random() * shape.height);
-      const c2 = Math.floor(random() * shape.width);
+    const usedBurrowSpots = new Set<string>(golden ? [key(golden)] : []);
+    for (let attempt = 0; attempt < 60 && burrowsList.length < shape.burrows; attempt++) {
+      const r1 = Math.floor(random() * boardH);
+      const c1 = Math.floor(random() * boardW);
+      const r2 = Math.floor(random() * boardH);
+      const c2 = Math.floor(random() * boardW);
+      if (rows[r1]?.[c1] !== '#' || rows[r2]?.[c2] !== '#') continue;
       const k1 = key([r1, c1]);
       const k2 = key([r2, c2]);
       if (
@@ -77,12 +91,23 @@ function makePanel(spec: Spec<HopTwist>, seed: number, why: Rejections): Made<Pa
   let route: number[] | null;
   let frame: Frame | undefined;
 
+  const reverseForTree = !(twists.has('dark') && !twists.has('colours'));
   if (twists.has('snow')) {
-    const snowRes = randomSnowRoute(shape.height, shape.width, random, burrowsList);
+    const snowRes = randomSnowRoute(boardH, boardW, random, burrowsList, rows);
     if (!snowRes) return why.no('no snowflake route');
     route = snowRes.route;
     frame = snowRes.frame;
     baseBoard = snowRes.b;
+    if (golden) {
+      const topIdx = baseBoard.index.get(key(golden));
+      if (reverseForTree) {
+        if (route[0] === topIdx) route = [...route].reverse();
+        else if (route[route.length - 1] !== topIdx) return why.no('tree route did not end at top');
+      } else {
+        if (route[route.length - 1] === topIdx) route = [...route].reverse();
+        else if (route[0] !== topIdx) return why.no('tree route did not start at top');
+      }
+    }
   } else {
     baseBoard = parse({
       name: 'candidate',
@@ -90,7 +115,9 @@ function makePanel(spec: Spec<HopTwist>, seed: number, why: Rejections): Made<Pa
       given: [],
       ...(burrowsList ? { burrows: burrowsList } : {}),
     });
-    route = randomRoute(baseBoard, random);
+    const topIdx = golden ? baseBoard.index.get(key(golden)) : undefined;
+    const rawRoute = randomRoute(baseBoard, random, topIdx);
+    route = rawRoute && topIdx !== undefined && reverseForTree ? [...rawRoute].reverse() : rawRoute;
   }
   if (!route) return why.no('no route');
 
@@ -126,9 +153,13 @@ function makePanel(spec: Spec<HopTwist>, seed: number, why: Rejections): Made<Pa
   const preservedSpots = new Set<number>();
   const prioritySpots = new Set<number>();
 
-  // Always preserve start egg(s)
+  // Always preserve start egg(s) and golden egg
   preservedSpots.add(route[0] as number);
   if (splitIdx !== undefined) preservedSpots.add(route[splitIdx] as number);
+  if (golden) {
+    const topIdx = baseBoard.index.get(key(golden));
+    if (topIdx !== undefined) preservedSpots.add(topIdx);
+  }
   if (burrowsList?.length) {
     for (const [u, v] of baseBoard.burrows) {
       if (preservedSpots.has(u) || preservedSpots.has(v)) return why.no('start egg on burrow');
@@ -334,6 +365,7 @@ function makePanel(spec: Spec<HopTwist>, seed: number, why: Rejections): Made<Pa
     ...(frame ? { frame } : {}),
     ...(letters && message && word && blanks ? { letters, message, word, blanks } : {}),
     ...(dark ? { dark } : {}),
+    ...(golden ? { golden } : {}),
   };
 
   const given = minimizeEggs(

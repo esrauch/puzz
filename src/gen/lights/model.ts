@@ -202,12 +202,12 @@ export const ovalShape = (h: number, w: number, top = 1): Shape =>
   );
 
 /** A wreath: a ring of squares round a hole. */
-export const ringShape = (h: number, w: number, hole = 0.08): Shape =>
+export const ringShape = (h: number, w: number, hole = 0.08, outer = 0.26): Shape =>
   Array.from({ length: h }, (_, r) =>
     Array.from({ length: w }, (_, c) => {
       const y = (r + 0.5) / h - 0.5;
       const x = (c + 0.5) / w - 0.5;
       const d = x * x + y * y;
-      return d <= 0.26 && d >= hole ? '#' : '.';
+      return d <= outer && d >= hole ? '#' : '.';
     }).join(''),
   );

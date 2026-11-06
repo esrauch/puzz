@@ -5,14 +5,14 @@
   "panels": [
     {
       "seed": 1,
-      "stats": { "words": 5, "steps": 329 },
+      "stats": { "words": 5, "steps": 302 },
       "panel": {
         "name": "Words, cuts: easy 1",
         "theme": "Cupid's kit",
-        "rows": ["BUTDA", "REHTR", "EGEHS", "HRAAS", "CATRT"],
+        "rows": ["THLDA", "GEHTR", "IREHS", "LUAAS", "FALRT"],
         "words": [
           {
-            "word": "CHERUB",
+            "word": "FLIGHT",
             "cells": [
               [4, 0],
               [3, 0],
@@ -23,7 +23,7 @@
             ]
           },
           {
-            "word": "TARGET",
+            "word": "LAUREL",
             "cells": [
               [4, 2],
               [4, 1],
@@ -63,21 +63,24 @@
           }
         ],
         "walls": [
-          [3, 3, "h"],
-          [2, 1, "v"],
-          [4, 2, "v"],
+          [2, 2, "v"],
+          [3, 0, "v"],
           [3, 1, "v"],
-          [2, 2, "v"]
+          [1, 3, "h"],
+          [2, 0, "v"],
+          [3, 4, "h"],
+          [1, 2, "v"],
+          [4, 0, "v"]
         ]
       }
     },
     {
       "seed": 4,
-      "stats": { "words": 5, "steps": 268 },
+      "stats": { "words": 5, "steps": 275 },
       "panel": {
         "name": "Words, cuts: easy 2",
         "theme": "Ghostly crushes",
-        "rows": ["MORBR", "OPCVA", "OAPEE", "TNTIN", "IORKC"],
+        "rows": ["MORBR", "OPCVA", "OAPEE", "TNSEN", "IOPLL"],
         "words": [
           {
             "word": "BROOM",
@@ -120,7 +123,7 @@
             ]
           },
           {
-            "word": "TRICK",
+            "word": "SPELL",
             "cells": [
               [3, 2],
               [4, 2],
@@ -130,19 +133,28 @@
             ]
           }
         ],
-        "walls": [[1, 3, "h"]]
+        "walls": [
+          [2, 2, "h"],
+          [2, 3, "h"],
+          [0, 3, "h"],
+          [3, 1, "v"],
+          [0, 3, "v"],
+          [0, 2, "h"],
+          [2, 1, "h"],
+          [1, 2, "v"]
+        ]
       }
     },
     {
       "seed": 7,
-      "stats": { "words": 5, "steps": 291 },
+      "stats": { "words": 5, "steps": 259 },
       "panel": {
         "name": "Words, cuts: easy 3",
         "theme": "Sweet treats",
-        "rows": ["TIMTE", "NTFRB", "RGDUO", "AEMFS", "TUFIN"],
+        "rows": ["EACTE", "KTFRB", "RGDUO", "AEMFS", "TUFIN"],
         "words": [
           {
-            "word": "MINT",
+            "word": "CAKE",
             "cells": [
               [0, 2],
               [0, 1],
@@ -193,8 +205,14 @@
           }
         ],
         "walls": [
+          [2, 2, "h"],
           [2, 3, "h"],
-          [1, 0, "v"]
+          [3, 4, "h"],
+          [3, 0, "v"],
+          [3, 3, "v"],
+          [0, 2, "h"],
+          [1, 1, "v"],
+          [4, 0, "v"]
         ]
       }
     }

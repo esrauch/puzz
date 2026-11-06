@@ -54,7 +54,11 @@ export interface LightsHooks {
 /** A panel with a tree-top star to light when it's solved (decoration). */
 export type LightsPanel = Panel & { star?: Spot };
 
-export function mountLights(host: HTMLElement, panel: LightsPanel, hooks: LightsHooks): void {
+export function mountLights(
+  host: HTMLElement,
+  panel: LightsPanel,
+  hooks: LightsHooks,
+): () => unknown {
   const b = parse(panel);
   const grid = startGrid(panel);
   const avail = Math.min(host.clientWidth || 360, 560);
@@ -634,4 +638,8 @@ export function mountLights(host: HTMLElement, panel: LightsPanel, hooks: Lights
   };
   drawNote();
   render();
+  return () => ({
+    done,
+    grid: grid.map((row) => row.map((v) => v.toString(16)).join('')),
+  });
 }

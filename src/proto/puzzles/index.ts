@@ -5,12 +5,12 @@ import { bow, broom, finale, sparklers } from './fourth';
 import { chocolates, cobwebs, starlights, web } from './halloween';
 import { fairylights, goldenegg, pumpkinpie, tree } from './christmas';
 import { breadboard, feast, hotdog, stocking } from './thanksgiving';
-import { tuesday } from './tuesday';
 import { basket, jack, lovenotes, mailbox } from './valentines';
 import {
   carvingWorkshop,
   hopsWorkshop,
   lightsWorkshop,
+  picturesWorkshop,
   webWorkshop,
   wordsWorkshop,
 } from './workshop';
@@ -46,12 +46,11 @@ export const PROTOS: Proto[] = [
   goldenegg,
   pumpkinpie,
   tree,
-  // The final puzzle
-  tuesday,
   // Generated in the browser
   webWorkshop,
   carvingWorkshop,
   wordsWorkshop,
   hopsWorkshop,
   lightsWorkshop,
+  picturesWorkshop,
 ];

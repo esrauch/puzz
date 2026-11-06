@@ -7,10 +7,11 @@ import type { Panel as CarvePanel } from './carving';
 import type { Made, Spec } from './core/spec';
 import type { Panel as HopPanel } from './hops';
 import type { Panel as LightPanel } from './lights';
+import type { Panel as PicturePanel } from './pictures';
 import type { Panel as WebPanel } from './webs';
 import type { Panel as WordPanel } from './words';
 
-export type Genre = 'webs' | 'carving' | 'words' | 'hops' | 'lights';
+export type Genre = 'webs' | 'carving' | 'words' | 'hops' | 'lights' | 'pictures';
 
 export interface GenRequest {
   id: number;
@@ -23,7 +24,7 @@ export interface GenRequest {
 
 export interface GenReply {
   id: number;
-  made: Made<WebPanel | CarvePanel | WordPanel | HopPanel | LightPanel> | null;
+  made: Made<WebPanel | CarvePanel | WordPanel | HopPanel | LightPanel | PicturePanel> | null;
   ms: number;
   /** Why attempts were thrown away (for "nothing found"). */
   rejected: string;

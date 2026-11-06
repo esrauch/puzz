@@ -69,7 +69,7 @@ export const SHAPES: Record<Tier, Shape> = {
   },
 };
 
-/** Words for the letters' messages (Valentine's in the spider's room); each letter of a word coded everywhere it appears. */
+/** Words and phrases for the letters' messages (Valentine's in the spider's room); each letter of a word coded everywhere it appears. */
 export const MESSAGES = [
   'LOVE',
   'BOO',
@@ -81,7 +81,10 @@ export const MESSAGES = [
   'TREAT',
   'WEB',
   'MOON',
-  'BEMINE',
+  'BE MINE',
+  'I DARE YOU',
+  'LOVE YOU',
+  'MY SWEET',
   'TRICK',
 ];
 
@@ -137,7 +140,10 @@ function encode(p: Panel, threads: number[], count: number, random: Rng): Panel 
     ...new Set(web.knots.flatMap((k, i) => (k.clue.kind === 'count' ? [t[i] ?? 0] : []))),
   ];
   for (const word of shuffle(random, MESSAGES)) {
-    const letters = shuffle(random, [...new Set(word)]).slice(0, count);
+    const letters = shuffle(random, [...new Set([...word].filter((ch) => /[A-Z]/.test(ch)))]).slice(
+      0,
+      count,
+    );
     const values = shuffle(random, shown).slice(0, count);
     if (letters.length < count || values.length < count) continue;
     const code = new Map(values.map((v, i) => [v, letters[i] as string]));

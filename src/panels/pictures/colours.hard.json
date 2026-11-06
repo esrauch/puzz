@@ -1,0 +1,64 @@
+{
+  "genre": "pictures",
+  "twists": ["colours"],
+  "tier": "hard",
+  "panels": [
+    {
+      "seed": 53,
+      "stats": { "steps": 9 },
+      "panel": {
+        "name": "Picture grids, colours: hard 1",
+        "rows": [
+          "..RR.RR..",
+          ".R..RRR..",
+          "RRRR.RRB.",
+          "..RR.RB..",
+          "..RRRBB.B",
+          "..RRB....",
+          "..RBBB...",
+          "..BB.....",
+          ".....B..."
+        ],
+        "palette": "RB"
+      }
+    },
+    {
+      "seed": 69,
+      "stats": { "steps": 9 },
+      "panel": {
+        "name": "Picture grids, colours: hard 2",
+        "rows": [
+          "BBRRBB...",
+          ".BRRBBR..",
+          ".RBBRR..R",
+          "..B.R....",
+          "BBRR..R..",
+          "BBRR.....",
+          "RRBBRRB.R",
+          "RRBBR.BB.",
+          ".B...BR.."
+        ],
+        "palette": "RB"
+      }
+    },
+    {
+      "seed": 87,
+      "stats": { "steps": 9 },
+      "panel": {
+        "name": "Picture grids, colours: hard 3",
+        "rows": [
+          ".B....B..",
+          ".BBB.....",
+          ".BB...BR.",
+          "BB....RR.",
+          ".B..BRRRR",
+          ".....RRRR",
+          "B.B..R.RR",
+          "BBR..RRRR",
+          ".RR......"
+        ],
+        "palette": "RB"
+      }
+    }
+  ]
+}

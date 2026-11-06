@@ -67,11 +67,36 @@ export const key = ([r, c]: Spot): string => `${r},${c}`;
 export const touching = (a: Spot, b: Spot): boolean =>
   Math.max(Math.abs(a[0] - b[0]), Math.abs(a[1] - b[1])) === 1;
 
+/** A fence's key: the two squares either side of it (in either order). */
+export const edge = (a: Spot, b: Spot): string => [key(a), key(b)].sort().join('|');
+
+/** The fence keys ('r,c|r,c') for a panel's walls. */
+export const wallSet = (walls: Panel['walls'] = []): Set<string> =>
+  new Set(walls.map(([r, c, side]) => edge([r, c], side === 'v' ? [r, c + 1] : [r + 1, c])));
+
+/**
+ * Does a fence block stepping from `a` to `b`?
+ * Orthogonal steps cross the shared edge; diagonal steps pass through the shared
+ * 2×2 corner, so any fence touching that corner (the 4 edges of the 2×2 square)
+ * blocks the diagonal.
+ */
+export function stepBlocked(walls: Set<string>, a: Spot, b: Spot): boolean {
+  if (!walls.size) return false;
+  if (a[0] === b[0] || a[1] === b[1]) return walls.has(edge(a, b));
+  const c: Spot = [a[0], b[1]];
+  const d: Spot = [b[0], a[1]];
+  return (
+    walls.has(edge(a, c)) || walls.has(edge(a, d)) || walls.has(edge(b, c)) || walls.has(edge(b, d))
+  );
+}
+
 /** The letter at a square. */
 export const letterAt = (p: Panel, [r, c]: Spot): string => p.rows[r]?.[c] ?? '';
 
 /** The word a dragged path finds (its index), if it spells a theme word over that word's own squares. */
 export function find(p: Panel, path: Spot[]): number {
+  const walls = wallSet(p.walls);
+  if (path.some((s, i) => i > 0 && stepBlocked(walls, path[i - 1] as Spot, s))) return -1;
   // The path must spell the word over exactly its squares, in any order: with repeated
   // letters (the Ms of MUMMY) there can be more than one way through the same squares.
   const squares = path.map(key).sort().join(' ');
@@ -96,6 +121,7 @@ export function placeIn(p: Panel, s: Spot): number {
  */
 export function spellings(p: Panel, word: string, dark: Spot[] = []): string[] {
   const wild = new Set(dark.map(key));
+  const walls = wallSet(p.walls);
   const H = p.rows.length;
   const W = p.rows[0]?.length ?? 0;
   const found = new Set<string>();
@@ -114,6 +140,7 @@ export function spellings(p: Panel, word: string, dark: Spot[] = []): string[] {
             t[0] < H &&
             t[1] >= 0 &&
             t[1] < W &&
+            !stepBlocked(walls, s, t) &&
             !path.some((x) => key(x) === key(t))
           )
             go(t, i + 1);
@@ -298,9 +325,17 @@ export function layOut(
 /** The words fill the grid exactly, each laid along touching squares, spelling itself. */
 export function wellFormed(p: Panel): boolean {
   const seen = new Set<string>();
+  const walls = wallSet(p.walls);
   for (const w of p.words) {
     if (w.cells.map((s) => letterAt(p, s)).join('') !== w.word) return false;
-    if (w.cells.some((s, i) => i > 0 && !touching(w.cells[i - 1] as Spot, s))) return false;
+    if (
+      w.cells.some(
+        (s, i) =>
+          i > 0 &&
+          (!touching(w.cells[i - 1] as Spot, s) || stepBlocked(walls, w.cells[i - 1] as Spot, s)),
+      )
+    )
+      return false;
     for (const s of w.cells) {
       if (seen.has(key(s))) return false;
       seen.add(key(s));

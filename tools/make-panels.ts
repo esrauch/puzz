@@ -18,6 +18,11 @@ import { CARVE_TWISTS, type CarveTwist, generate as generateCarving } from '../s
 import { type Made, Rejections, type Spec, type Tier } from '../src/gen/core/spec';
 import { HOP_TWISTS, type HopTwist, generate as generateHops } from '../src/gen/hops';
 import { LIGHT_TWISTS, type LightTwist, generate as generateLights } from '../src/gen/lights';
+import {
+  PICTURE_TWISTS,
+  type PictureTwist,
+  generate as generatePictures,
+} from '../src/gen/pictures';
 import { WEB_TWISTS, type WebTwist, generate as generateWebs } from '../src/gen/webs';
 import { WORD_TWISTS, type WordTwist, generate as generateWords } from '../src/gen/words';
 
@@ -58,6 +63,11 @@ const GENRES: Record<string, Genre> = {
     title: 'Lights',
     twists: LIGHT_TWISTS,
     generate: (spec, ...rest) => generateLights(spec as Spec<LightTwist>, ...rest),
+  },
+  pictures: {
+    title: 'Picture grids',
+    twists: PICTURE_TWISTS,
+    generate: (spec, ...rest) => generatePictures(spec as Spec<PictureTwist>, ...rest),
   },
 };
 

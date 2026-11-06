@@ -1,0 +1,34 @@
+{
+  "genre": "pictures",
+  "twists": ["portions"],
+  "tier": "easy",
+  "panels": [
+    {
+      "seed": 3,
+      "stats": { "steps": 9, "without portions": 2 },
+      "panel": {
+        "name": "Picture grids, portions: easy 1",
+        "rows": ["###.#", ".#...", "##.#.", "....#", ".#..."],
+        "portions": ["AAAAB", "ABAAB", "ABAAB", "ABBBB", "BBBBB"]
+      }
+    },
+    {
+      "seed": 4,
+      "stats": { "steps": 10, "without portions": 2 },
+      "panel": {
+        "name": "Picture grids, portions: easy 2",
+        "rows": ["...#.", ".#..#", ".##..", "#####", "..##."],
+        "portions": ["AAAAB", "AAABB", "AAABB", "ABABB", "BBBBB"]
+      }
+    },
+    {
+      "seed": 5,
+      "stats": { "steps": 34, "without portions": 2 },
+      "panel": {
+        "name": "Picture grids, portions: easy 3",
+        "rows": [".#.#.", "####.", ".#..#", "..#..", "...#."],
+        "portions": ["AAAAB", "ABBBB", "AAABB", "AAABB", "BBBBB"]
+      }
+    }
+  ]
+}

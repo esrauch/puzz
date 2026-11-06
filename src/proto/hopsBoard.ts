@@ -42,7 +42,7 @@ export interface HopsHooks {
   status(text: string): void;
 }
 
-export function mountHops(host: HTMLElement, panel: Panel, hooks: HopsHooks): void {
+export function mountHops(host: HTMLElement, panel: Panel, hooks: HopsHooks): () => unknown {
   const b = parse(panel);
   const H = panel.rows.length;
   const Wd = panel.rows[0]?.length ?? 0;
@@ -655,4 +655,9 @@ export function mountHops(host: HTMLElement, panel: Panel, hooks: HopsHooks): vo
 
   drawNote();
   render();
+  return () => ({
+    done,
+    redTrail: routes.r.map((idx) => b.spots[idx]),
+    ...(b.twoBunnies ? { secondTrail: routes.b.map((idx) => b.spots[idx]) } : {}),
+  });
 }

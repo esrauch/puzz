@@ -1,0 +1,34 @@
+{
+  "genre": "pictures",
+  "twists": ["colours"],
+  "tier": "easy",
+  "panels": [
+    {
+      "seed": 1,
+      "stats": { "steps": 5 },
+      "panel": {
+        "name": "Picture grids, colours: easy 1",
+        "rows": ["..B..", "RRBB.", ".BRRB", "...R.", ".R.B."],
+        "palette": "RB"
+      }
+    },
+    {
+      "seed": 8,
+      "stats": { "steps": 5 },
+      "panel": {
+        "name": "Picture grids, colours: easy 2",
+        "rows": [".RR..", "RRR..", "RRR.B", "RRBB.", "R...."],
+        "palette": "RB"
+      }
+    },
+    {
+      "seed": 9,
+      "stats": { "steps": 5 },
+      "panel": {
+        "name": "Picture grids, colours: easy 3",
+        "rows": ["RRRR.", "..RRB", "RRRB.", "RRB..", ".B..."],
+        "palette": "RB"
+      }
+    }
+  ]
+}

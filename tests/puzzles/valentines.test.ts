@@ -2,9 +2,11 @@ import { describe, expect, it } from 'vitest';
 import {
   type Panel,
   type Spot,
+  eachWordOnce,
   find,
   key,
   letterAt,
+  problems,
   spellings,
   wellFormed,
 } from '../../src/gen/words';
@@ -17,9 +19,9 @@ describe("Valentine's love-letter run", () => {
     for (const p of all) expect(wellFormed(p), p.name).toBe(true);
   });
 
-  it('each theme word can be spelled only one way', () => {
-    for (const p of all)
-      for (const w of p.words) expect(spellings(p, w.word), `${p.name}: ${w.word}`).toHaveLength(1);
+  it('each theme word can be spelled only one way with its clues', () => {
+    for (const p of all) expect(eachWordOnce(p), p.name).toBe(true);
+    for (const p of [...JACK, ...BASKET, ...MAILBOX]) expect(problems(p, 1), p.name).toEqual([]);
   });
 
   it('at most one dark letter per word, never its first or last', () => {

@@ -5,11 +5,11 @@
   "panels": [
     {
       "seed": 1,
-      "stats": { "words": 9, "steps": 892 },
+      "stats": { "words": 9, "steps": 807 },
       "panel": {
         "name": "Words, cuts: medium 1",
         "theme": "Cupid's kit",
-        "rows": ["THRMAHE", "GEQRKRA", "IVULAUT", "LICHOER", "FHHSRVL", "EBAEAEE", "RUSHTFR"],
+        "rows": ["THLDAHE", "GELRTRA", "IRAREVT", "LUCCLQI", "FHTOSOU", "EBHLDSU", "RUSANAD"],
         "words": [
           {
             "word": "FLIGHT",
@@ -23,7 +23,7 @@
             ]
           },
           {
-            "word": "QUIVER",
+            "word": "LAUREL",
             "cells": [
               [1, 2],
               [2, 2],
@@ -34,7 +34,7 @@
             ]
           },
           {
-            "word": "MARK",
+            "word": "DART",
             "cells": [
               [0, 3],
               [0, 4],
@@ -53,17 +53,6 @@
             ]
           },
           {
-            "word": "LAUREL",
-            "cells": [
-              [2, 3],
-              [2, 4],
-              [2, 5],
-              [3, 6],
-              [3, 5],
-              [4, 6]
-            ]
-          },
-          {
             "word": "CHERUB",
             "cells": [
               [3, 2],
@@ -75,7 +64,7 @@
             ]
           },
           {
-            "word": "HOVER",
+            "word": "CLOUD",
             "cells": [
               [3, 3],
               [3, 4],
@@ -85,7 +74,7 @@
             ]
           },
           {
-            "word": "SASH",
+            "word": "SHOT",
             "cells": [
               [6, 2],
               [5, 2],
@@ -94,12 +83,23 @@
             ]
           },
           {
-            "word": "FEATHER",
+            "word": "QUIVER",
             "cells": [
-              [6, 5],
+              [3, 5],
+              [4, 6],
+              [3, 6],
+              [2, 5],
+              [2, 4],
+              [2, 3]
+            ]
+          },
+          {
+            "word": "SANDALS",
+            "cells": [
               [5, 5],
-              [5, 4],
+              [6, 5],
               [6, 4],
+              [5, 4],
               [6, 3],
               [5, 3],
               [4, 4]
@@ -107,24 +107,34 @@
           }
         ],
         "walls": [
-          [3, 5, "h"],
           [6, 2, "v"],
-          [3, 3, "h"],
+          [0, 4, "v"],
+          [2, 2, "v"],
+          [1, 3, "h"],
           [1, 4, "v"],
-          [4, 5, "h"]
+          [1, 2, "v"],
+          [1, 4, "h"],
+          [2, 4, "h"],
+          [6, 1, "v"],
+          [6, 5, "v"],
+          [0, 2, "v"],
+          [3, 0, "v"],
+          [2, 0, "v"],
+          [5, 1, "v"],
+          [3, 2, "v"]
         ]
       }
     },
     {
       "seed": 2,
-      "stats": { "words": 8, "steps": 805 },
+      "stats": { "words": 8, "steps": 798 },
       "panel": {
         "name": "Words, cuts: medium 2",
         "theme": "Ghostly crushes",
-        "rows": ["TRCACAP", "ETNNIKE", "ADSOPUP", "LSPOULM", "EDEOKYM", "HGTWHSA", "OSODAET"],
+        "rows": ["BRCACAP", "OMSNIKE", "OTSOPUP", "LSPOULM", "EDEOKYM", "HCMTPSA", "ARIRIET"],
         "words": [
           {
-            "word": "TREAT",
+            "word": "BROOM",
             "cells": [
               [0, 0],
               [0, 1],
@@ -134,7 +144,7 @@
             ]
           },
           {
-            "word": "CANDLE",
+            "word": "CASTLE",
             "cells": [
               [0, 2],
               [0, 3],
@@ -190,7 +200,7 @@
             ]
           },
           {
-            "word": "GHOSTED",
+            "word": "CHARMED",
             "cells": [
               [5, 1],
               [5, 0],
@@ -202,7 +212,7 @@
             ]
           },
           {
-            "word": "SHADOW",
+            "word": "SPIRIT",
             "cells": [
               [5, 5],
               [5, 4],
@@ -214,20 +224,31 @@
           }
         ],
         "walls": [
-          [0, 3, "v"],
-          [3, 3, "v"],
+          [3, 4, "h"],
           [2, 2, "h"],
-          [2, 3, "h"]
+          [0, 3, "v"],
+          [1, 3, "h"],
+          [4, 0, "v"],
+          [5, 5, "h"],
+          [4, 0, "h"],
+          [6, 4, "v"],
+          [0, 4, "h"],
+          [4, 4, "h"],
+          [5, 5, "v"],
+          [3, 1, "h"],
+          [3, 2, "h"],
+          [4, 3, "h"],
+          [4, 2, "v"]
         ]
       }
     },
     {
       "seed": 3,
-      "stats": { "words": 9, "steps": 884 },
+      "stats": { "words": 9, "steps": 799 },
       "panel": {
         "name": "Words, cuts: medium 3",
         "theme": "Love notes",
-        "rows": ["CHEUCGN", "ALDCHRI", "RDSIREA", "MHHSULC", "PNCHDOB", "AORSVTU", "SSIUERE"],
+        "rows": ["CHEUCGN", "ALDPRRI", "RDSIMOA", "MEYENOC", "PNCHDEH", "AORSATU", "SSIURRE"],
         "words": [
           {
             "word": "CHARM",
@@ -262,7 +283,7 @@
             ]
           },
           {
-            "word": "CHERISH",
+            "word": "PROMISE",
             "cells": [
               [1, 3],
               [1, 4],
@@ -274,7 +295,7 @@
             ]
           },
           {
-            "word": "BLUSH",
+            "word": "HONEY",
             "cells": [
               [4, 6],
               [3, 5],
@@ -306,7 +327,7 @@
             ]
           },
           {
-            "word": "DOVE",
+            "word": "DEAR",
             "cells": [
               [4, 4],
               [4, 5],
@@ -325,12 +346,21 @@
           }
         ],
         "walls": [
-          [0, 4, "h"],
-          [3, 3, "h"],
-          [0, 3, "h"],
+          [6, 4, "v"],
+          [4, 6, "h"],
           [2, 3, "h"],
           [2, 4, "h"],
-          [2, 2, "h"]
+          [2, 5, "h"],
+          [3, 3, "h"],
+          [3, 4, "h"],
+          [0, 4, "h"],
+          [5, 3, "v"],
+          [4, 3, "v"],
+          [3, 0, "v"],
+          [6, 3, "v"],
+          [3, 1, "h"],
+          [2, 0, "v"],
+          [3, 0, "h"]
         ]
       }
     }

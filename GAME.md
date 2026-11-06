@@ -108,12 +108,12 @@ extras (Halloween's diagonals).
 
 | Holiday | Cross-theme | Goes into (where its items are stray) |
 |---|---|---|
-| **Valentine's** | **Letters for numbers:** the same letter means the same number; a message's numbered blanks fill in from the counts. | Halloween webs (Box of Chocolates, built) · Fourth of July picture grids (Cupid's Bow: clue numbers become letters) |
-| **Christmas** | **Snowflakes:** the answer's skeleton mirrors across a line (the whole board where the mechanics allow, as in Webs; otherwise a frame as large and square as possible), while a detail on each side stays free, so neither half solves the other. | To be reassigned (its items carried red and green before: Tree-Top Star, Stocking) |
-| **Halloween** | **The dark:** clues hidden in shadow (any value), with the lantern showing what's lit. | Valentine's words (Jack-o'-Lantern: letters in the dark, unknown until worked out) · Fourth of July picture grids (Witch's Broom: clues in the dark) |
-| **Easter** | **Numbered eggs:** some pieces carry numbers saying when they're visited or read. | Valentine's words (Bunny's Basket: numbered eggs fix some letters' places) · Christmas lights (Golden Egg: the bulb marked 3 is three steps from the plug) |
-| **Fourth of July** | **Red, white and blue:** things are red, white, blue or plain; two of the same colour can't join or touch (white is a real colour; plain touches anything). | To be reassigned (its items carried edge flags before: Star-Spangled Flag, Hot Dog) |
-| **Thanksgiving** | **Fair shares and cuts:** the board is split into outlined portions and each must get the same; or short fences (cuts) that nothing may cross. | Easter's bunny hops (Cornucopia: courses; the bunny finishes one portion before the next) · Christmas lights (Pumpkin Pie: each portion gets one bulb) |
+| **Valentine's** | **Love Letters:** the same letter means the same number; a message's numbered blanks fill in from the counts. | Halloween Spiderweb (Box of Chocolates, built) · Fourth of July Fireworks (Cupid's Bow: clue numbers become letters) |
+| **Christmas** | **Snowflakes:** the answer's skeleton mirrors across a line (the whole board where the mechanics allow, as in Spiderweb; otherwise a frame as large and square as possible), while a detail on each side stays free, so neither half solves the other. | To be reassigned (its items carried red and green before: Tree-Top Star, Stocking) |
+| **Halloween** | **Spooky:** clues hidden in shadow (any value), with the lantern showing what's lit. | Valentine's Heartstrings (Jack-o'-Lantern: letters in the dark, unknown until worked out) · Fourth of July Fireworks (Witch's Broom: clues in the dark) |
+| **Easter** | **Egg Hunt:** some pieces carry eggs saying when they're visited, which run covers them, or what goes in each basket. | Valentine's Heartstrings (Bunny's Basket: numbered eggs fix some letters' places) · Christmas Lights (Golden Egg: the bulb marked 3 is three steps from the plug) |
+| **Fourth of July** | **Red, White and Blue:** things are red, white, blue or plain; two of the same colour can't join or touch (white is a real colour; plain touches anything). | To be reassigned (its items carried edge flags before: Star-Spangled Flag, Hot Dog) |
+| **Thanksgiving** | **Portions:** the board is split into outlined portions and each must get the same; or short fences (cuts) that nothing may cross. | Easter's Hops (Cornucopia: courses; the bunny finishes one portion before the next) · Christmas Lights (Pumpkin Pie: each portion gets one bulb) |
 
 Chosen for being about the holiday itself (love letters, snowflakes, the
 dark, egg numbers, the flag's colours, fair portions) rather than its room's

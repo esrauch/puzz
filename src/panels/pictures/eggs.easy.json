@@ -1,0 +1,43 @@
+{
+  "genre": "pictures",
+  "twists": ["eggs"],
+  "tier": "easy",
+  "panels": [
+    {
+      "seed": 7,
+      "stats": { "steps": 48, "without eggs": 2 },
+      "panel": {
+        "name": "Picture grids, eggs: easy 1",
+        "rows": ["....#", "..#..", ".##..", "##.#.", ".#..#"],
+        "eggs": [
+          [3, 3, 3],
+          [4, 4, 2]
+        ]
+      }
+    },
+    {
+      "seed": 14,
+      "stats": { "steps": 43, "without eggs": 2 },
+      "panel": {
+        "name": "Picture grids, eggs: easy 2",
+        "rows": [".#...", "#.#..", "...#.", ".#..#", "..##."],
+        "eggs": [
+          [1, 2, 2],
+          [3, 4, 2]
+        ]
+      }
+    },
+    {
+      "seed": 17,
+      "stats": { "steps": 6, "without eggs": 2 },
+      "panel": {
+        "name": "Picture grids, eggs: easy 3",
+        "rows": ["#..#.", "##..#", "##...", ".##..", ".###."],
+        "eggs": [
+          [0, 3, 2],
+          [1, 1, 2]
+        ]
+      }
+    }
+  ]
+}

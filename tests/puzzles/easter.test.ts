@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { problems } from '../../src/gen/hops';
 import { type Panel, countSolutions, key, parse, solve } from '../../src/proto/hops';
 import { CORNUCOPIA, EGGTREE, FLAG, HUTCH } from '../../src/proto/puzzles/easter';
 
@@ -12,6 +13,8 @@ describe('Easter bunny-hop run', () => {
       if (p.free) expect(count(p), p.name).toBeGreaterThan(0);
       else expect(count(p), p.name).toBe(1);
     }
+    for (const p of [...FLAG, ...CORNUCOPIA, ...EGGTREE])
+      expect(problems(p, 2), p.name).toEqual([]);
   }, 120_000);
 
   it('no clue is pointless: taking away any egg or flag leaves more than one answer', () => {
@@ -34,8 +37,8 @@ describe('Easter bunny-hop run', () => {
     }
   }, 120_000);
 
-  it('the flags and the courses matter', () => {
-    for (const p of FLAG) expect(count(p, { noFlags: true }), p.name).toBe(2);
+  it('the colours and the courses matter', () => {
+    for (const p of FLAG) expect(count(p, { noColours: true }), p.name).toBe(2);
     for (const p of CORNUCOPIA) expect(count(p, { noPortions: true }), p.name).toBe(2);
   }, 120_000);
 

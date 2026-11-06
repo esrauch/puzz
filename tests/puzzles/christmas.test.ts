@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { problems } from '../../src/gen/lights';
 import {
   type Panel,
   countSolutions,
@@ -21,6 +22,7 @@ describe('Christmas lights run', () => {
       const b = parse(p);
       expect(solved(b, b.solution), p.name).toBe(true);
     }
+    for (const p of [...EGG, ...PIE, ...TREE]) expect(problems(p, 2), p.name).toEqual([]);
   }, 120_000);
 
   it('no panel starts solved', () => {

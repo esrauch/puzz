@@ -4,122 +4,223 @@
   "tier": "easy",
   "panels": [
     {
-      "seed": 187,
-      "stats": { "words": 4, "steps": 228 },
+      "seed": 81,
+      "stats": { "words": 5, "steps": 280 },
       "panel": {
         "name": "Words, cuts and eggs: easy 1",
-        "theme": "Date night",
-        "rows": ["SUEBA", "NGOCL", "SDNLL", "EIYSO", "TRBTR"],
+        "theme": "Love notes",
+        "rows": ["CARBE", "HMEVL", "BLUDO", "EOSBA", "VDHEU"],
         "words": [
           {
-            "word": "SUNSET",
+            "word": "CHARM",
             "cells": [
               [0, 0],
-              [0, 1],
               [1, 0],
-              [2, 0],
-              [3, 0],
-              [4, 0]
+              [0, 1],
+              [0, 2],
+              [1, 1]
             ]
           },
           {
-            "word": "BRIDGE",
-            "cells": [
-              [4, 2],
-              [4, 1],
-              [3, 1],
-              [2, 1],
-              [1, 1],
-              [0, 2]
-            ]
-          },
-          {
-            "word": "BALCONY",
+            "word": "BELOVED",
             "cells": [
               [0, 3],
               [0, 4],
               [1, 4],
+              [2, 4],
               [1, 3],
               [1, 2],
-              [2, 2],
-              [3, 2]
+              [2, 3]
             ]
           },
           {
-            "word": "STROLL",
+            "word": "BLUSH",
+            "cells": [
+              [2, 0],
+              [2, 1],
+              [2, 2],
+              [3, 2],
+              [4, 2]
+            ]
+          },
+          {
+            "word": "DOVE",
+            "cells": [
+              [4, 1],
+              [3, 1],
+              [4, 0],
+              [3, 0]
+            ]
+          },
+          {
+            "word": "BEAU",
             "cells": [
               [3, 3],
               [4, 3],
-              [4, 4],
               [3, 4],
-              [2, 4],
-              [2, 3]
+              [4, 4]
             ]
           }
         ],
-        "walls": [[1, 4, "h"]],
-        "eggs": [[2, 3]]
+        "walls": [
+          [2, 1, "h"],
+          [1, 1, "h"],
+          [2, 0, "h"],
+          [2, 4, "h"],
+          [2, 3, "h"],
+          [0, 2, "v"],
+          [4, 1, "v"],
+          [3, 1, "v"]
+        ],
+        "eggs": [
+          [2, 2],
+          [1, 3]
+        ]
       }
     },
     {
-      "seed": 263,
-      "stats": { "words": 4, "steps": 331 },
+      "seed": 126,
+      "stats": { "words": 5, "steps": 264 },
       "panel": {
         "name": "Words, cuts and eggs: easy 2",
-        "theme": "Love letters",
-        "rows": ["YLRMD", "PEIYA", "ERDER", "RPREV", "APELI"],
+        "theme": "Cupid's kit",
+        "rows": ["WNGHA", "ISFPR", "TAERO", "HRWRB", "EORAE"],
         "words": [
           {
-            "word": "REPLY",
+            "word": "WINGS",
             "cells": [
-              [3, 0],
-              [2, 0],
+              [0, 0],
               [1, 0],
               [0, 1],
-              [0, 0]
+              [0, 2],
+              [1, 1]
             ]
           },
           {
-            "word": "ADMIRER",
+            "word": "HARP",
             "cells": [
-              [1, 4],
-              [0, 4],
               [0, 3],
-              [1, 2],
-              [2, 1],
-              [1, 1],
-              [0, 2]
-            ]
-          },
-          {
-            "word": "DELIVERY",
-            "cells": [
-              [2, 2],
-              [3, 3],
-              [4, 3],
-              [4, 4],
-              [3, 4],
-              [2, 3],
-              [2, 4],
+              [0, 4],
+              [1, 4],
               [1, 3]
             ]
           },
           {
-            "word": "PAPER",
+            "word": "FEATHER",
             "cells": [
-              [3, 1],
+              [1, 2],
+              [2, 2],
+              [2, 1],
+              [2, 0],
+              [3, 0],
+              [4, 0],
+              [3, 1]
+            ]
+          },
+          {
+            "word": "ROBE",
+            "cells": [
+              [2, 3],
+              [2, 4],
+              [3, 4],
+              [4, 4]
+            ]
+          },
+          {
+            "word": "ARROW",
+            "cells": [
+              [4, 3],
+              [3, 3],
+              [4, 2],
+              [4, 1],
+              [3, 2]
+            ]
+          }
+        ],
+        "walls": [
+          [1, 4, "h"],
+          [3, 3, "v"],
+          [2, 2, "h"],
+          [4, 3, "v"],
+          [1, 1, "h"],
+          [2, 3, "h"],
+          [1, 3, "h"],
+          [1, 0, "h"]
+        ],
+        "eggs": [
+          [4, 2],
+          [2, 1]
+        ]
+      }
+    },
+    {
+      "seed": 261,
+      "stats": { "words": 4, "steps": 220 },
+      "panel": {
+        "name": "Words, cuts and eggs: easy 3",
+        "theme": "Garden of love",
+        "rows": ["TLIGN", "UPSPI", "LDERR", "ANTLI", "VEEOV"],
+        "words": [
+          {
+            "word": "TULIP",
+            "cells": [
+              [0, 0],
+              [1, 0],
+              [0, 1],
+              [0, 2],
+              [1, 1]
+            ]
+          },
+          {
+            "word": "SPRING",
+            "cells": [
+              [1, 2],
+              [1, 3],
+              [2, 4],
+              [1, 4],
+              [0, 4],
+              [0, 3]
+            ]
+          },
+          {
+            "word": "LAVENDER",
+            "cells": [
+              [2, 0],
+              [3, 0],
               [4, 0],
               [4, 1],
+              [3, 1],
+              [2, 1],
+              [2, 2],
+              [2, 3]
+            ]
+          },
+          {
+            "word": "VIOLET",
+            "cells": [
+              [4, 4],
+              [3, 4],
+              [4, 3],
+              [3, 3],
               [4, 2],
               [3, 2]
             ]
           }
         ],
         "walls": [
-          [1, 0, "v"],
-          [2, 0, "v"]
+          [0, 2, "v"],
+          [2, 2, "h"],
+          [1, 2, "h"],
+          [2, 3, "h"],
+          [2, 4, "h"],
+          [3, 1, "v"],
+          [1, 0, "h"],
+          [1, 1, "h"]
         ],
-        "eggs": [[4, 1]]
+        "eggs": [
+          [2, 3],
+          [3, 4]
+        ]
       }
     }
   ]

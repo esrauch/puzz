@@ -41,31 +41,93 @@ export const THEME_WORDS: Record<number, readonly string[]> = {
 };
 const WORDS_3 = ['JOY', 'SUN', 'ICY', 'FIR', 'ELM', 'BOW', 'RED', 'LIT', 'RAY', 'WAX'];
 
-/** Partition a rectangular board into balanced pie-wedge slices around the center plug `*`. */
+/** Partition a board into balanced pie-wedge slices around a center plug `*`. */
 export function makePieSlices(
   height: number,
   width: number,
   numSlices: number,
   random: Rng,
   needInternalCycle = false,
+  shape?: Shape,
 ): { plug: Spot; slices: string[] } {
-  if (height === 5 && width === 5 && numSlices === 2 && needInternalCycle) {
+  const isInside = (r: number, c: number): boolean => !shape || shape[r]?.[c] === '#';
+  if (
+    height === 5 &&
+    width === 5 &&
+    numSlices === 2 &&
+    needInternalCycle &&
+    (!shape || shape.every((row) => !row.includes('.')))
+  ) {
     return {
       plug: [2, 3],
       slices: ['BBBAA', 'BBBBA', 'BBB*A', 'BBAAA', 'BBAAA'],
     };
   }
-  const pr = Math.floor(height / 2);
-  const pc = Math.floor(width / 2);
+  const midR = Math.floor(height / 2);
+  const midC = Math.floor(width / 2);
+  if (!isInside(midR, midC)) {
+    // Wreath (ring with center hole)
+    const pr = 1;
+    const pc = midC;
+    const plug: Spot = [pr, pc];
+    const grid = Array.from({ length: height }, (_, r) =>
+      Array.from({ length: width }, (_, c) => {
+        if (!isInside(r, c)) return '.';
+        if (r === pr && c === pc) return '*';
+        if (numSlices === 2) {
+          return (r <= 1 && c < midC) || (r <= height - 3 && c >= midC && !(r === 2 && c === midC))
+            ? 'B'
+            : 'A';
+        }
+        if ((r <= 1 && c < midC) || (r === 0 && c <= midC + 1)) return 'B';
+        if (r <= height - 3 && c >= midC && !(r === 2 && c === midC)) return 'A';
+        return 'C';
+      }),
+    );
+    return { plug, slices: grid.map((row) => row.join('')) };
+  }
+  if (!isInside(0, 0) && isInside(height - 1, 0)) {
+    // Tree shape (narrow top, wide bottom)
+    if (height <= 6) {
+      const pr = 2;
+      const pc = midC;
+      const plug: Spot = [pr, pc];
+      const grid = Array.from({ length: height }, (_, r) =>
+        Array.from({ length: width }, (_, c) => {
+          if (!isInside(r, c)) return '.';
+          if (r === pr && c === pc) return '*';
+          return c < midC || (c === midC && r < pr) ? 'B' : 'A';
+        }),
+      );
+      return { plug, slices: grid.map((row) => row.join('')) };
+    }
+    const pr = height - 2;
+    const pc = midC;
+    const plug: Spot = [pr, pc];
+    const grid = Array.from({ length: height }, (_, r) =>
+      Array.from({ length: width }, (_, c) => {
+        if (!isInside(r, c)) return '.';
+        if (r === pr && c === pc) return '*';
+        if (numSlices === 2) return r <= height - 3 ? 'B' : 'A';
+        if (r <= height - 3) return 'B';
+        return c < midC ? 'C' : 'A';
+      }),
+    );
+    return { plug, slices: grid.map((row) => row.join('')) };
+  }
+  const pr = midR;
+  const pc = midC;
   const plug: Spot = [pr, pc];
-  const grid = Array.from({ length: height }, () => Array.from({ length: width }, () => 'A'));
+  const grid: string[][] = Array.from({ length: height }, (_, r) =>
+    Array.from({ length: width }, (_, c) => (isInside(r, c) ? 'A' : '.')),
+  );
   (grid[pr] as string[])[pc] = '*';
 
   if (numSlices === 2) {
     const vertical = random() < 0.5;
     for (let r = 0; r < height; r++) {
       for (let c = 0; c < width; c++) {
-        if (r === pr && c === pc) continue;
+        if (!isInside(r, c) || (r === pr && c === pc)) continue;
         const firstHalf = vertical
           ? c < pc || (c === pc && r < pr)
           : r < pr || (r === pr && c < pc);
@@ -78,7 +140,7 @@ export function makePieSlices(
     const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     for (let r = 0; r < height; r++) {
       for (let c = 0; c < width; c++) {
-        if (r === pr && c === pc) continue;
+        if (!isInside(r, c) || (r === pr && c === pc)) continue;
         const raw = Math.atan2(r - pr, c - pc) - theta0;
         const norm = ((raw % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
         const idx = Math.min(numSlices - 1, Math.floor((norm / (2 * Math.PI)) * numSlices));
@@ -135,12 +197,17 @@ export function randomTree(
     const hubPairs: [Spot, Spot][] = [];
 
     const effCycles = H < 7 || Wd < 7 ? Math.min(cycles, 1) : cycles;
-    const effStraddle = slices && H >= 7 && Wd >= 7 ? straddleCycles : 0;
+    const effStraddle = slices && H >= 6 && Wd >= 6 ? straddleCycles : 0;
 
     if ((effCycles > 0 || effStraddle > 0) && H >= 5 && Wd >= 5) {
+      const hasOffBoard = shape.some((row) => row.includes('.'));
+      const rMin = hasOffBoard ? 0 : 1;
+      const rMax = hasOffBoard ? H - 1 : H - 2;
+      const cMin = hasOffBoard ? 0 : 1;
+      const cMax = hasOffBoard ? Wd - 1 : Wd - 2;
       const blocks: Spot[] = [];
-      for (let r = 1; r + 2 < H; r++) {
-        for (let c = 1; c + 2 < Wd; c++) {
+      for (let r = rMin; r < rMax; r++) {
+        for (let c = cMin; c < cMax; c++) {
           const sq: Spot[] = [
             [r, c],
             [r, c + 1],
@@ -152,6 +219,30 @@ export function randomTree(
           }
         }
       }
+
+      const staysConnected = (leaves: Set<string>): boolean => {
+        if (!hasOffBoard) return true;
+        const activeCount = cells.length - leaves.size;
+        if (activeCount <= 0 || leaves.has(key(...plug))) return false;
+        const seen = new Set<string>([key(...plug)]);
+        const queue: Spot[] = [plug];
+        while (queue.length) {
+          const [cr, cc] = queue.shift() as Spot;
+          const cs = sliceAt(cr, cc);
+          for (const d of DIRS) {
+            const [dr, dc] = STEP[d] as Spot;
+            const nr = cr + dr;
+            const nc = cc + dc;
+            const nk = key(nr, nc);
+            if (!inside(nr, nc) || leaves.has(nk) || seen.has(nk)) continue;
+            const ns = sliceAt(nr, nc);
+            if (slices && cs !== '*' && ns !== '*' && cs !== ns) continue;
+            seen.add(nk);
+            queue.push([nr, nc]);
+          }
+        }
+        return seen.size === activeCount;
+      };
 
       const chosenBlocks: { B: Spot; D: Spot; r: number; c: number }[] = [];
 
@@ -201,12 +292,12 @@ export function randomTree(
                 const nr = hr + dr;
                 const nc = hc + dc;
                 if (!inside(nr, nc) || nextLeaves.has(key(nr, nc))) continue;
-                if (slices && sliceAt(nr, nc) !== hs) continue;
+                if (slices && sliceAt(nr, nc) !== hs && sliceAt(nr, nc) !== '*') continue;
                 ext++;
               }
               return ext >= 2;
             });
-            if (ok) {
+            if (ok && staysConnected(nextLeaves)) {
               chosenBlocks.push({ B, D, r, c });
               leafSet.add(key(...L1)).add(key(...L2));
               hubSet.add(key(...B)).add(key(...D));
@@ -364,10 +455,59 @@ export function randomTree(
  * where the wires inside the frame mirror across the axis (`offAxis >= 3`),
  * while wires outside the frame carry on freely.
  */
-export function randomSnowTree(shape: Shape, plug: Spot, random: Rng): Panel | null {
+export function randomSnowTree(
+  shape: Shape,
+  plug: Spot,
+  random: Rng,
+  wantBlocks = 0,
+): Panel | null {
   const H = shape.length;
   const Wd = shape[0]?.length ?? 0;
   const inside = (r: number, c: number): boolean => shape[r]?.[c] === '#';
+  const isInterior = (r: number, c: number): boolean =>
+    DIRS.every((d) => inside(r + (STEP[d] as Spot)[0], c + (STEP[d] as Spot)[1]));
+
+  const cells: Spot[] = [];
+  for (let r = 0; r < H; r++) for (let c = 0; c < Wd; c++) if (inside(r, c)) cells.push([r, c]);
+
+  const straddleCandsFor = (
+    f: ReturnType<typeof frames>[number],
+  ): { B: Spot; D: Spot; L1: Spot; L2: Spot; mB: Spot; mL1: Spot }[] => {
+    const inFrame = (r: number, c: number): boolean =>
+      r >= f.top && r <= f.bottom && c >= f.left && c <= f.right;
+    const cands: { B: Spot; D: Spot; L1: Spot; L2: Spot; mB: Spot; mL1: Spot }[] = [];
+    for (let r = 0; r < H - 1; r++) {
+      for (let c = 0; c < Wd - 1; c++) {
+        const sq: Spot[] = [
+          [r, c],
+          [r, c + 1],
+          [r + 1, c],
+          [r + 1, c + 1],
+        ];
+        if (!sq.every(([rr, cc]) => inside(rr, cc) && !(rr === plug[0] && cc === plug[1])))
+          continue;
+        if (sq.filter(([rr, cc]) => inFrame(rr, cc)).length !== 2) continue;
+        for (const diag of [true, false]) {
+          const c1 = diag ? (sq[0] as Spot) : (sq[1] as Spot);
+          const c2 = diag ? (sq[3] as Spot) : (sq[2] as Spot);
+          const o1 = diag ? (sq[1] as Spot) : (sq[0] as Spot);
+          const o2 = diag ? (sq[2] as Spot) : (sq[3] as Spot);
+          const B = inFrame(...c1) ? c1 : c2;
+          const D = inFrame(...c1) ? c2 : c1;
+          const L1 = inFrame(...o1) ? o1 : o2;
+          const L2 = inFrame(...o1) ? o2 : o1;
+          if (!inFrame(...B) || inFrame(...D) || !inFrame(...L1) || inFrame(...L2)) continue;
+          if (!isInterior(...B) || !isInterior(...D)) continue;
+          const mB = mirrorSquare(f, B[0], B[1]);
+          const mL1 = mirrorSquare(f, L1[0], L1[1]);
+          if (segment(...B, ...L1) === segment(...mB, ...mL1)) continue;
+          if (mL1[0] === plug[0] && mL1[1] === plug[1]) continue;
+          cands.push({ B, D, L1, L2, mB, mL1 });
+        }
+      }
+    }
+    return cands;
+  };
 
   const validFrames = shuffle(
     random,
@@ -377,18 +517,66 @@ export function randomSnowTree(shape: Shape, plug: Spot, random: Rng): Panel | n
       if ((f.axis === 'v' ? w : h) % 2 !== 0) return false;
       if (area(f) >= Wd * H * 0.85) return false;
       if (Math.min(h, w) / Math.max(h, w) < 0.6) return false;
-      return true;
+      let countIn = 0;
+      for (let r = f.top; r <= f.bottom; r++) {
+        for (let c = f.left; c <= f.right; c++) {
+          const [mr, mc] = mirrorSquare(f, r, c);
+          if (inside(r, c) !== inside(mr, mc)) return false;
+          if (inside(r, c)) countIn++;
+        }
+      }
+      return countIn >= 6 && countIn <= cells.length - 2;
     }),
   );
-  validFrames.sort((a, b) => area(b) - area(a));
-  const f = validFrames[0];
+  validFrames.sort(
+    (a, b) =>
+      Math.min(wantBlocks, straddleCandsFor(b).length) -
+        Math.min(wantBlocks, straddleCandsFor(a).length) || area(b) - area(a),
+  );
+  const f = validFrames[Math.floor(random() * Math.min(validFrames.length, 6))];
   if (!f) return null;
 
-  const cells: Spot[] = [];
-  for (let r = 0; r < H; r++) for (let c = 0; c < Wd; c++) if (inside(r, c)) cells.push([r, c]);
+  const cands = wantBlocks > 0 ? shuffle(random, straddleCandsFor(f)) : [];
+  const chosen: typeof cands = [];
+  const usedKeys = new Set<string>();
+  const leafSet = new Set<string>();
+  const hubSet = new Set<string>();
+  const hubPairs: [Spot, Spot][] = [];
 
+  for (const cand of cands) {
+    if (chosen.length >= wantBlocks) break;
+    const keys = [
+      key(...cand.B),
+      key(...cand.D),
+      key(...cand.L1),
+      key(...cand.L2),
+      key(...cand.mB),
+      key(...cand.mL1),
+    ];
+    if (keys.some((k) => usedKeys.has(k))) continue;
+    const nextLeaves = new Set([...leafSet, key(...cand.L1), key(...cand.L2)]);
+    const nextHubs = [...chosen.flatMap((c) => [c.B, c.D]), cand.B, cand.D];
+    const hubsOk = nextHubs.every(([hr, hc]) => {
+      let ext = 0;
+      for (const d of DIRS) {
+        const nr = hr + (STEP[d] as Spot)[0];
+        const nc = hc + (STEP[d] as Spot)[1];
+        if (inside(nr, nc) && !nextLeaves.has(key(nr, nc))) ext++;
+      }
+      return ext >= 2;
+    });
+    if (!hubsOk) continue;
+    for (const k of keys) usedKeys.add(k);
+    chosen.push(cand);
+    leafSet.add(key(...cand.L1)).add(key(...cand.L2));
+    hubSet.add(key(...cand.B)).add(key(...cand.D));
+    hubPairs.push([cand.B, cand.L1], [cand.D, cand.L2]);
+  }
+
+  const activeCells = cells.filter(([r, c]) => !leafSet.has(key(r, c)));
   const mask = new Map<string, number>(cells.map(([r, c]) => [key(r, c), 0]));
-  const parent = new Map(cells.map(([r, c]) => [key(r, c), key(r, c)]));
+  const parent = new Map(activeCells.map(([r, c]) => [key(r, c), key(r, c)]));
+  const deg = new Map<string, number>(activeCells.map(([r, c]) => [key(r, c), 0]));
   const find = (k: string): string => {
     while (parent.get(k) !== k) k = parent.get(k) as string;
     return k;
@@ -399,24 +587,38 @@ export function randomSnowTree(shape: Shape, plug: Spot, random: Rng): Panel | n
     const d = dr === -1 ? N : dr === 1 ? S : dc === 1 ? E : W;
     mask.set(key(...a), (mask.get(key(...a)) ?? 0) | d);
     mask.set(key(...b), (mask.get(key(...b)) ?? 0) | (OPP[d] as number));
+    deg.set(key(...a), (deg.get(key(...a)) ?? 0) + 1);
+    deg.set(key(...b), (deg.get(key(...b)) ?? 0) + 1);
   };
+
+  const preSegs = new Set<string>();
+  for (const cand of chosen) {
+    const k1 = find(key(...cand.mB));
+    const k2 = find(key(...cand.mL1));
+    if (k1 !== k2) {
+      parent.set(k1, k2);
+      linkSpots(cand.mB, cand.mL1);
+    }
+    preSegs.add(segment(...cand.B, ...cand.L1)).add(segment(...cand.mB, ...cand.mL1));
+  }
 
   // Collect edges inside `f` (grouped with their mirror image) and edges outside `f`
   const inEdges: [Spot, Spot, Spot, Spot][] = [];
-  const seenSegs = new Set<string>();
+  const seenSegs = new Set<string>(preSegs);
   const outEdges: [Spot, Spot][] = [];
 
-  for (const [r, c] of cells) {
+  for (const [r, c] of activeCells) {
     for (const d of [E, S]) {
       const [dr, dc] = STEP[d] as Spot;
       const r2 = r + dr;
       const c2 = c + dc;
-      if (!inside(r2, c2)) continue;
+      if (!inside(r2, c2) || leafSet.has(key(r2, c2))) continue;
       const seg = segment(r, c, r2, c2);
       if (featureInside(f, seg)) {
         if (seenSegs.has(seg)) continue;
         const [mr1, mc1] = mirrorSquare(f, r, c);
         const [mr2, mc2] = mirrorSquare(f, r2, c2);
+        if (leafSet.has(key(mr1, mc1)) || leafSet.has(key(mr2, mc2))) continue;
         const mseg = segment(mr1, mc1, mr2, mc2);
         seenSegs.add(seg).add(mseg);
         inEdges.push([
@@ -434,26 +636,51 @@ export function randomSnowTree(shape: Shape, plug: Spot, random: Rng): Panel | n
     }
   }
 
-  // First add mirrored edge pairs inside `f` (preferring off-axis pairs first)
+  const canUse = (k: string, add = 1): boolean => !hubSet.has(k) || (deg.get(k) ?? 0) + add <= 2;
+
+  // First add mirrored edge pairs inside `f` (preferring hub edges and off-axis pairs first)
   const shuffledIn = shuffle(random, inEdges).sort((x, y) => {
+    const xHub =
+      hubSet.has(key(...x[0])) ||
+      hubSet.has(key(...x[1])) ||
+      hubSet.has(key(...x[2])) ||
+      hubSet.has(key(...x[3]))
+        ? 0
+        : 1;
+    const yHub =
+      hubSet.has(key(...y[0])) ||
+      hubSet.has(key(...y[1])) ||
+      hubSet.has(key(...y[2])) ||
+      hubSet.has(key(...y[3]))
+        ? 0
+        : 1;
+    if (xHub !== yHub) return xHub - yHub;
     const xSelf = segment(...x[0], ...x[1]) === segment(...x[2], ...x[3]) ? 1 : 0;
     const ySelf = segment(...y[0], ...y[1]) === segment(...y[2], ...y[3]) ? 1 : 0;
     return xSelf - ySelf;
   });
 
   for (const [a1, b1, a2, b2] of shuffledIn) {
-    const k1 = find(key(...a1));
-    const k2 = find(key(...b1));
+    const ka1 = key(...a1);
+    const kb1 = key(...b1);
+    const ka2 = key(...a2);
+    const kb2 = key(...b2);
+    const k1 = find(ka1);
+    const k2 = find(kb1);
     if (k1 === k2) continue;
     const sameEdge = segment(...a1, ...b1) === segment(...a2, ...b2);
     if (sameEdge) {
+      if (!canUse(ka1) || !canUse(kb1)) continue;
       parent.set(k1, k2);
       linkSpots(a1, b1);
     } else {
+      const degNeed = new Map<string, number>();
+      for (const k of [ka1, kb1, ka2, kb2]) degNeed.set(k, (degNeed.get(k) ?? 0) + 1);
+      if ([...degNeed.entries()].some(([k, cnt]) => !canUse(k, cnt))) continue;
       // Check if adding both (a1, b1) and (a2, b2) creates a cycle
       parent.set(k1, k2);
-      const m1 = find(key(...a2));
-      const m2 = find(key(...b2));
+      const m1 = find(ka2);
+      const m2 = find(kb2);
       if (m1 === m2) {
         // Revert first union
         parent.set(k1, k1);
@@ -466,17 +693,32 @@ export function randomSnowTree(shape: Shape, plug: Spot, random: Rng): Panel | n
   }
 
   // Now complete the spanning tree using edges outside `f`
-  for (const [a, b] of shuffle(random, outEdges)) {
-    const k1 = find(key(...a));
-    const k2 = find(key(...b));
+  const sortedOut = shuffle(random, outEdges).sort((x, y) => {
+    const xHub = hubSet.has(key(...x[0])) || hubSet.has(key(...x[1])) ? 0 : 1;
+    const yHub = hubSet.has(key(...y[0])) || hubSet.has(key(...y[1])) ? 0 : 1;
+    return xHub - yHub;
+  });
+
+  for (const [a, b] of sortedOut) {
+    const ka = key(...a);
+    const kb = key(...b);
+    if (!canUse(ka) || !canUse(kb)) continue;
+    const k1 = find(ka);
+    const k2 = find(kb);
     if (k1 === k2) continue;
     parent.set(k1, k2);
     linkSpots(a, b);
   }
 
-  // Verify the whole board is a single connected tree
-  const roots = new Set(cells.map(([r, c]) => find(key(r, c))));
+  for (const hk of hubSet) {
+    if ((deg.get(hk) ?? 0) !== 2) return null;
+  }
+
+  // Verify activeCells is a single connected tree
+  const roots = new Set(activeCells.map(([r, c]) => find(key(r, c))));
   if (roots.size !== 1) return null;
+
+  for (const [hub, leaf] of hubPairs) linkSpots(hub, leaf);
 
   const rows = shape.map((row, r) =>
     [...row].map((ch, c) => (ch === '#' ? (mask.get(key(r, c)) ?? 0).toString(16) : '.')).join(''),

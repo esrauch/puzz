@@ -1,0 +1,46 @@
+{
+  "genre": "pictures",
+  "twists": ["eggs"],
+  "tier": "medium",
+  "panels": [
+    {
+      "seed": 6,
+      "stats": { "steps": 8, "without eggs": 2 },
+      "panel": {
+        "name": "Picture grids, eggs: medium 1",
+        "rows": [".#.....", "#.#.#..", "...###.", "#####.#", "..####.", "#..##.#", ".#..##."],
+        "eggs": [
+          [1, 4, 3],
+          [3, 6, 6],
+          [5, 0, 1]
+        ]
+      }
+    },
+    {
+      "seed": 9,
+      "stats": { "steps": 8, "without eggs": 2 },
+      "panel": {
+        "name": "Picture grids, eggs: medium 2",
+        "rows": ["##..##.", "#.##.#.", "####.##", "####.#.", "..#####", "#.....#", ".#....#"],
+        "eggs": [
+          [3, 3, 4],
+          [5, 0, 1],
+          [6, 6, 2]
+        ]
+      }
+    },
+    {
+      "seed": 11,
+      "stats": { "steps": 16, "without eggs": 2 },
+      "panel": {
+        "name": "Picture grids, eggs: medium 3",
+        "rows": [".....#.", "#.###..", ".##..#.", ".##...#", ".#.....", ".#.....", ".#....."],
+        "eggs": [
+          [1, 3, 3],
+          [2, 5, 3],
+          [3, 2, 2]
+        ]
+      }
+    }
+  ]
+}

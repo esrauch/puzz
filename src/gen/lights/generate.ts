@@ -13,7 +13,16 @@ import {
   randomSnowTree,
   randomTree,
 } from './make';
-import { type Panel, type Spot, parse, rectangle } from './model';
+import {
+  type Panel,
+  type Shape,
+  type Spot,
+  ovalShape,
+  parse,
+  rectangle,
+  ringShape,
+  treeShape,
+} from './model';
 import { solve } from './solve';
 import { type LightTwist, problems, twistsOf } from './verify';
 
@@ -33,6 +42,18 @@ export const SHAPES: Record<Tier, TierShape> = {
   hard: { width: 9, height: 9, eggs: 2, letters: 5, slices: 3, dark: 4, margin: 3 },
 };
 
+function buildBoardShape(tierShape: TierShape, kind: Spec<LightTwist>['shape'] = 'rect'): Shape {
+  const { height: H, width: W } = tierShape;
+  if (kind === 'tree') return H <= 5 ? treeShape(6, 7, 0.5) : treeShape(H, W, 0.5);
+  if (kind === 'egg') return ovalShape(H, W, H <= 5 ? 1 : 1.25);
+  if (kind === 'pie') return ovalShape(H, W, 1);
+  if (kind === 'wreath') {
+    if (H <= 5) return ringShape(7, 7, 0.015, 0.32);
+    return ringShape(8, 8, 0.03, 0.32);
+  }
+  return rectangle(H, W);
+}
+
 function makePanel(spec: Spec<LightTwist>, seed: number, why: Rejections): Made<Panel> | null {
   const shape = SHAPES[spec.tier];
   const twists = new Set(spec.twists);
@@ -45,9 +66,16 @@ function makePanel(spec: Spec<LightTwist>, seed: number, why: Rejections): Made<
   const random = rng(mixedSeed);
 
   return within(() => {
-    const boardShape = rectangle(shape.height, shape.width);
+    const boardShape = buildBoardShape(shape, spec.shape);
+    const H = boardShape.length;
+    const W = boardShape[0]?.length ?? shape.width;
     const hasEggsOrLetters = twists.has('eggs') || twists.has('letters');
-    const needCycles = !twists.has('snow') && hasEggsOrLetters ? (margin >= 3 ? 2 : 1) : 0;
+    const needCycles =
+      !twists.has('snow') && (hasEggsOrLetters || twists.has('colours'))
+        ? margin >= 3
+          ? 2
+          : 1
+        : 0;
     const straddleCycles =
       !twists.has('snow') && twists.has('slices')
         ? hasEggsOrLetters
@@ -58,17 +86,22 @@ function makePanel(spec: Spec<LightTwist>, seed: number, why: Rejections): Made<
         : 0;
 
     const pie = twists.has('slices')
-      ? makePieSlices(shape.height, shape.width, shape.slices, random, hasEggsOrLetters)
+      ? makePieSlices(H, W, shape.slices, random, hasEggsOrLetters, boardShape)
       : undefined;
-    const plug: Spot = pie
+    const mid = Math.floor(W / 2);
+    const rawPlug: Spot = pie
       ? pie.plug
-      : twists.has('snow')
-        ? [Math.floor(shape.height / 2), Math.floor(shape.width / 2)]
-        : [shape.height - 1, Math.floor(shape.width / 2)];
+      : twists.has('snow') && spec.shape !== 'tree' && boardShape[Math.floor(H / 2)]?.[mid] === '#'
+        ? [Math.floor(H / 2), mid]
+        : [H - 1, mid];
+    const plug: Spot =
+      boardShape[rawPlug[0]]?.[rawPlug[1]] === '#'
+        ? rawPlug
+        : ([boardShape.findIndex((row) => row[mid] === '#'), mid] as Spot);
     const plugDegree = pie ? shape.slices : undefined;
 
     const p = twists.has('snow')
-      ? randomSnowTree(boardShape, plug, random)
+      ? randomSnowTree(boardShape, plug, random, margin >= 3 ? 2 : 1)
       : randomTree(
           boardShape,
           plug,
@@ -81,7 +114,10 @@ function makePanel(spec: Spec<LightTwist>, seed: number, why: Rejections): Made<
         );
     if (!p) return why.no('failed to build spanning tree');
 
-    let candidate: Panel = { ...p };
+    let candidate: Panel = {
+      ...p,
+      ...(spec.shape === 'tree' ? { star: [0, mid] as Spot } : {}),
+    };
     const b0 = parse(candidate);
     const sols = solve(b0, margin + 4, { noSnow: true, noServings: true }, new Budget(35_000));
 

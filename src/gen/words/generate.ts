@@ -35,13 +35,15 @@ export interface Shape {
   dark: number;
   /** Letters to write as numbers. */
   code: number;
+  /** Fences (cuts) between words when Portions is on. */
+  cuts: number;
 }
 
 /** A tier is a board size; the twists make it easier or harder as they fall. */
 export const SHAPES: Record<Tier, Shape> = {
-  easy: { width: 5, height: 5, shortest: 4, longest: 8, margin: 1, dark: 2, code: 2 },
-  medium: { width: 7, height: 7, shortest: 4, longest: 8, margin: 2, dark: 3, code: 3 },
-  hard: { width: 9, height: 9, shortest: 5, longest: 9, margin: 2, dark: 5, code: 4 },
+  easy: { width: 5, height: 5, shortest: 4, longest: 8, margin: 1, dark: 2, code: 2, cuts: 8 },
+  medium: { width: 7, height: 7, shortest: 4, longest: 8, margin: 2, dark: 3, code: 3, cuts: 15 },
+  hard: { width: 9, height: 9, shortest: 5, longest: 9, margin: 2, dark: 5, code: 4, cuts: 21 },
 };
 
 const ROUNDS = 40;
@@ -401,13 +403,28 @@ export function makePanel(
       p = { ...p, code: code.join('') };
     }
     if (on.has('cuts')) {
-      // Fences on edges no word steps across, next to squares another way to lie uses;
-      // each kept while it rules ways out, then the spare ones dropped.
+      // Fences on boundary edges between different words (never stepped across by a true word or
+      // touching a corner a true word steps diagonally through), at most 2 fences per square so no
+      // letter is boxed in, prioritising edges that rule out stray word paths.
       const H = p.rows.length;
       const W = p.rows[0]?.length ?? 0;
-      const stepped = new Set(
-        p.words.flatMap((w) => w.cells.slice(1).map((s, i) => edge(w.cells[i] as Spot, s))),
-      );
+      const owner = new Map<string, number>();
+      p.words.forEach((w, i) => w.cells.forEach((s) => owner.set(key(s), i)));
+      const stepped = new Set<string>();
+      for (const w of p.words)
+        for (let i = 1; i < w.cells.length; i++) {
+          const a = w.cells[i - 1] as Spot;
+          const b = w.cells[i] as Spot;
+          if (a[0] === b[0] || a[1] === b[1]) stepped.add(edge(a, b));
+          else {
+            const c: Spot = [a[0], b[1]];
+            const d: Spot = [b[0], a[1]];
+            stepped.add(edge(a, c));
+            stepped.add(edge(a, d));
+            stepped.add(edge(b, c));
+            stepped.add(edge(b, d));
+          }
+        }
       const truth = new Set(p.words.map((w) => w.cells.map(key).sort().join(' ')));
       const strays = new Set(
         framedOptions(p, { noCode: true }, budget).flatMap((ways) =>
@@ -416,7 +433,8 @@ export function makePanel(
             : [],
         ),
       );
-      const candidates: Wall[] = [];
+      const strayCandidates: Wall[] = [];
+      const otherBoundaries: Wall[] = [];
       for (let r = 0; r < H; r++)
         for (let c = 0; c < W; c++)
           for (const [side, t] of [
@@ -424,38 +442,84 @@ export function makePanel(
             ['h', [r + 1, c]],
           ] as ['v' | 'h', Spot][]) {
             if (t[0] >= H || t[1] >= W || stepped.has(edge([r, c], t))) continue;
-            if (strays.has(key([r, c])) || strays.has(key(t))) candidates.push([r, c, side]);
+            if (owner.get(key([r, c])) === owner.get(key(t))) continue;
+            if (strays.has(key([r, c])) || strays.has(key(t))) strayCandidates.push([r, c, side]);
+            else otherBoundaries.push([r, c, side]);
           }
-      let walls: Wall[] = [];
+      const walls: Wall[] = [];
+      const usedWalls = new Set<string>();
+      const cellWalls = new Map<string, number>();
+      const wallKey = (w: Wall): string => `${w[0]},${w[1]},${w[2]}`;
+      const canAddWall = (w: Wall): boolean => {
+        const a = key([w[0], w[1]]);
+        const b = key(w[2] === 'v' ? [w[0], w[1] + 1] : [w[0] + 1, w[1]]);
+        return (cellWalls.get(a) ?? 0) < 2 && (cellWalls.get(b) ?? 0) < 2;
+      };
+      const addWall = (w: Wall): void => {
+        const a = key([w[0], w[1]]);
+        const b = key(w[2] === 'v' ? [w[0], w[1] + 1] : [w[0] + 1, w[1]]);
+        walls.push(w);
+        usedWalls.add(wallKey(w));
+        cellWalls.set(a, (cellWalls.get(a) ?? 0) + 1);
+        cellWalls.set(b, (cellWalls.get(b) ?? 0) + 1);
+      };
       let before = load(p);
-      for (const wall of shuffle(random, candidates)) {
+      for (const wall of shuffle(random, strayCandidates)) {
+        if (walls.length >= shape.cuts) break;
+        if (!canAddWall(wall)) continue;
         if (eachWordOnce({ ...p, walls }, {}, budget)) break;
         const after = load({ ...p, walls: [...walls, wall] });
         if (after < before) {
-          walls.push(wall);
+          addWall(wall);
           before = after;
         }
       }
-      for (const wall of shuffle(random, [...walls])) {
-        const fewer = walls.filter((x) => x !== wall);
-        if (fewer.length && load({ ...p, walls: fewer }) === before) walls = fewer;
+      const pool = [
+        ...shuffle(random, strayCandidates),
+        ...shuffle(random, otherBoundaries),
+      ].filter((w) => !usedWalls.has(wallKey(w)));
+      for (const wall of pool) {
+        if (walls.length >= shape.cuts) break;
+        if (!canAddWall(wall)) continue;
+        addWall(wall);
       }
-      if (walls.length) p = { ...p, walls };
+      if (walls.length >= shape.cuts) p = { ...p, walls };
     }
     if (on.has('eggs')) {
-      // Eggs on letters whose word could otherwise be traced another way (each then settles it).
+      // Eggs = half the words (at most 1 egg per word, starting with words that can be traced more than one way).
+      const targetEggs = Math.max(2, Math.floor(p.words.length / 2));
       const eggs: Spot[] = [];
-      for (const w of p.words) {
+      const usedWords = new Set<number>();
+      for (let wi = 0; wi < p.words.length; wi++) {
+        if (eggs.length >= targetEggs) break;
+        const w = p.words[wi] as Word;
         if (options({ ...p, eggs }, w.word, {}, budget).length <= 1) continue;
+        let bestSpot: Spot | null = null;
+        let bestCount = options({ ...p, eggs }, w.word, {}, budget).length;
         for (const s of shuffle(random, w.cells)) {
-          const next = [...eggs, s];
-          if (
-            options({ ...p, eggs: next }, w.word, {}, budget).length <
-            options({ ...p, eggs }, w.word, {}, budget).length
-          ) {
-            eggs.push(s);
-            if (options({ ...p, eggs }, w.word, {}, budget).length <= 1) break;
+          const cnt = options({ ...p, eggs: [...eggs, s] }, w.word, {}, budget).length;
+          if (cnt < bestCount) {
+            bestCount = cnt;
+            bestSpot = s;
+            if (cnt <= 1) break;
           }
+        }
+        if (bestSpot) {
+          eggs.push(bestSpot);
+          usedWords.add(wi);
+        }
+      }
+      for (const wi of shuffle(
+        random,
+        p.words.map((_, i) => i).filter((i) => !usedWords.has(i)),
+      )) {
+        if (eggs.length >= targetEggs) break;
+        const w = p.words[wi] as Word;
+        const pool = w.cells.length > 1 ? w.cells.slice(1) : w.cells;
+        const chosen = shuffle(random, pool)[0];
+        if (chosen) {
+          eggs.push(chosen);
+          usedWords.add(wi);
         }
       }
       p = { ...p, eggs };

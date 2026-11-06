@@ -7,7 +7,17 @@
  * (a coded letter is then revealed everywhere, and in the key).
  */
 import { blip } from './kit';
-import { type Panel, type Spot, find, key, letterAt, placeIn, touching } from '../gen/words';
+import {
+  type Panel,
+  type Spot,
+  find,
+  key,
+  letterAt,
+  placeIn,
+  stepBlocked,
+  touching,
+  wallSet,
+} from '../gen/words';
 
 const NS = 'http://www.w3.org/2000/svg';
 
@@ -16,7 +26,7 @@ export interface StrandsHooks {
   status(text: string): void;
 }
 
-export function mountStrands(host: HTMLElement, panel: Panel, hooks: StrandsHooks): void {
+export function mountStrands(host: HTMLElement, panel: Panel, hooks: StrandsHooks): () => unknown {
   const H = panel.rows.length;
   const Wd = panel.rows[0]?.length ?? 0;
   const avail = Math.min(host.clientWidth || 360, 480);
@@ -26,6 +36,7 @@ export function mountStrands(host: HTMLElement, panel: Panel, hooks: StrandsHook
   const found = new Set<number>();
   const dark = new Set((panel.dark ?? []).map(key));
   const eggs = new Set((panel.eggs ?? []).map(key));
+  const walls = wallSet(panel.walls);
   const code = panel.code ?? '';
   let path: Spot[] = [];
   let shake = 0;
@@ -59,7 +70,8 @@ export function mountStrands(host: HTMLElement, panel: Panel, hooks: StrandsHook
   if (panel.bows) rules.push('A bow shows its word’s colour; two words of one colour never touch.');
   if (panel.portions)
     rules.push('No word crosses a fence; each portion holds the same number of words.');
-  if (panel.walls?.length) rules.push('No word steps straight across a fence.');
+  if (panel.walls?.length)
+    rules.push('No word steps across a fence (or diagonally through its corner).');
   if (panel.eggs?.length) rules.push('An egg’s number is its letter’s place in its word.');
   const ruleLines = rules.map((text) => {
     const line = document.createElement('div');
@@ -129,7 +141,12 @@ export function mountStrands(host: HTMLElement, panel: Panel, hooks: StrandsHook
     if (key(s) === key(last)) return;
     const back = path[path.length - 2];
     if (back && key(back) === key(s)) path.pop();
-    else if (touching(last, s) && !path.some((x) => key(x) === key(s))) path.push(s);
+    else if (
+      touching(last, s) &&
+      !stepBlocked(walls, last, s) &&
+      !path.some((x) => key(x) === key(s))
+    )
+      path.push(s);
     else return;
     blip(600 + path.length * 40, 20);
     render();
@@ -377,4 +394,9 @@ export function mountStrands(host: HTMLElement, panel: Panel, hooks: StrandsHook
       );
   };
   render();
+  return () => ({
+    done: found.size === panel.words.length,
+    foundWords: [...found].map((i) => panel.words[i]?.word),
+    currentPath: [...path],
+  });
 }

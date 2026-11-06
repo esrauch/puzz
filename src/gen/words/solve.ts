@@ -12,7 +12,9 @@
  */
 import { Budget } from '../core/budget';
 import { type Frame, inFrame, mirrorSquare } from '../core/mirror';
-import { type Panel, type Spot, key, letterAt, placeIn } from './model';
+import { type Panel, type Spot, edge, key, letterAt, placeIn, stepBlocked, wallSet } from './model';
+
+export { edge };
 
 export interface Without {
   /** Leave a twist out (to measure what it does). */
@@ -66,13 +68,7 @@ function look(p: Panel, rules: Without): Look {
       rules.noBows ? [] : (p.bows ?? []).map(([r, c]) => [key([r, c]), p.colours?.[r]?.[c] ?? '']),
     ),
     frame: rules.noSnow ? undefined : p.frame,
-    walls: new Set(
-      rules.noWalls
-        ? []
-        : (p.walls ?? []).map(([r, c, side]) =>
-            edge([r, c], side === 'v' ? [r, c + 1] : [r + 1, c]),
-          ),
-    ),
+    walls: rules.noWalls ? new Set() : wallSet(p.walls),
   };
 }
 
@@ -97,8 +93,8 @@ export function options(
     const egg = seen.egg.get(k);
     if (egg !== undefined && egg !== i + 1) return;
     if (path.length && seen.portion(k) !== seen.portion(key(path[0] as Spot))) return;
-    // Cuts: no step straight across a fence.
-    if (path.length && seen.walls.has(edge(path[path.length - 1] as Spot, s))) return;
+    // Cuts: no step across a fence or diagonally through its corner.
+    if (path.length && stepBlocked(seen.walls, path[path.length - 1] as Spot, s)) return;
     // Snowflakes: no word crosses the frame's edge.
     if (path.length && seen.frame) {
       const f = seen.frame;
@@ -279,6 +275,3 @@ export function framedOptions(p: Panel, rules: Without = {}, budget = new Budget
   }
   return all;
 }
-
-/** A fence's key: the two squares either side of it (in either order). */
-export const edge = (a: Spot, b: Spot): string => [key(a), key(b)].sort().join('|');

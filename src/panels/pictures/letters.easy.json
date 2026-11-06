@@ -1,0 +1,37 @@
+{
+  "genre": "pictures",
+  "twists": ["letters"],
+  "tier": "easy",
+  "panels": [
+    {
+      "seed": 4,
+      "stats": { "steps": 14, "without letters": 2 },
+      "panel": {
+        "name": "Picture grids, letters: easy 1",
+        "rows": ["...#.", ".#.##", ".###.", "#####", "..#.."],
+        "letters": "  ES",
+        "message": "4HIN3"
+      }
+    },
+    {
+      "seed": 7,
+      "stats": { "steps": 395, "without letters": 2 },
+      "panel": {
+        "name": "Picture grids, letters: easy 2",
+        "rows": ["....#", "..#..", ".###.", "##.##", ".###."],
+        "letters": "BR",
+        "message": "1U2ST"
+      }
+    },
+    {
+      "seed": 9,
+      "stats": { "steps": 17, "without letters": 2 },
+      "panel": {
+        "name": "Picture grids, letters: easy 3",
+        "rows": ["####.", "..###", "####.", "###..", ".#..."],
+        "letters": " E L",
+        "message": "4OV2"
+      }
+    }
+  ]
+}

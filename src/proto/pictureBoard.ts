@@ -4,14 +4,24 @@
  * (or the cross), and tap to paint (tap a painted square again to clear it).
  * Drag along a row or column to paint a run in one stroke. A line's clues go
  * grey when it matches; dark clues show '?', letter clues their letter.
+ * Supports all six holiday twists:
+ * - colours (red and blue paints in the bar, different colours can touch);
+ * - dark ('?' clues of any length);
+ * - letters (letter clues and message blank tiles above the board);
+ * - eggs (glow green when they are the nth filled square in their row, red when over);
+ * - portions (live share counts per portion, green when fair, red when over);
+ * - snowflakes (frosty frame, mirror line with ❄, and ghost mirror squares).
  * Solved, the picture glows and chimes (and a message's blanks fill in).
  */
+import { mirrorSquare } from '../gen/core/mirror';
 import { blip, h } from './kit';
 import {
   type Panel,
   type Run,
   clues,
+  eggsHold,
   fillMessage,
+  frameSymmetric,
   lineDone,
   matches,
   picture,
@@ -27,7 +37,7 @@ export interface PictureHooks {
   status(text: string): void;
 }
 
-export function mountPicture(host: HTMLElement, panel: Panel, hooks: PictureHooks): void {
+export function mountPicture(host: HTMLElement, panel: Panel, hooks: PictureHooks): () => unknown {
   const palette = panel.palette ?? '#';
   const c = clues(panel);
   const H = c.rows.length;
@@ -53,47 +63,86 @@ export function mountPicture(host: HTMLElement, panel: Panel, hooks: PictureHook
     if (!note || !panel.message) return;
     const solved = fillMessage(panel);
     note.replaceChildren(
-      ...[...panel.message].map((ch, i) =>
-        ch === ' '
-          ? h('span', { style: { width: '12px' } })
-          : h(
-              'span',
-              {
-                style: {
-                  width: '30px',
-                  height: '38px',
-                  display: 'grid',
-                  placeItems: 'center',
-                  borderRadius: '6px',
-                  fontWeight: '700',
-                  fontSize: done ? '22px' : '14px',
-                  background: done ? '#ffd54f' : '#fff',
-                  border: '2px dashed #c9a2b0',
-                  color: done ? '#7a1f3d' : '#9a8a96',
-                },
-              },
-              done ? (solved[i] ?? '') : ch,
-            ),
-      ),
+      ...[...panel.message].map((ch, i) => {
+        if (ch === ' ') return h('span', { style: { width: '12px' } });
+        const blank = /[0-9]/.test(ch);
+        return h(
+          'span',
+          {
+            style: {
+              width: '30px',
+              height: '38px',
+              display: 'grid',
+              placeItems: 'center',
+              borderRadius: '6px',
+              fontWeight: '700',
+              fontSize: blank && !done ? '14px' : '22px',
+              background: blank ? (done ? '#ffd54f' : '#fff') : '#f3e3e8',
+              border: blank ? '2px dashed #c9a2b0' : '2px solid transparent',
+              color: blank && !done ? '#9a8a96' : '#7a1f3d',
+            },
+          },
+          done ? (solved[i] ?? '') : ch,
+        );
+      }),
     );
   };
   if (note) host.append(note);
-  if (panel.portions) {
-    const share = [...portionCounts(panel, picture(panel)).values()][0] ?? 0;
+
+  if (panel.frame) {
     host.append(
       h(
         'div',
-        { style: { fontSize: '17px', fontWeight: '600', margin: '0 0 8px' } },
-        `Every portion gets ${share} filled squares.`,
+        { style: { fontSize: '16px', fontWeight: '600', margin: '0 0 8px' } },
+        '❄ Inside the frosty frame, the filled squares are their own mirror image. Outside it, anything goes.',
       ),
     );
   }
+
+  const share = panel.portions ? ([...portionCounts(panel, picture(panel)).values()][0] ?? 0) : 0;
+  const portionBar = panel.portions
+    ? h('div', {
+        style: {
+          display: 'flex',
+          gap: '8px',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          fontSize: '16px',
+          fontWeight: '600',
+          margin: '0 0 8px',
+        },
+      })
+    : null;
+  const drawPortionBar = (): void => {
+    if (!portionBar || !panel.portions) return;
+    const counts = portionCounts(panel, grid);
+    portionBar.replaceChildren(
+      h('span', {}, `Every portion gets ${share} filled squares:`),
+      ...[...counts.entries()].map(([k, have]) =>
+        h(
+          'span',
+          {
+            style: {
+              padding: '2px 8px',
+              borderRadius: '6px',
+              background: have === share ? '#e2f2dc' : have > share ? '#fde0dd' : '#f4efe6',
+              color: have === share ? '#2f8a45' : have > share ? '#c23b33' : '#5a4a3a',
+              border: `1.5px solid ${have === share ? '#4caf50' : have > share ? '#d9534f' : '#c9beae'}`,
+            },
+          },
+          `${k}: ${have}/${share}`,
+        ),
+      ),
+    );
+  };
+  if (portionBar) host.append(portionBar);
+
   if (panel.eggs?.length) {
     host.append(
       h(
         'div',
         { style: { fontSize: '16px', fontWeight: '600', margin: '0 0 8px' } },
-        'An egg’s number: which filled square it is in its row, counting from the left.',
+        'An egg on a row clue marks which run in that row covers the egg square.',
       ),
     );
   }
@@ -170,6 +219,7 @@ export function mountPicture(host: HTMLElement, panel: Panel, hooks: PictureHook
     } catch {
       // A synthetic pointer: no capture needed.
     }
+    drawPortionBar();
     render();
   });
   svg.addEventListener('pointermove', (e) => {
@@ -182,6 +232,7 @@ export function mountPicture(host: HTMLElement, panel: Panel, hooks: PictureHook
     drag.axis ??= r === drag.r ? 'row' : 'col';
     if (drag.axis === 'row') paint(drag.r, cc, drag.value);
     else paint(r, drag.c, drag.value);
+    drawPortionBar();
     render();
   });
   const release = (): void => {
@@ -192,10 +243,12 @@ export function mountPicture(host: HTMLElement, panel: Panel, hooks: PictureHook
       [660, 880, 1100, 1320].forEach((f, k) => setTimeout(() => blip(f, 150), k * 110));
       navigator.vibrate?.([20, 40, 20]);
       drawNote();
+      drawPortionBar();
       render();
       hooks.solved();
       return;
     }
+    drawPortionBar();
     render();
   };
   svg.addEventListener('pointerup', release);
@@ -221,29 +274,97 @@ export function mountPicture(host: HTMLElement, panel: Panel, hooks: PictureHook
         : palette.length > 1
           ? (PAINT[palette[run.colour - 1] as string] as string)
           : '#2b2a33';
-    // Row clues, right-aligned against the grid.
+
+    // Concrete-clue lines that appear solved trigger auto-X on their remaining empty squares.
+    const rowAuto = c.rows.map(
+      (runs, r) => runs.every((run) => !run.hidden) && lineDone(runs, grid[r] as number[]),
+    );
+    const colAuto = c.cols.map(
+      (runs, cc) =>
+        runs.every((run) => !run.hidden) &&
+        lineDone(
+          runs,
+          grid.map((row) => row[cc] ?? 0),
+        ),
+    );
+    const isAutoX = (r: number, cc: number): boolean =>
+      (grid[r]?.[cc] ?? 0) === 0 && Boolean(rowAuto[r] || colAuto[cc]);
+    const effective = (r: number, cc: number): number => {
+      const v = grid[r]?.[cc] ?? 0;
+      return v !== 0 ? v : isAutoX(r, cc) ? CROSS : 0;
+    };
+
+    // Map each egg [r, cc, n] to which run index k in c.rows[r] covers (r, cc),
+    // and compute its live fill/stroke colours.
+    const sol = picture(panel);
+    const eggStyle = (
+      r: number,
+      cc: number,
+      n: number,
+    ): { fill: string; stroke: string; right: boolean } => {
+      const row = grid[r] ?? [];
+      const atCell = row[cc] ?? 0;
+      const filledToHere = row.slice(0, cc + 1).filter((v) => v > 0).length;
+      const right = atCell > 0 && filledToHere === n;
+      const wrong =
+        atCell === CROSS ||
+        filledToHere > n ||
+        (atCell > 0 && row.slice(0, cc).every((v) => v !== 0) && filledToHere !== n);
+      const fill = done ? '#ffd54f' : wrong ? '#ff8a80' : right ? '#a5d6a7' : '#fff6dc';
+      const stroke = done ? '#b28704' : wrong ? '#c62828' : right ? '#2e7d32' : '#c9a227';
+      return { fill, stroke, right };
+    };
+    const clueEgg = new Map<string, [number, number, number]>();
+    for (const egg of panel.eggs ?? []) {
+      const [r, cc] = egg;
+      const solRow = sol[r] ?? [];
+      let runIdx = -1;
+      let prev = 0;
+      for (let col = 0; col <= cc; col++) {
+        const cur = solRow[col] ?? 0;
+        if (cur > 0 && cur !== prev) runIdx++;
+        prev = cur > 0 ? cur : 0;
+      }
+      if (runIdx >= 0) clueEgg.set(`${r},${runIdx}`, egg);
+    }
+
+    // Row clues, right-aligned against the grid (with an egg behind any egg-marked clue).
     c.rows.forEach((runs, r) => {
-      const grey = lineDone(runs, grid[r] as number[]);
-      runs.forEach((run, k) =>
+      const effRow = Array.from({ length: W }, (_, cc) => effective(r, cc));
+      const grey = done || lineDone(runs, effRow);
+      runs.forEach((run, k) => {
+        const cx = clueW - (runs.length - k - 0.5) * cell * 0.62;
+        const cy = clueH + r * cell + cell / 2;
+        const egg = clueEgg.get(`${r},${k}`);
+        if (egg) {
+          const { fill, stroke } = eggStyle(egg[0], egg[1], egg[2]);
+          add('ellipse', {
+            cx,
+            cy,
+            rx: cell * 0.25,
+            ry: cell * 0.32,
+            fill,
+            stroke,
+            'stroke-width': 2,
+          });
+        }
         add(
           'text',
           {
-            x: clueW - (runs.length - k - 0.5) * cell * 0.62,
+            x: cx,
             y: clueH + r * cell + cell * 0.66,
             'text-anchor': 'middle',
             'font-size': cell * 0.46,
             'font-weight': 700,
-            fill: tone(run, grey),
+            fill: egg ? (grey ? '#7a6f5d' : '#4a3a20') : tone(run, grey),
           },
           label(run),
-        ),
-      );
+        );
+      });
     });
     c.cols.forEach((runs, cc) => {
-      const grey = lineDone(
-        runs,
-        grid.map((row) => row[cc] ?? 0),
-      );
+      const effCol = Array.from({ length: H }, (_, r) => effective(r, cc));
+      const grey = done || lineDone(runs, effCol);
       runs.forEach((run, k) =>
         add(
           'text',
@@ -281,13 +402,94 @@ export function mountPicture(host: HTMLElement, panel: Panel, hooks: PictureHook
               y: y + cell * 0.68,
               'text-anchor': 'middle',
               'font-size': cell * 0.5,
-              fill: '#b0a898',
+              'font-weight': 700,
+              fill: '#968d7e',
+            },
+            '✕',
+          );
+        else if (isAutoX(r, cc))
+          add(
+            'text',
+            {
+              x: x + cell / 2,
+              y: y + cell * 0.66,
+              'text-anchor': 'middle',
+              'font-size': cell * 0.44,
+              fill: '#d8d0c2',
             },
             '✕',
           );
       }),
     );
-    // Fair shares: thick edges between portions. Eggs: a filled square's place in its row's run.
+
+    // Snowflakes: frosty frame, mirror line with ❄, and ghost mirror squares
+    if (panel.frame) {
+      const f = panel.frame;
+      for (let r = f.top; r <= f.bottom; r++) {
+        for (let cc = f.left; cc <= f.right; cc++) {
+          const v = grid[r]?.[cc] ?? 0;
+          if (v <= 0) continue;
+          const [mr, mc] = mirrorSquare(f, r, cc);
+          if ((grid[mr]?.[mc] ?? 0) > 0) continue;
+          add('rect', {
+            x: clueW + mc * cell + 3,
+            y: clueH + mr * cell + 3,
+            width: cell - 6,
+            height: cell - 6,
+            rx: 5,
+            fill: 'rgba(90, 169, 230, 0.22)',
+            stroke: '#5aa9e6',
+            'stroke-width': 2,
+            'stroke-dasharray': '4 3',
+          });
+        }
+      }
+      const fx = clueW + f.left * cell + 2;
+      const fy = clueH + f.top * cell + 2;
+      const fw = (f.right - f.left + 1) * cell - 4;
+      const fh = (f.bottom - f.top + 1) * cell - 4;
+      add('rect', {
+        x: fx,
+        y: fy,
+        width: fw,
+        height: fh,
+        rx: 8,
+        fill: 'none',
+        stroke: '#5aa9e6',
+        'stroke-width': 2.5,
+        'stroke-dasharray': '7 5',
+      });
+      const vertical = f.axis === 'v';
+      const mid = vertical
+        ? clueW + ((f.left + f.right + 1) * cell) / 2
+        : clueH + ((f.top + f.bottom + 1) * cell) / 2;
+      const [x1, y1, x2, y2] = vertical ? [mid, fy, mid, fy + fh] : [fx, mid, fx + fw, mid];
+      add('line', {
+        x1,
+        y1,
+        x2,
+        y2,
+        stroke: '#5aa9e6',
+        'stroke-width': 1.8,
+        'stroke-dasharray': '3 4',
+      });
+      for (const [x, y] of [
+        [x1, y1],
+        [x2, y2],
+      ])
+        add(
+          'text',
+          {
+            x: x ?? 0,
+            y: (y ?? 0) + cell * 0.1,
+            'text-anchor': 'middle',
+            'font-size': cell * 0.28,
+          },
+          '❄',
+        );
+    }
+
+    // Fair shares: thick edges between portions.
     if (panel.portions)
       for (let r = 0; r < H; r++)
         for (let cc = 0; cc < W; cc++) {
@@ -311,30 +513,28 @@ export function mountPicture(host: HTMLElement, panel: Panel, hooks: PictureHook
               'stroke-width': 4,
             });
         }
+
+    // Eggs inside the grid: just an unnumbered egg icon in the square.
     for (const [r, cc, n] of panel.eggs ?? []) {
       const x = clueW + cc * cell + cell / 2;
       const y = clueH + r * cell + cell / 2;
+      const { fill, stroke } = eggStyle(r, cc, n);
       add('ellipse', {
         cx: x,
         cy: y,
-        rx: cell * 0.24,
-        ry: cell * 0.3,
-        fill: '#fff6dc',
-        stroke: '#c9a227',
+        rx: cell * 0.22,
+        ry: cell * 0.28,
+        fill,
+        stroke,
         'stroke-width': 2,
       });
-      add(
-        'text',
-        {
-          x,
-          y: y + cell * 0.1,
-          'text-anchor': 'middle',
-          'font-size': cell * 0.3,
-          'font-weight': 700,
-          fill: '#4a3a20',
-        },
-        String(n),
-      );
+      add('ellipse', {
+        cx: x - cell * 0.06,
+        cy: y - cell * 0.08,
+        rx: cell * 0.06,
+        ry: cell * 0.09,
+        fill: 'rgba(255, 255, 255, 0.65)',
+      });
     }
     // Thicker lines every five squares, to help counting.
     for (let k = 5; k < W; k += 5)
@@ -365,9 +565,48 @@ export function mountPicture(host: HTMLElement, panel: Panel, hooks: PictureHook
         stroke: '#ffd54f',
         'stroke-width': 5,
       });
-    hooks.status(done ? 'A picture!' : '');
+    const allLinesDone =
+      c.rows.every((runs, r) =>
+        lineDone(
+          runs,
+          Array.from({ length: W }, (_, cc) => effective(r, cc)),
+        ),
+      ) &&
+      c.cols.every((runs, cc) =>
+        lineDone(
+          runs,
+          Array.from({ length: H }, (_, r) => effective(r, cc)),
+        ),
+      );
+    const snowBad =
+      !done && allLinesDone && Boolean(panel.frame && !frameSymmetric(panel.frame, grid));
+    const portionsBad =
+      !done &&
+      allLinesDone &&
+      Boolean(
+        panel.portions && [...portionCounts(panel, grid).values()].some((have) => have !== share),
+      );
+    const eggsBad = !done && allLinesDone && Boolean(panel.eggs?.length && !eggsHold(panel, grid));
+    hooks.status(
+      done
+        ? 'A picture!'
+        : snowBad
+          ? 'Every line matches, but the frosty frame isn’t a mirror image'
+          : portionsBad
+            ? 'Every line matches, but the portions don’t have equal shares'
+            : eggsBad
+              ? 'Every line matches, but an egg square doesn’t match its clue'
+              : '',
+    );
   };
   drawNote();
+  drawPortionBar();
   drawBar();
   render();
+  return () => ({
+    done,
+    grid: grid.map((row) =>
+      row.map((v) => (v === CROSS ? 'X' : v > 0 ? (palette[v - 1] ?? '#') : '.')).join(''),
+    ),
+  });
 }

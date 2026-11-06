@@ -1,0 +1,67 @@
+{
+  "genre": "pictures",
+  "twists": ["letters"],
+  "tier": "hard",
+  "panels": [
+    {
+      "seed": 9,
+      "stats": { "steps": 119, "without letters": 3 },
+      "panel": {
+        "name": "Picture grids, letters: hard 1",
+        "rows": [
+          "......##.",
+          "#..#...#.",
+          "########.",
+          "#.###..#.",
+          "#####..#.",
+          "..##.....",
+          "..####.##",
+          "...#.....",
+          "......#.."
+        ],
+        "letters": " LW   G",
+        "message": "72O3"
+      }
+    },
+    {
+      "seed": 15,
+      "stats": { "steps": 359, "without letters": 3 },
+      "panel": {
+        "name": "Picture grids, letters: hard 2",
+        "rows": [
+          "....#....",
+          "##.#.....",
+          "#####....",
+          "#########",
+          "...####..",
+          ".#####...",
+          "...##....",
+          "...##....",
+          "...##...#"
+        ],
+        "letters": "   MB O",
+        "message": "5774"
+      }
+    },
+    {
+      "seed": 45,
+      "stats": { "steps": 4803, "without letters": 3 },
+      "panel": {
+        "name": "Picture grids, letters: hard 3",
+        "rows": [
+          "......#..",
+          "#.#...#..",
+          "#####.##.",
+          "#..##.##.",
+          "..######.",
+          "...##.#..",
+          "......#..",
+          "..######.",
+          "...###..#"
+        ],
+        "letters": "  HTR",
+        "message": "3EA54"
+      }
+    }
+  ]
+}

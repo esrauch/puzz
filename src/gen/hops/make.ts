@@ -6,7 +6,7 @@ import { type Frame, area, frames, mirrorSquare, offAxis, symmetricIn } from '..
 import { type Rng, shuffle } from '../core/rng';
 import { type Board, type Panel, type Spot, key, parse, splitRoutes } from './model';
 import { trailSegments } from './rules';
-import { countSolutions } from './solve';
+import { countSolutions, solve } from './solve';
 
 /** Words with distinct letters for each message length (3, 4, 5). */
 export const EASTER_WORDS: Record<number, readonly string[]> = {
@@ -103,7 +103,10 @@ export function randomSnowRoute(
   width: number,
   random: Rng,
   burrows?: [Spot, Spot][],
+  customRows?: string[],
 ): { route: number[]; frame: Frame; b: Board } | null {
+  const rows = customRows ?? Array.from({ length: height }, () => '#'.repeat(width));
+  const isLawn = (r: number, c: number): boolean => rows[r]?.[c] === '#';
   const validFrames = shuffle(
     random,
     frames(width, height, 3).filter((f) => {
@@ -112,13 +115,17 @@ export function randomSnowRoute(
       if ((f.axis === 'v' ? w : h) % 2 !== 0) return false;
       if (area(f) >= width * height * 0.8) return false;
       if (Math.min(h, w) / Math.max(h, w) < 0.6) return false;
+      for (let r = f.top; r <= f.bottom; r++) {
+        for (let c = f.left; c <= f.right; c++) {
+          if (!isLawn(r, c)) return false;
+        }
+      }
       return true;
     }),
   );
   // Prefer larger frames first
   validFrames.sort((a, b) => area(b) - area(a));
 
-  const rows = Array.from({ length: height }, () => '#'.repeat(width));
   const baseBoard = parse({
     name: 'snow-candidate',
     rows,
@@ -126,6 +133,31 @@ export function randomSnowRoute(
     ...(burrows?.length ? { burrows } : {}),
   });
   const N = baseBoard.spots.length;
+
+  if (rows.some((row) => row.includes('.'))) {
+    const mid = Math.floor(width / 2);
+    const treeFrames = [...validFrames].sort((a, b) => area(a) - area(b));
+    for (const f of treeFrames.slice(0, 4)) {
+      const startCol = random() < 0.5 ? mid - 1 : mid + 1;
+      if (!isLawn(1, startCol) || !isLawn(0, mid)) continue;
+      const bCand = parse({
+        name: 'snow-tree-candidate',
+        rows,
+        given: [[1, startCol, 1]],
+        golden: [0, mid],
+        frame: f,
+        ...(burrows?.length ? { burrows } : {}),
+      });
+      const sols = solve(bCand, 6, {}, new Budget(25_000));
+      const good = shuffle(
+        random,
+        sols.filter((s) => offAxis(f, trailSegments(baseBoard, s)) >= 3),
+      );
+      if (good[0]) {
+        return { route: good[0], frame: f, b: baseBoard };
+      }
+    }
+  }
 
   for (const f of validFrames.slice(0, 12)) {
     const h = f.bottom - f.top + 1;
@@ -617,6 +649,19 @@ export function minimizeEggs(
     const p: Panel = { ...basePanel, given: candidate.map((x) => x.egg) };
     try {
       if (countSolutions(parse(p), 2, {}, new Budget(stepBudget)) === 1) {
+        current = candidate;
+      }
+    } catch {
+      // Keep egg if removing it blows the step budget
+    }
+  }
+
+  for (const item of [...current]) {
+    if (preservedSpots.has(item.spot)) continue;
+    const candidate = current.filter((x) => x !== item);
+    const p: Panel = { ...basePanel, given: candidate.map((x) => x.egg) };
+    try {
+      if (countSolutions(parse(p), 2, {}, new Budget(50_000)) === 1) {
         current = candidate;
       }
     } catch {

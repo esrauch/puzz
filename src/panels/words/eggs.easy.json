@@ -4,10 +4,140 @@
   "tier": "easy",
   "panels": [
     {
+      "seed": 8,
+      "stats": { "words": 5, "steps": 246 },
+      "panel": {
+        "name": "Words, eggs: easy 1",
+        "theme": "Garden of love",
+        "rows": ["GNSLO", "IPNST", "RESRU", "MBLAO", "OOVTH"],
+        "words": [
+          {
+            "word": "SPRING",
+            "cells": [
+              [0, 2],
+              [1, 1],
+              [2, 0],
+              [1, 0],
+              [0, 1],
+              [0, 0]
+            ]
+          },
+          {
+            "word": "LOTUS",
+            "cells": [
+              [0, 3],
+              [0, 4],
+              [1, 4],
+              [2, 4],
+              [1, 3]
+            ]
+          },
+          {
+            "word": "THORN",
+            "cells": [
+              [4, 3],
+              [4, 4],
+              [3, 4],
+              [2, 3],
+              [1, 2]
+            ]
+          },
+          {
+            "word": "VASE",
+            "cells": [
+              [4, 2],
+              [3, 3],
+              [2, 2],
+              [2, 1]
+            ]
+          },
+          {
+            "word": "BLOOM",
+            "cells": [
+              [3, 1],
+              [3, 2],
+              [4, 1],
+              [4, 0],
+              [3, 0]
+            ]
+          }
+        ],
+        "eggs": [
+          [2, 4],
+          [2, 2]
+        ]
+      }
+    },
+    {
+      "seed": 10,
+      "stats": { "words": 5, "steps": 250 },
+      "panel": {
+        "name": "Words, eggs: easy 2",
+        "theme": "Ghostly crushes",
+        "rows": ["MSTRA", "INSEV", "IPLLN", "GEBTE", "HTITN"],
+        "words": [
+          {
+            "word": "MIST",
+            "cells": [
+              [0, 0],
+              [1, 0],
+              [0, 1],
+              [0, 2]
+            ]
+          },
+          {
+            "word": "RAVEN",
+            "cells": [
+              [0, 3],
+              [0, 4],
+              [1, 4],
+              [1, 3],
+              [2, 4]
+            ]
+          },
+          {
+            "word": "NIGHT",
+            "cells": [
+              [1, 1],
+              [2, 0],
+              [3, 0],
+              [4, 0],
+              [4, 1]
+            ]
+          },
+          {
+            "word": "SPELL",
+            "cells": [
+              [1, 2],
+              [2, 1],
+              [3, 1],
+              [2, 2],
+              [2, 3]
+            ]
+          },
+          {
+            "word": "BITTEN",
+            "cells": [
+              [3, 2],
+              [4, 2],
+              [3, 3],
+              [4, 3],
+              [3, 4],
+              [4, 4]
+            ]
+          }
+        ],
+        "eggs": [
+          [1, 0],
+          [2, 4]
+        ]
+      }
+    },
+    {
       "seed": 19,
       "stats": { "words": 5, "steps": 276 },
       "panel": {
-        "name": "Words, eggs: easy 1",
+        "name": "Words, eggs: easy 3",
         "theme": "Ghostly crushes",
         "rows": ["CULTA", "ADCRE", "RAKST", "OPANO", "NEMOM"],
         "words": [
@@ -62,121 +192,10 @@
             ]
           }
         ],
-        "eggs": [[3, 4]]
-      }
-    },
-    {
-      "seed": 32,
-      "stats": { "words": 4, "steps": 238 },
-      "panel": {
-        "name": "Words, eggs: easy 2",
-        "theme": "Love notes",
-        "rows": ["NISEM", "OSHFA", "ASIRL", "PCNCE", "ARIGH"],
-        "words": [
-          {
-            "word": "PASSION",
-            "cells": [
-              [3, 0],
-              [2, 0],
-              [1, 1],
-              [0, 2],
-              [0, 1],
-              [1, 0],
-              [0, 0]
-            ]
-          },
-          {
-            "word": "FLAME",
-            "cells": [
-              [1, 3],
-              [2, 4],
-              [1, 4],
-              [0, 4],
-              [0, 3]
-            ]
-          },
-          {
-            "word": "CHERISH",
-            "cells": [
-              [3, 3],
-              [4, 4],
-              [3, 4],
-              [2, 3],
-              [2, 2],
-              [2, 1],
-              [1, 2]
-            ]
-          },
-          {
-            "word": "CARING",
-            "cells": [
-              [3, 1],
-              [4, 0],
-              [4, 1],
-              [4, 2],
-              [3, 2],
-              [4, 3]
-            ]
-          }
-        ],
-        "eggs": [[1, 1]]
-      }
-    },
-    {
-      "seed": 48,
-      "stats": { "words": 4, "steps": 250 },
-      "panel": {
-        "name": "Words, eggs: easy 3",
-        "theme": "Date night",
-        "rows": ["ALETE", "LRSUS", "BELMN", "MDCOI", "UNAVE"],
-        "words": [
-          {
-            "word": "UMBRELLA",
-            "cells": [
-              [4, 0],
-              [3, 0],
-              [2, 0],
-              [1, 1],
-              [0, 2],
-              [0, 1],
-              [1, 0],
-              [0, 0]
-            ]
-          },
-          {
-            "word": "SUNSET",
-            "cells": [
-              [1, 2],
-              [1, 3],
-              [2, 4],
-              [1, 4],
-              [0, 4],
-              [0, 3]
-            ]
-          },
-          {
-            "word": "CANDLE",
-            "cells": [
-              [3, 2],
-              [4, 2],
-              [4, 1],
-              [3, 1],
-              [2, 2],
-              [2, 1]
-            ]
-          },
-          {
-            "word": "MOVIE",
-            "cells": [
-              [2, 3],
-              [3, 3],
-              [4, 3],
-              [3, 4],
-              [4, 4]
-            ]
-          }
-        ],
-        "eggs": [[0, 1]]
+        "eggs": [
+          [3, 4],
+          [1, 1]
+        ]
       }
     }
   ]

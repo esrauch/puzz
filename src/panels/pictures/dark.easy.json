@@ -1,0 +1,43 @@
+{
+  "genre": "pictures",
+  "twists": ["dark"],
+  "tier": "easy",
+  "panels": [
+    {
+      "seed": 4,
+      "stats": { "steps": 5 },
+      "panel": {
+        "name": "Picture grids, dark: easy 1",
+        "rows": ["...#.", ".#.##", ".###.", "#####", "..#.."],
+        "dark": [
+          ["col", 4, 1],
+          ["row", 1, 1]
+        ]
+      }
+    },
+    {
+      "seed": 6,
+      "stats": { "steps": 5 },
+      "panel": {
+        "name": "Picture grids, dark: easy 2",
+        "rows": ["#..#.", "..##.", "##.##", ".##.#", "...#."],
+        "dark": [
+          ["row", 3, 1],
+          ["col", 0, 0]
+        ]
+      }
+    },
+    {
+      "seed": 7,
+      "stats": { "steps": 5 },
+      "panel": {
+        "name": "Picture grids, dark: easy 3",
+        "rows": ["....#", "..#..", ".###.", "##.##", ".###."],
+        "dark": [
+          ["col", 4, 0],
+          ["col", 2, 1]
+        ]
+      }
+    }
+  ]
+}

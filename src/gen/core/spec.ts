@@ -1,8 +1,11 @@
 /** What a generator is asked for, and what it hands back. */
 export type Tier = 'easy' | 'medium' | 'hard';
+export type BoardShape = 'rect' | 'tree' | 'egg' | 'pie' | 'wreath';
 
 export interface Spec<T extends string> {
   tier: Tier;
+  /** Optional board silhouette (default: 'rect'). */
+  shape?: BoardShape;
   /** Twists on, in any combination (none: the plain puzzle). */
   twists: T[];
 }

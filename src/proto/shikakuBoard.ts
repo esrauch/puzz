@@ -37,7 +37,7 @@ export interface CarveHooks {
   status(text: string): void;
 }
 
-export function mountCarving(host: HTMLElement, panel: Panel, hooks: CarveHooks): void {
+export function mountCarving(host: HTMLElement, panel: Panel, hooks: CarveHooks): () => unknown {
   const b = parse(panel);
   const marks = [...b.rowMarks, ...b.colMarks].some((m) => m !== null);
   const avail = Math.min(host.clientWidth || 360, 560);
@@ -606,4 +606,8 @@ export function mountCarving(host: HTMLElement, panel: Panel, hooks: CarveHooks)
     );
   };
   render();
+  return () => ({
+    done,
+    rects: rects.map((r) => ({ ...r })),
+  });
 }
