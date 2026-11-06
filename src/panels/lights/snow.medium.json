@@ -1,0 +1,37 @@
+{
+  "genre": "lights",
+  "twists": ["snow"],
+  "tier": "medium",
+  "panels": [
+    {
+      "seed": 6,
+      "stats": { "steps": 78 },
+      "panel": {
+        "name": "Lights, snow: medium 1",
+        "rows": ["44442c4", "53d787d", "7ed7ed1", "5111178", "5682c7c", "3feef95", "2911381"],
+        "plug": [3, 3],
+        "frame": { "top": 1, "left": 0, "bottom": 6, "right": 5, "axis": "v" }
+      }
+    },
+    {
+      "seed": 331,
+      "stats": { "steps": 103 },
+      "panel": {
+        "name": "Lights, snow: medium 2",
+        "rows": ["6a8442c", "546d7c5", "7d53955", "53d4479", "543d794", "17ed7ed", "2911111"],
+        "plug": [3, 3],
+        "frame": { "top": 1, "left": 1, "bottom": 6, "right": 6, "axis": "v" }
+      }
+    },
+    {
+      "seed": 345,
+      "stats": { "steps": 75 },
+      "panel": {
+        "name": "Lights, snow: medium 3",
+        "rows": ["6aaeea8", "56ad7ac", "178112d", "47ac6ad", "3d45545", "2d79395", "29382a9"],
+        "plug": [3, 3],
+        "frame": { "top": 0, "left": 1, "bottom": 5, "right": 6, "axis": "v" }
+      }
+    }
+  ]
+}

@@ -1,7 +1,9 @@
 # Puzzles: six base puzzles, six twists
 
 The puzzle design in one place. `GAME.md` has the story, rooms and panel
-runs; `PROTOTYPES.md` has build status. This file is the map that ties them
+runs; `PROTOTYPES.md` has build status; `PUZZLE_DESIGN.md` has the generator
+design rules, Do/Don't examples and precedents for making compelling panels.
+This file is the map that ties them
 together: every base puzzle against every holiday twist, and what makes each
 one satisfying to play with a thumb.
 
@@ -78,11 +80,11 @@ and hear, the rules are on the board, and solving is a small celebration.
 
 | Holiday | Twist | What it always means | How it shows itself working |
 |---|---|---|---|
-| **Valentine's** | **Letters for numbers** | Some numbers are written as letters: the same letter is the same number, different letters different numbers. A little message's numbered blanks fill in from them, so the words and the puzzle help each other. | The message tiles fill in, gold, as the panel solves. Guessing the word is a legitimate shortcut. |
+| **Valentine's** | **Letters for numbers** | Some numbers are written as letters: the same letter is the same number, different letters different numbers. A little message's numbered blanks fill in from them, so the words and the puzzle help each other. Always at least two different letters (different numbers), even on easy: one letter alone is just a hidden given (fine only for a training level). | The message tiles fill in, gold, as the panel solves. Guessing the word is a legitimate shortcut. |
 | **Christmas** | **Snowflakes** | The answer's skeleton is its own mirror image across a line, but a detail on each side is free, so neither half can be solved alone (see below). | A ghost shows where your drawing's mirror image still has to go; it fades once it's drawn. |
 | **Halloween** | **The dark** | Some clues are hidden (could be anything) until worked out. | The dark lights up on solving, showing what was there. |
 | **Easter** | **Numbered eggs** | An egg's number says *when*: the step it's visited on, or its place in an order. (Kept for now; to revisit: it reads awkwardly in Carving and Pictures.) | An egg turns green when its moment comes on time, red when it doesn't. |
-| **Fourth of July** | **Red, white and blue** | Things are red, white, blue or plain; two of the same colour can't join or touch. White is a real colour (not "either"); plain, uncoloured things touch anything. | A same-colour touch flashes both pieces red. |
+| **Fourth of July** | **Red, white and blue** | Things are red or blue, or white (the default: uncoloured); two reds or two blues can't join or touch, and white touches anything. | A same-colour touch flashes both pieces red. |
 | **Thanksgiving** | **Fair shares and cuts** | The board is outlined in portions and every portion gets the same; or short fences (cuts) that nothing may cross. | Each portion shows its share so far (🥧 2/3), green when it's fair; a fence flashes when something tries to cross it. |
 
 ### Snowflakes in detail
@@ -100,6 +102,10 @@ Mirroring everything just halves the puzzle (solve one side, copy it).
   image; outside it, anything goes. Things crossing the frame's edge carry
   on freely, which is the escape: a 2×3 portion on one side can face a 2×2
   on the other, as long as the parts inside the frame match.
+- **Between squares, in square puzzles.** In puzzles played on squares
+  (Carving, Words, Bunny hops, Pictures, Lights) the mirror line runs between
+  squares, never through their middles; Webs, played on points, mirrors
+  through its middle knots.
 - **Frames as large and square as possible.** A long thin frame (two
   columns mirroring each other) doesn't read as a snowflake; prefer near
   square frames covering a good share of the board.
@@ -115,11 +121,11 @@ generator (any tier, any mix of twists); 🟡 tentative (built for Tuesday);
 
 | Puzzle ↓ / Twist → | Letters (Val.) | Snowflakes (Xmas) | Dark (Hall.) | Eggs (Easter) | Red, white & blue (4th) | Shares & cuts (Thanks.) |
 |---|---|---|---|---|---|---|
-| **Webs** (Halloween) | ✅ Box of Chocolates, ⚙️ | ⚙️ whole board | ✅ **Spider's Web**, ⚙️ | 🟡 Tuesday, ⚙️ | 🔧 Tree-Top Star (red and green), ⚙️ two colours so far | ⚙️ cuts |
-| **Carving** (Thanksgiving) | 🟡 Tuesday | ❓ frame | 🟡 Tuesday | ❓ | 🔧 Stocking (red and green) | ✅ **Feast** |
-| **Lights** (Christmas) | ❓ | 🔧 **Christmas Tree** (red and green strings) | 🟡 Tuesday | ✅ Golden Egg | ❓ | ✅ Pumpkin Pie |
-| **Words** (Valentine's) | ✅ **Valentine Mailbox** | ❓ frame | ✅ Jack-o'-Lantern | ✅ Bunny's Basket | 🔧 Tuesday (red and green bows) | 🟡 Tuesday |
-| **Bunny hops** (Easter) | 🟡 Tuesday | ❓ frame | ❓ | ✅ **Egg Tree** | 🔧 Tuesday (red and green bunnies) | ✅ Cornucopia |
+| **Webs** (Halloween) | ✅ Box of Chocolates, ⚙️ | ⚙️ whole board | ✅ **Spider's Web**, ⚙️ | 🟡 Tuesday, ⚙️ | 🔧 Tree-Top Star (red and green), ⚙️ red and blue | ⚙️ cuts |
+| **Carving** (Thanksgiving) | 🟡 Tuesday, ⚙️ | ⚙️ frame | 🟡 Tuesday, ⚙️ | ⚙️ Easter baskets | 🔧 Stocking (red and green), ⚙️ red and blue | ✅ **Feast**, ⚙️ cuts |
+| **Lights** (Christmas) | ⚙️ | ⚙️ frame | 🟡 Tuesday, ⚙️ | ✅ Golden Egg, ⚙️ | ⚙️ red and blue | ✅ Pumpkin Pie, ⚙️ |
+| **Words** (Valentine's) | ✅ **Valentine Mailbox**, ⚙️ | ⚙️ mirror pairs | ✅ Jack-o'-Lantern, ⚙️ | ✅ Bunny's Basket, ⚙️ | 🔧 Tuesday (red and green bows), ⚙️ red and blue | 🟡 Tuesday, ⚙️ cuts |
+| **Bunny hops** (Easter) | 🟡 Tuesday, ⚙️ | ⚙️ frame | ⚙️ | ✅ **Egg Tree**, ⚙️ | ⚙️ | ✅ Cornucopia, ⚙️ |
 | **Picture grids** (Fourth) | ✅ Cupid's Bow | ❓ frame | ✅ Witch's Broom | 🟡 Tuesday | ✅ **Grand Finale** (red and blue clues; to add white) | 🟡 Tuesday |
 
 ---
@@ -138,64 +144,109 @@ generator (any tier, any mix of twists); 🟡 tentative (built for Tuesday);
 - **Eggs (Tuesday, 🟡; generator ⚙️):** 🕷 marks the spider's home; an egg's
   number is how many threads it takes to reach it from home, always more
   than the shortest possible path (it refutes the obvious route).
-- **Red, white and blue (🔧 Tree-Top Star; generator ⚙️ with two colours):**
+- **Red, white and blue (🔧 Tree-Top Star; generator ⚙️):**
   knots are coloured, and a thread only joins different colours; plain
   knots join anything. The generator colours a grown web along its threads.
-  To become three colours.
+  Knots are red or blue; white ones (the default) join anything.
 - **Cuts (generator ⚙️):** short fences on the squares' edges that no
   thread may cross, placed only where they rule other webs out.
 
 ### Carving (Thanksgiving)
 
-- **Letters (Tuesday, 🟡):** some sizes are letters, and the message's
-  digits pick from the letter key (CAKE, PARTY).
-- **Snowflakes (❓):** inside a frame, the cuts mirror; portions crossing
-  the frame's edge carry on differently outside.
-- **The dark (Tuesday, 🟡):** some sizes show '?'.
-- **Eggs (❓):** the first cut (an egg's number is its square's place in its
-  portion, row by row: an egg 1 marks a top-left corner), or served in
-  order (an egg's number is its portion's place, biggest first).
-- **Red, white and blue (🔧 Stocking):** some portions are coloured, and two
-  of the same colour can't share an edge; plain portions touch anything.
-  Three colours make a full colouring possible far more often than two.
-- **Fair shares, at home (Feast, ✅):** dishes on the board; every portion
-  gets exactly one of each. Cuts are the natural second form here too.
+All six columns are in the generator (⚙️), at every tier, in any mix (three
+clue-adding twists at once only on easy so far). Playtested 2026-11-03: the
+dark and cuts are good; the rest were adjusted as below.
+
+- **Letters (Tuesday, 🟡; ⚙️):** some sizes are letters; the message shows
+  a digit *n* as the letter for size *n*, other letters as they are (2A4 →
+  YAM). Two letters on easy, three from medium up (each a different size).
+  Size letters avoid T, P and C (the dishes).
+- **Snowflakes (⚙️):** inside a frame, the cuts mirror; portions crossing
+  the frame's edge carry on differently outside. The mirror line runs
+  *between* squares (a line through a square's middle made no sense), so
+  frames are an even number of squares across the mirror. Frames at least
+  3×3, near square, at most three quarters of the board, largest first.
+  Random carvings rarely mirror over a big area, so frames come out small
+  (4×4 on a 9×9); carving symmetrically inside a chosen frame is the next
+  step to make them larger.
+- **The dark (Tuesday, 🟡; ⚙️):** some sizes show '?'. Playtested: good.
+- **Easter, as baskets (⚙️; decided 2026-11-03):** Carving's Easter twist
+  isn't numbered eggs (the "first cut" version was built and playtested:
+  too confusing). Instead every portion gets an Easter basket: one 🥚 egg,
+  one 🥕 carrot and one 🍫 chocolate (two foods on easy), with at least half
+  the portions' sizes taken away. It's the Feast's fair-share rule with
+  Easter food; Carving only, an exception to Easter's numbered eggs.
+- **Red, white and blue (🔧 Stocking; ⚙️):** portions take the colour of
+  their marks, and two of one colour never share an edge; plain portions
+  touch anything. Every portion that can be coloured carries a mark (with
+  only the strictly needed marks, the few dots looked pointless).
+- **Thanksgiving, at home: cuts (⚙️):** fences no portion may cross.
+  Playtested: great. The built Feast centrepiece uses fair shares (one of
+  each Thanksgiving dish per portion); the generator's Thanksgiving twist
+  for Carving is cuts.
 
 ### Lights (Christmas)
 
-- **Letters (❓):** bulbs that spell as they light (the letter bulbs light
-  in the message's order, counting wires from the plug), or distances in
-  the message (blank *n* is the letter *n* wires from the plug).
-- **Snowflakes, at home (🔧 Christmas Tree, to redo):** Net's pieces are
-  given, so mirrored wiring would force a mirrored board (a copy). Options:
-  a frame where the wires mirror and the given pieces differ outside it;
-  or the power arrives at a square and its mirror at the same moment (plug
-  on the line) while the wiring differs. Whichever, the tree lights up
-  symmetrically, which suits a Christmas tree.
-- **The dark (Tuesday, 🟡):** some pieces stay dark, and turn blind, until
-  the whole panel is solved. Never touching each other.
-- **Eggs (Golden Egg, ✅):** an egg bulb must be reached in exactly its
+All six columns are in the generator (⚙️), generating in seconds across easy, medium, and hard.
+
+- **Letters (⚙️):** letter bulbs whose distances (counting steps of wire from the plug)
+  match numbered blanks in a message (e.g. LIGHT, SHINE, SPARK).
+- **Snowflakes, at home (⚙️):** inside a frosty frame, the wires mirror across the axis;
+  outside the frame, wiring carries on freely.
+- **The dark (Tuesday, 🟡; ⚙️):** some pieces stay dark, and turn blind, until
+  the whole panel is solved.
+- **Eggs (Golden Egg, ✅; ⚙️):** an egg bulb must be reached in exactly its
   number of steps from the plug.
-- **Red, white and blue (❓):** strings of three colours that never join
-  (the old Christmas Tree's two strings, as a stray here); white pieces are
-  a third string, not "either".
-- **Fair shares (Pumpkin Pie, ✅):** a round pie in slices; no wire crosses
+- **Red, white and blue (⚙️):** a red string and a blue string that never
+  join, each powered from its own plug; white pieces can belong to either.
+- **Fair shares (Pumpkin Pie, ✅; ⚙️):** pie slices with one serving each; no wire crosses
   a slice wall, and each slice gets exactly one wire from the middle.
 
 ### Words (Valentine's)
 
-- **Letters, at home (Valentine Mailbox, ✅):** some letters are written as
-  numbers, like a codeword; a key fills in above the board.
-- **Snowflakes (❓):** inside a frame, the word strokes mirror; the letters
-  differ, so the words differ, and they leave the frame differently. Must
-  pass the test: the mirror side still needs reading, not just tracing.
-- **The dark (Jack-o'-Lantern, ✅):** some letters are blanks until a word
-  through them is found.
-- **Eggs (Bunny's Basket, ✅):** a letter's egg is its place in its word.
-- **Red, white and blue (🔧 Tuesday bows):** words are coloured; two words
-  of a colour never touch; only the bowed letters show their colour.
-- **Fair shares (Tuesday, 🟡):** outlined portions each hold the same
-  number of words; no word crosses a wall.
+All six columns are in the generator (⚙️). Words come from theme banks
+(`src/gen/words/themes.ts`, real words only), picked to fill the board
+exactly; every word must be traceable only one way as the player sees the
+board, so a found word is always the right one. A twist "does work" when,
+without it, some words could be traced more than one way (1 on easy, 2
+above): whole-board answers hardly ever differ in Strands. Boards are
+filled straight from the theme's bank, choosing words as they go (a pocket
+of four squares takes a four-letter word), with dead ends caught as each
+word grows (a sealed-off pocket must fit some unused words; a lone square
+never can) and paths grown Warnsdorff-style (hugging edges and corners).
+A word that can be traced another way is swapped for a bank word of the
+same length on the same path (new letters usually kill the other way), with
+a refill of its squares as the fallback. Every single twist now generates
+at every tier in seconds or less (eggs on hard is the slowest, ~6 s).
+
+- **Letters, at home (Valentine Mailbox, ✅; ⚙️):** some letters are written
+  as numbers, like a codeword (at least two). Tracing counts coded letters
+  as known (the key fills in); the whole board must have one answer with the
+  code unknown.
+- **Snowflakes (⚙️):** the whole board is the frame, one column narrower
+  than the tier's size (5×4, 7×6, 9×8, or turned) so the mirror line runs
+  between squares; a leftover column would only have held a straight word
+  outside the frame, a giveaway. Words come in mirror pairs: each word's
+  squares mirror another word's, its letters in a different order (so the
+  mirror side still has to be read). Built from same-length word pairs: one
+  of each laid on the first half, preferring curled-up shapes (a straight
+  word has only two ways to lie in its mirror), the partner on the mirrored
+  squares in a new order. The solver keeps a word's way to lie only if
+  another word of its length could lie on the mirror image, which settles
+  almost everything (fast at every tier).
+- **The dark (Jack-o'-Lantern, ✅; ⚙️):** some letters are blanks until a
+  word through them is found; at most one per word, never first or last.
+- **Eggs (Bunny's Basket, ✅; ⚙️):** a letter's egg is its place in its word,
+  placed on words that could otherwise be traced another way.
+- **Red, white and blue (🔧 Tuesday bows; ⚙️):** words are red, white or
+  blue; one letter of each word is bowed to show its colour, and two words
+  of one colour never touch.
+- **Cuts (⚙️):** short fences between neighbouring squares that no word
+  steps straight across, added after the board is laid: only on edges the
+  true words never step, next to squares another way to lie would use, and
+  kept only while they rule ways out (spare ones dropped). Tuesday's built
+  words panel uses the older form: two portions, the same number of words
+  each.
 
 ### Bunny hops (Easter)
 
@@ -247,8 +298,7 @@ retired twists, and to be redone:
   snowflakes instead), and Tuesday's words and bunnies.
 - **Flags:** the Hot Dog (Thanksgiving), the Star-Spangled Flag (Easter),
   and Tuesday's webs and lights.
-- **The Webs generator** still offers flags (to remove) and colours in two
-  colours (to become red, white and blue).
+- **The Webs generator** is up to date (red and blue, white plain; flags gone).
 - **`GAME.md`'s room sections** still describe the old twists.
 
 **Next steps:** keep building the generator out to the full matrix: migrate

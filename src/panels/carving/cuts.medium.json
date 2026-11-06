@@ -1,0 +1,68 @@
+{
+  "genre": "carving",
+  "twists": ["cuts"],
+  "tier": "medium",
+  "panels": [
+    {
+      "seed": 3,
+      "stats": { "plain": 4, "without cuts": 4, "steps": 23 },
+      "panel": {
+        "name": "Carving, cuts: medium 1",
+        "rows": [
+          "4 . 2 . . . .",
+          ". 2 . . . . 8",
+          ". . . 6 . . .",
+          ". . . . . . .",
+          ". 6 . 3 . . 3",
+          "2 . . . 6 . .",
+          ". 3 . 2 . 2 ."
+        ],
+        "walls": [
+          [4, 1, "h"],
+          [0, 1, "h"]
+        ]
+      }
+    },
+    {
+      "seed": 12,
+      "stats": { "plain": 3, "without cuts": 3, "steps": 27 },
+      "panel": {
+        "name": "Carving, cuts: medium 2",
+        "rows": [
+          ". 6 . . . . .",
+          ". . . . . 2 2",
+          ". 8 . . . . .",
+          "3 . . . . . 2",
+          ". . 3 . 6 2 3",
+          ". 3 . 4 . 2 .",
+          "3 . . . . . ."
+        ],
+        "walls": [
+          [4, 1, "v"],
+          [5, 0, "h"]
+        ]
+      }
+    },
+    {
+      "seed": 13,
+      "stats": { "plain": 6, "without cuts": 6, "steps": 45 },
+      "panel": {
+        "name": "Carving, cuts: medium 3",
+        "rows": [
+          ". . . 8 . . 6",
+          ". . . . . . .",
+          ". . 3 . 2 2 .",
+          "2 . 3 . . . .",
+          ". . . . 3 . 4",
+          ". 4 . 6 . . .",
+          "2 . . . . . 4"
+        ],
+        "walls": [
+          [4, 3, "v"],
+          [5, 0, "h"],
+          [2, 2, "v"]
+        ]
+      }
+    }
+  ]
+}

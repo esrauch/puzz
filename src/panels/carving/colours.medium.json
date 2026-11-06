@@ -1,0 +1,58 @@
+{
+  "genre": "carving",
+  "twists": ["colours"],
+  "tier": "medium",
+  "panels": [
+    {
+      "seed": 13,
+      "stats": { "plain": 6, "without colours": 6, "steps": 63 },
+      "panel": {
+        "name": "Carving, colours: medium 1",
+        "rows": [
+          ". . . 8 . . 6",
+          ". . . . . . .",
+          ". . 3 . 2 2 .",
+          "2 . 3 . . . .",
+          ". . . . 3 . 4",
+          ". 4 . 6 . . .",
+          "2 . . . . . 4"
+        ],
+        "colours": ["......b", ".......", ".r....r", "..b....", ".......", "b...rb.", "r......"]
+      }
+    },
+    {
+      "seed": 206,
+      "stats": { "plain": 4, "without colours": 4, "steps": 33 },
+      "panel": {
+        "name": "Carving, colours: medium 2",
+        "rows": [
+          ". . . . . 4 .",
+          ". . . . . . 5",
+          ". 6 . 6 . . .",
+          ". . . . . 3 .",
+          ". . . . 5 . .",
+          ". 8 6 . . 2 .",
+          ". . . 2 . . 2"
+        ],
+        "colours": [".......", "......b", ".r.....", "....br.", "..b....", "......r", "..r...."]
+      }
+    },
+    {
+      "seed": 227,
+      "stats": { "plain": 6, "without colours": 6, "steps": 21 },
+      "panel": {
+        "name": "Carving, colours: medium 3",
+        "rows": [
+          ". 6 . 8 . . .",
+          ". . . . . . .",
+          ". . . . . . .",
+          ". . . . . 8 .",
+          ". . . 2 . . 2",
+          "4 . 2 . . . 2",
+          ". 4 . 2 7 2 ."
+        ],
+        "colours": [".......", ".......", "....r..", "r......", "...b..b", ".br...r", "......."]
+      }
+    }
+  ]
+}

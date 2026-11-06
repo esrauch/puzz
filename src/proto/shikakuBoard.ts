@@ -8,23 +8,29 @@
  * when its line is carved and right, red when it's over. Solved, the board
  * turns gold and chimes.
  */
+import { inside as inFrame, mirrorKey } from '../gen/core/mirror';
 import {
   type Panel,
   type Rect,
   colourClashes,
   colourOf,
   covers,
+  cutsOf,
   lineCounts,
   parse,
   problem,
   solved,
-} from './shikaku';
+} from '../gen/carving';
 import { blip } from './kit';
 
 const NS = 'http://www.w3.org/2000/svg';
 const DISH: Record<string, string> = { T: '🦃', P: '🥧', C: '🍒' };
-const TINT = { r: '#ef9a92', g: '#9fd49a' };
-const INK = { r: '#c23b33', g: '#2f8a45' };
+/** How a portion's share is listed: the Feast's dishes, then an Easter basket's food. */
+const FOOD_ORDER = ['T', 'P', 'C', '🥚', '🥕', '🍫'];
+// Red, white and blue: red and blue marks, plain portions white (green in older panels).
+const TINT = { r: '#ef9a92', b: '#9db8ef', g: '#9fd49a' };
+const INK = { r: '#c23b33', b: '#3c5aa6', g: '#2f8a45' };
+const COLOUR_NAME = { r: 'red', b: 'blue', g: 'green' };
 
 export interface CarveHooks {
   solved(): void;
@@ -45,12 +51,26 @@ export function mountCarving(host: HTMLElement, panel: Panel, hooks: CarveHooks)
   svg.setAttribute('height', String(H));
   svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
   Object.assign(svg.style, { touchAction: 'none', userSelect: 'none', display: 'block' });
+  // The twists' rules, one line each above the board.
+  const legend = (text: string): void => {
+    const line = document.createElement('div');
+    line.textContent = text;
+    Object.assign(line.style, { fontSize: '16px', fontWeight: '600', margin: '0 0 8px' });
+    host.append(line);
+  };
+  if (panel.colours?.some((row) => /[rb]/.test(row)))
+    legend('Portions take the colour of their marks; two of one colour never touch.');
+  if (b.walls.size) legend('No portion may cross a fence.');
+  if (b.frame)
+    legend(
+      '❄ Inside the frosty frame, the cuts are their own mirror image. Outside it, anything goes.',
+    );
   // Fair shares: the recipe every portion must get, spelled out above the board.
   if (b.dishes.length) {
     const recipe = document.createElement('div');
     recipe.textContent = `Each portion gets: ${b.dishes
       .slice()
-      .sort((x, y) => 'TPC'.indexOf(x) - 'TPC'.indexOf(y))
+      .sort((x, y) => FOOD_ORDER.indexOf(x) - FOOD_ORDER.indexOf(y))
       .map((d) => DISH[d] ?? d)
       .join(' ')}`;
     Object.assign(recipe.style, { fontSize: '18px', margin: '0 0 8px', fontWeight: '600' });
@@ -63,7 +83,8 @@ export function mountCarving(host: HTMLElement, panel: Panel, hooks: CarveHooks)
     note.replaceChildren(
       ...[...panel.message].map((ch) => {
         const tile = document.createElement('span');
-        const letter = ch === ' ' ? ' ' : (panel.sizeLetters?.[Number(ch) - 1] ?? '?');
+        // A digit n is the letter for size n; other letters show as they are.
+        const letter = /[0-9]/.test(ch) ? (panel.sizeLetters?.[Number(ch) - 1] ?? '?') : ch;
         tile.textContent = solved ? letter : ch;
         Object.assign(tile.style, {
           display: 'inline-grid',
@@ -208,7 +229,7 @@ export function mountCarving(host: HTMLElement, panel: Panel, hooks: CarveHooks)
     };
     // Candy-cane stripes for red and green portions (a flat red would read as an error).
     const defs = document.createElementNS(NS, 'defs');
-    defs.innerHTML = (['r', 'g'] as const)
+    defs.innerHTML = (['r', 'b', 'g'] as const)
       .map(
         (k) =>
           `<pattern id="stripes-${k}" width="12" height="12" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="12" height="12" fill="#fffaf2"/><rect width="5" height="12" fill="${TINT[k]}"/></pattern>`,
@@ -257,6 +278,40 @@ export function mountCarving(host: HTMLElement, panel: Panel, hooks: CarveHooks)
         'stroke-dasharray': bad && !done ? '6 4' : '',
       });
     });
+    // Colour clashes: a thick red line along every edge where two portions of one colour meet.
+    const clashes = colourClashes(b, rects);
+    for (const [i, j] of clashes) {
+      const a = rects[i] as Rect;
+      const o = rects[j] as Rect;
+      const vertical = a.c + a.w === o.c || o.c + o.w === a.c;
+      if (vertical) {
+        const x = (a.c + a.w === o.c ? o.c : a.c) * cell;
+        const y1 = Math.max(a.r, o.r) * cell;
+        const y2 = Math.min(a.r + a.h, o.r + o.h) * cell;
+        add('line', {
+          x1: x,
+          y1: y1 + 4,
+          x2: x,
+          y2: y2 - 4,
+          stroke: '#d9534f',
+          'stroke-width': 7,
+          'stroke-linecap': 'round',
+        });
+      } else {
+        const y = (a.r + a.h === o.r ? o.r : a.r) * cell;
+        const x1 = Math.max(a.c, o.c) * cell;
+        const x2 = Math.min(a.c + a.w, o.c + o.w) * cell;
+        add('line', {
+          x1: x1 + 4,
+          y1: y,
+          x2: x2 - 4,
+          y2: y,
+          stroke: '#d9534f',
+          'stroke-width': 7,
+          'stroke-linecap': 'round',
+        });
+      }
+    }
     if (drag) {
       const x = span(drag.r, drag.c, drag.to[0], drag.to[1]);
       add('rect', {
@@ -287,7 +342,13 @@ export function mountCarving(host: HTMLElement, panel: Panel, hooks: CarveHooks)
       row.forEach((cl, c) => {
         const x = c * cell + cell / 2;
         const y = r * cell + cell / 2;
-        if (cl.colour) add('circle', { cx: x, cy: y, r: cell * 0.3, fill: INK[cl.colour] });
+        if (cl.colour)
+          add('circle', {
+            cx: x,
+            cy: y,
+            r: cell * 0.3,
+            fill: INK[cl.colour],
+          });
         if (cl.letter || cl.dark)
           add(
             'text',
@@ -322,6 +383,90 @@ export function mountCarving(host: HTMLElement, panel: Panel, hooks: CarveHooks)
           );
       }),
     );
+    // Cuts: fences on the squares' edges.
+    for (const w of b.walls) {
+      const [r, c, side] = w.split(',');
+      const rr = Number(r);
+      const cc = Number(c);
+      const [x1, y1, x2, y2] =
+        side === 'v'
+          ? [(cc + 1) * cell, rr * cell + 3, (cc + 1) * cell, (rr + 1) * cell - 3]
+          : [cc * cell + 3, (rr + 1) * cell, (cc + 1) * cell - 3, (rr + 1) * cell];
+      add('line', {
+        x1,
+        y1,
+        x2,
+        y2,
+        stroke: '#8b5a2b',
+        'stroke-width': 6,
+        'stroke-linecap': 'round',
+      });
+    }
+    // Snowflakes: the frosty frame, its mirror line with a snowflake at each end,
+    // and a ghost of each cut's mirror image until it's carved.
+    if (b.frame) {
+      const f = b.frame;
+      const [fx, fy] = [f.left * cell + 2, f.top * cell + 2];
+      const [fw, fh] = [(f.right - f.left + 1) * cell - 4, (f.bottom - f.top + 1) * cell - 4];
+      add('rect', {
+        x: fx,
+        y: fy,
+        width: fw,
+        height: fh,
+        rx: 10,
+        fill: 'none',
+        stroke: '#6fb8e8',
+        'stroke-width': 2.5,
+        'stroke-dasharray': '7 5',
+      });
+      const vertical = f.axis === 'v';
+      const mid = vertical
+        ? ((f.left + f.right + 1) * cell) / 2
+        : ((f.top + f.bottom + 1) * cell) / 2;
+      const [x1, y1, x2, y2] = vertical ? [mid, fy, mid, fy + fh] : [fx, mid, fx + fw, mid];
+      add('line', {
+        x1,
+        y1,
+        x2,
+        y2,
+        stroke: '#6fb8e8',
+        'stroke-width': 1.5,
+        'stroke-dasharray': '3 4',
+      });
+      for (const [x, y] of [
+        [x1, y1],
+        [x2, y2],
+      ])
+        add(
+          'text',
+          { x: x ?? 0, y: (y ?? 0) + cell * 0.1, 'text-anchor': 'middle', 'font-size': cell * 0.3 },
+          '❄',
+        );
+      const drawn = cutsOf(b.height, b.width, rects);
+      for (const seg of drawn) {
+        if (!inFrame(f, seg)) continue;
+        const m = mirrorKey(f, seg);
+        if (drawn.has(m)) continue;
+        // A cut between two squares is the edge they share.
+        const [r1 = 0, c1 = 0, r2 = 0, c2 = 0] = m.slice(1).split(',').map(Number);
+        const [gx1, gy1, gx2, gy2] =
+          r1 === r2
+            ? [(c1 + 1) * cell, r1 * cell + 4, (c1 + 1) * cell, (r1 + 1) * cell - 4]
+            : [c1 * cell + 4, (r1 + 1) * cell, (c1 + 1) * cell - 4, (r1 + 1) * cell];
+        void c2;
+        void r2;
+        add('line', {
+          x1: gx1,
+          y1: gy1,
+          x2: gx2,
+          y2: gy2,
+          stroke: '#6fb8e8',
+          'stroke-width': 4,
+          'stroke-dasharray': '4 4',
+          opacity: 0.7,
+        });
+      }
+    }
     let explain = '';
     if (marks) {
       const { rows, cols } = lineCounts(b, rects);
@@ -453,9 +598,11 @@ export function mountCarving(host: HTMLElement, panel: Panel, hooks: CarveHooks)
         ? 'Carved!'
         : explain
           ? explain
-          : covers(b, rects)
-            ? 'Every square is carved, but something’s not right yet'
-            : '',
+          : clashes.length
+            ? `Two ${COLOUR_NAME[colourOf(b, rects[clashes[0]?.[0] ?? 0] as Rect) ?? 'r']} portions touch (see the red line)`
+            : covers(b, rects)
+              ? 'Every square is carved, but something’s not right yet'
+              : '',
     );
   };
   render();

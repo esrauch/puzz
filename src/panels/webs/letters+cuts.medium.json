@@ -4,23 +4,36 @@
   "tier": "medium",
   "panels": [
     {
-      "seed": 30,
+      "seed": 28,
       "stats": { "plain": 4, "without cuts": 4, "steps": 10 },
       "panel": {
         "name": "Webs, letters and cuts: medium 1",
-        "rows": ["....3.B", ".......", ".......", "B...7B.", "....3OB", "B.33...", "...B..B"],
-        "message": "211",
-        "walls": [[3, 5, "h"]]
+        "rows": ["......1", "1......", "V...V..", ".......", "...27.3", "4.L1V.L", "1......"],
+        "message": "3O4E",
+        "walls": [
+          [5, 3, "v"],
+          [4, 3, "h"]
+        ]
       }
     },
     {
-      "seed": 86,
+      "seed": 95,
       "stats": { "plain": 4, "without cuts": 4, "steps": 28 },
       "panel": {
         "name": "Webs, letters and cuts: medium 2",
-        "rows": ["3.4...S", "..S....", ".......", ".E4..34", "E......", ".....24", "..S...S"],
-        "message": "2W11T",
-        "walls": [[4, 5, "h"]]
+        "rows": ["2...A..", ".A....A", "R5..3..", "R3.....", "....R.2", ".......", "3...3.."],
+        "message": "HE14T",
+        "walls": [[2, 0, "h"]]
+      }
+    },
+    {
+      "seed": 96,
+      "stats": { "plain": 3, "without cuts": 3, "steps": 4 },
+      "panel": {
+        "name": "Webs, letters and cuts: medium 3",
+        "rows": ["4...3.H", ".......", "..H....", "4U434.2", ".......", ".H..H..", "...1..."],
+        "message": "15G",
+        "walls": [[0, 5, "v"]]
       }
     }
   ]

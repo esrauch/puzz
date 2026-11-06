@@ -7,7 +7,7 @@
  * grid and each can be spelled only one way (tests/puzzles/valentines.test.ts).
  */
 import { run } from '../run';
-import { type Panel } from '../strands';
+import { type Panel } from '../../gen/words';
 import { mountStrands } from '../strandsBoard';
 
 export const LOVENOTES: Panel[] = [

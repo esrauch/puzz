@@ -1,0 +1,31 @@
+{
+  "genre": "carving",
+  "twists": ["basket"],
+  "tier": "easy",
+  "panels": [
+    {
+      "seed": 11,
+      "stats": { "plain": 1, "steps": 8 },
+      "panel": {
+        "name": "Carving, basket: easy 1",
+        "rows": [". 🥕 6 . .", "🥚 . 🥕 🥚 .", "🥚 . 🥚 . 🥕", "4 🥕 . . .", ". . . 🥚 🥕"]
+      }
+    },
+    {
+      "seed": 133,
+      "stats": { "plain": 1, "steps": 80 },
+      "panel": {
+        "name": "Carving, basket: easy 2",
+        "rows": [". . . . 🥚", ". 🥕 🥚 🥚 🥕", "🥕 . 🥕 . .", "🥚 . . 🥕 .", "3 . 🥚 . ."]
+      }
+    },
+    {
+      "seed": 165,
+      "stats": { "plain": 1, "steps": 27 },
+      "panel": {
+        "name": "Carving, basket: easy 3",
+        "rows": [". 🥚 🥕 4 🥕", ". . . . 🥚", "🥚 3 🥕 🥕 .", ". . . 🥚 🥚", ". 🥕 🥚 . 🥕"]
+      }
+    }
+  ]
+}

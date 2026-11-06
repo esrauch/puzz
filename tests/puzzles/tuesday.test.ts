@@ -2,8 +2,8 @@ import { describe, expect, it } from 'vitest';
 import * as hashi from '../../src/gen/webs';
 import * as net from '../../src/proto/net';
 import * as picture from '../../src/proto/picture';
-import * as shikaku from '../../src/proto/shikaku';
-import * as strands from '../../src/proto/strands';
+import * as shikaku from '../../src/gen/carving';
+import * as strands from '../../src/gen/words';
 import * as two from '../../src/proto/twohops';
 import {
   BUNNIES,

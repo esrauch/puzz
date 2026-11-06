@@ -1,0 +1,45 @@
+{
+  "genre": "carving",
+  "twists": ["basket", "snow"],
+  "tier": "hard",
+  "panels": [
+    {
+      "seed": 4993,
+      "stats": { "plain": 3, "without snow": 3, "steps": 149 },
+      "panel": {
+        "name": "Carving, basket and snow: hard 1",
+        "rows": [
+          "🥚 . . . 🍫 🥚 . . .",
+          "🍫 . . 🥕 🥕 4 🥕 🥚 🍫",
+          "🥕 . . . 🍫 . . . .",
+          ". . 🍫 🥚 🥚 . . . 8",
+          ". . 4 🥕 🥕 . . . 🍫",
+          "🥚 🥕 🥚 🍫 . 🍫 . 🥕 .",
+          "6 🍫 . 🥕 🥚 . 🍫 . 🥚",
+          "🥕 🍫 🥚 . . 🥕 🥚 4 🥕",
+          "🥚 4 . 🍫 . . 🥕 🥚 🍫"
+        ],
+        "frame": { "top": 2, "left": 0, "bottom": 5, "right": 3, "axis": "h" }
+      }
+    },
+    {
+      "seed": 6184,
+      "stats": { "plain": 6, "without snow": 6, "steps": 1308 },
+      "panel": {
+        "name": "Carving, basket and snow: hard 2",
+        "rows": [
+          "4 🥕 🥚 🍫 🍫 . . . .",
+          "🥚 . . 🍫 5 . 🥕 🥕 .",
+          ". 9 🥕 🥕 🥚 🥚 🥚 🍫 🥚",
+          ". 🍫 . 4 . 🍫 . . .",
+          "🥕 . . 🥚 🥕 . . 🥚 🍫",
+          "🥚 🍫 🥚 . 🥕 . . . 🥕",
+          "🍫 🥕 🥕 . . 🥕 🍫 . .",
+          "5 . . . . . . 🥕 🥚",
+          ". 🥚 🍫 🍫 🥚 . . 6 🍫"
+        ],
+        "frame": { "top": 1, "left": 4, "bottom": 8, "right": 8, "axis": "h" }
+      }
+    }
+  ]
+}

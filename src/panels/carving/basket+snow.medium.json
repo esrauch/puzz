@@ -1,0 +1,41 @@
+{
+  "genre": "carving",
+  "twists": ["basket", "snow"],
+  "tier": "medium",
+  "panels": [
+    {
+      "seed": 731,
+      "stats": { "plain": 3, "without snow": 3, "steps": 67 },
+      "panel": {
+        "name": "Carving, basket and snow: medium 1",
+        "rows": [
+          ". . . 🍫 🥚 . 🥕",
+          "7 🥕 🍫 🥚 . . .",
+          "🍫 🥚 . . 🥕 🥚 🥕",
+          "🥕 . . 🥚 🍫 6 🍫",
+          ". 🍫 🥕 . . . 🥚",
+          "🥚 🍫 🥕 4 🥚 🍫 🥕",
+          ". 🍫 6 . . 🥚 🥕"
+        ],
+        "frame": { "top": 0, "left": 1, "bottom": 5, "right": 4, "axis": "v" }
+      }
+    },
+    {
+      "seed": 2444,
+      "stats": { "plain": 3, "without snow": 3, "steps": 21 },
+      "panel": {
+        "name": "Carving, basket and snow: medium 2",
+        "rows": [
+          ". 🥕 🍫 . . . 🥚",
+          ". 🥕 7 🥚 🍫 . .",
+          "🍫 4 4 🥚 🍫 . .",
+          "🥚 🥕 🥕 🍫 . . .",
+          ". 8 . 🥚 🥚 🥕 🥕",
+          ". . 🍫 🥕 🥕 🥚 🥚",
+          "🥚 . 🍫 🥕 . 🍫 🍫"
+        ],
+        "frame": { "top": 0, "left": 0, "bottom": 3, "right": 5, "axis": "v" }
+      }
+    }
+  ]
+}

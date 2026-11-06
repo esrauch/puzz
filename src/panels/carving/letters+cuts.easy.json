@@ -1,0 +1,29 @@
+{
+  "genre": "carving",
+  "twists": ["letters", "cuts"],
+  "tier": "easy",
+  "panels": [
+    {
+      "seed": 6,
+      "stats": { "plain": 2, "without cuts": 2, "steps": 72 },
+      "panel": {
+        "name": "Carving, letters and cuts: easy 1",
+        "rows": [". . I . .", ". 4 . . 4", ". I I . .", "I . . E .", "I . I . I"],
+        "sizeLetters": " IE      ",
+        "message": "P23",
+        "walls": [[2, 1, "h"]]
+      }
+    },
+    {
+      "seed": 11,
+      "stats": { "plain": 2, "without cuts": 2, "steps": 35 },
+      "panel": {
+        "name": "Carving, letters and cuts: easy 2",
+        "rows": [". . V . .", ". 4 . . .", ". . . . .", "4 . V . .", ". A . . ."],
+        "sizeLetters": "    AV   ",
+        "message": "GR56Y",
+        "walls": [[1, 1, "h"]]
+      }
+    }
+  ]
+}

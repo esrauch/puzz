@@ -1,0 +1,39 @@
+{
+  "genre": "carving",
+  "twists": ["dark", "basket"],
+  "tier": "medium",
+  "panels": [
+    {
+      "seed": 115,
+      "stats": { "plain": 1, "steps": 25 },
+      "panel": {
+        "name": "Carving, dark and basket: medium 1",
+        "rows": [
+          "🥚 . 🍫 . 🥕 7 .",
+          ". . 🍫 🥕 🥕 . 🍫",
+          ". 🥚 . 🥚 ? 🥕 .",
+          "🍫 . 🍫 🥕 🥚 . 🥚",
+          "🥚 🥕 ? 🥚 🍫 . .",
+          "🥕 . 🥚 . 🥕 🍫 .",
+          ". 🍫 🥚 . 🥕 🍫 ."
+        ]
+      }
+    },
+    {
+      "seed": 164,
+      "stats": { "plain": 1, "steps": 14 },
+      "panel": {
+        "name": "Carving, dark and basket: medium 2",
+        "rows": [
+          "🍫 . 🥕 . 🥚 . 🍫",
+          "🍫 🥚 6 🥚 . 🥚 🥚",
+          "🥕 . 🥕 . . 🥕 .",
+          ". 🍫 . 🍫 . . .",
+          ". . . . . 🍫 .",
+          ". ? 🥕 . ? 🥕 .",
+          "🥕 🥚 🥚 🍫 🍫 🥚 🥕"
+        ]
+      }
+    }
+  ]
+}

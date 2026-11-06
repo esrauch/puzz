@@ -37,7 +37,7 @@ export interface Panel {
   name: string;
   /** '.' empty; a digit: a knot with that many threads; a letter: a coded count; '?': a dark knot. */
   rows: string[];
-  /** Bulb colours, row by row: 'r' red, 'g' green. A thread only joins different colours. */
+  /** Knot colours, row by row: 'r' red, 'b' blue ('g' green in older panels); '.' plain (white), which joins anything. A thread only joins different colours. */
   colours?: string[];
   /** Threads may also run diagonally. */
   diagonal?: boolean;
@@ -92,7 +92,7 @@ export interface Knot {
   r: number;
   c: number;
   clue: Clue;
-  colour?: 'r' | 'g';
+  colour?: 'r' | 'b' | 'g';
 }
 
 export interface Link {
@@ -142,7 +142,11 @@ export function parse(panel: Panel): Web {
             : { kind: 'letter', letter: ch };
       const colour = panel.colours?.[r]?.[c];
       at.set(`${r},${c}`, knots.length);
-      knots.push(colour === 'r' || colour === 'g' ? { r, c, clue, colour } : { r, c, clue });
+      knots.push(
+        colour === 'r' || colour === 'b' || colour === 'g'
+          ? { r, c, clue, colour }
+          : { r, c, clue },
+      );
     }),
   );
   const height = panel.rows.length;

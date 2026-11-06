@@ -4,30 +4,30 @@
   "tier": "easy",
   "panels": [
     {
-      "seed": 62,
-      "stats": { "plain": 1, "steps": 7 },
+      "seed": 27,
+      "stats": { "plain": 1, "steps": 10 },
       "panel": {
         "name": "Webs, letters: easy 1",
-        "rows": ["3..3.", ".....", "...R.", "4..5R", "1...."],
-        "message": "T2EAT"
+        "rows": ["G.1..", ".....", "4...U", "....1", "U.G.."],
+        "message": "H32"
       }
     },
     {
-      "seed": 63,
+      "seed": 42,
       "stats": { "plain": 1, "steps": 4 },
       "panel": {
         "name": "Webs, letters: easy 2",
-        "rows": ["1.5.2", "W.W..", ".....", ".....", "W..1."],
-        "message": "S3EET"
+        "rows": ["O.4..", ".....", ".....", "1.4..", ".E4.O"],
+        "message": "L2V1"
       }
     },
     {
-      "seed": 67,
+      "seed": 44,
       "stats": { "plain": 1, "steps": 4 },
       "panel": {
         "name": "Webs, letters: easy 3",
-        "rows": ["....2", "1....", ".....", "5.A..", "A.A.A"],
-        "message": "HE3RT"
+        "rows": ["2....", "4...E", "....2", "..A..", "E.E.."],
+        "message": "TR31T"
       }
     }
   ]

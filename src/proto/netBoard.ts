@@ -2,11 +2,16 @@
  * The clicky lights panel: tap a piece to turn it a quarter clockwise
  * (always clockwise; four taps go all the way round). Power spreads from the plug as
  * you turn: every piece it reaches lights up, and a lit wire end that meets
- * nothing sparks red. Numbered eggs glow when the power reaches them in
- * their number of steps; on a pie, each slice shows its servings (wires in
- * from the middle), and a wire across a wall between slices shows red. Solved, the lights turn gold, the star lights, and it chimes.
+ * nothing sparks red. Supports all six holiday twists:
+ * - snowflakes (frosty frame, mirror line with ❄, and ghost mirror wires);
+ * - the dark (squares marked ? turn blind until solved);
+ * - letters (letter bulbs and message blank tiles above the board);
+ * - numbered eggs (glow green when reached in their exact step count);
+ * - red, white and blue (two strings from two plugs, white pieces take either);
+ * - fair shares / slices (one serving wire from the middle per slice, no wires across slice walls).
  */
-import { blip } from './kit';
+import { inside, mirrorKey } from '../gen/core/mirror';
+import { blip, h } from './kit';
 import {
   DIRS,
   E,
@@ -14,20 +19,32 @@ import {
   type Panel,
   STEP,
   type Spot,
-  key,
+  W as WEST,
   joinsAlong,
+  key,
   light,
   parse,
   servings,
   solved,
+  spell,
   startGrid,
   turn,
-  W as WEST,
+  wiresOf,
 } from './net';
 
 const NS = 'http://www.w3.org/2000/svg';
-const WIRE = { r: '#ff6b6b', g: '#5fd27a', w: '#ffe08a' };
-const DIM = { r: '#6e3a44', g: '#2f5a43', w: '#55607a' };
+const WIRE: Record<string, string> = {
+  r: '#ff6b6b',
+  g: '#5fd27a',
+  b: '#4dabf7',
+  w: '#ffe08a',
+};
+const DIM: Record<string, string> = {
+  r: '#6e3a44',
+  g: '#2f5a43',
+  b: '#2a4365',
+  w: '#55607a',
+};
 
 export interface LightsHooks {
   solved(): void;
@@ -47,28 +64,95 @@ export function mountLights(host: HTMLElement, panel: LightsPanel, hooks: Lights
     Math.min(64, Math.floor((avail - 8) / (b.width + (flagged ? 0.8 : 0)))),
   );
   const pad = flagged ? cell * 0.8 : 0;
-  const darkSet = new Set((panel.dark ?? []).map(([r, c]) => key(r, c)));
-  /** Dark pieces stay dark (and turn blind) until the whole panel is solved. */
+  const darkSet = b.dark;
+  let done = false;
   const revealed = (): Set<string> => (done ? darkSet : new Set<string>());
   const W = b.width * cell + pad;
   const H = b.height * cell + pad;
+
+  const rules: string[] = [];
   if (b.servings) {
-    const recipe = document.createElement('div');
-    recipe.textContent =
-      'Each slice gets exactly one wire from the middle. No wire may cross a thick crust line.';
-    Object.assign(recipe.style, { fontSize: '17px', margin: '0 0 8px', fontWeight: '600' });
-    host.append(recipe);
+    rules.push(
+      'Each slice gets exactly one wire from the middle. No wire may cross a thick crust line.',
+    );
   }
+  if (b.frame) {
+    rules.push(
+      '❄ Inside the frosty frame, the wires mirror across the icy line. Outside it, anything goes.',
+    );
+  }
+  if (b.bluePlug || b.greenPlug) {
+    const toneName = b.bluePlug ? 'blue' : 'green';
+    rules.push(
+      `Two strings: the red and ${toneName} strings never join; white pieces can belong to either.`,
+    );
+  }
+  if (b.eggs.length) {
+    rules.push(
+      'Numbered eggs: power must reach each egg in its exact number of steps from the plug.',
+    );
+  }
+  if (b.dark.size) {
+    rules.push(
+      'The dark: squares marked ? stay dark and turn blind until the whole panel is solved.',
+    );
+  }
+  for (const text of rules) {
+    const line = h(
+      'div',
+      {
+        style: { fontSize: '15px', fontWeight: '600', margin: '0 0 6px' },
+      },
+      text,
+    );
+    host.append(line);
+  }
+
+  // Message blank tiles for Valentine's letters twist
+  const note = b.blanks.length ? h('div', { style: { margin: '0 0 8px' } }) : null;
+  const blankSet = new Set(b.blanks);
+  const drawNote = (): void => {
+    if (!note) return;
+    const word = done && b.word ? b.word : spell(b, grid);
+    const row = h(
+      'div',
+      { style: { display: 'flex', gap: '5px', alignItems: 'center', flexWrap: 'wrap' } },
+      h('span', { style: { fontSize: '20px', marginRight: '2px' } }, '💡'),
+      ...b.blanks.map((n, idx) => {
+        const ch = word[idx] ?? '_';
+        const filled = ch !== '_';
+        return h(
+          'span',
+          {
+            style: {
+              minWidth: '34px',
+              height: '38px',
+              display: 'grid',
+              placeItems: 'center',
+              borderRadius: '6px',
+              border: `2px ${done ? 'solid #c9a227' : 'dashed #d4af37'}`,
+              fontWeight: '700',
+              fontSize: done ? '20px' : filled ? '16px' : '14px',
+              background: done ? '#ffd54f' : filled ? '#fff8e1' : '#fff',
+              color: done ? '#3a2f25' : filled ? '#8d6e00' : '#8a7a86',
+              padding: '0 6px',
+            },
+          },
+          done ? ch : filled ? `${n}:${ch}` : String(n),
+        );
+      }),
+    );
+    note.replaceChildren(row);
+  };
+  if (note) host.append(note);
+
   const svg = document.createElementNS(NS, 'svg');
   svg.setAttribute('width', String(W));
   svg.setAttribute('height', String(H));
   svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
   Object.assign(svg.style, { touchAction: 'none', userSelect: 'none', display: 'block' });
   host.append(svg);
-  let done = false;
 
-  // Every tap turns the piece under it a quarter clockwise, at once (on the
-  // press, so it feels instant). Always the same way: four taps go all round.
   svg.addEventListener('pointerdown', (e) => {
     if (done) return;
     e.preventDefault();
@@ -76,7 +160,6 @@ export function mountLights(host: HTMLElement, panel: LightsPanel, hooks: Lights
     const r = Math.floor(((e.clientY - box.top) * H) / box.height / cell);
     const c = Math.floor(((e.clientX - box.left) * W) / box.width / cell);
     if (!b.inside(r, c)) return;
-    // A piece in the dark turns blind: you can't see it until it's joined into the lit string.
     const row = grid[r] as number[];
     row[c] = turn(row[c] ?? 0);
     blip(520, 30, 6);
@@ -88,9 +171,13 @@ export function mountLights(host: HTMLElement, panel: LightsPanel, hooks: Lights
       done = true;
       [660, 880, 1100, 1320].forEach((f, i) => setTimeout(() => blip(f, 150), i * 110));
       navigator.vibrate?.([20, 40, 20]);
+      drawNote();
       render();
       hooks.solved();
-    } else render();
+    } else {
+      drawNote();
+      render();
+    }
   };
 
   const render = (): void => {
@@ -106,30 +193,30 @@ export function mountLights(host: HTMLElement, panel: LightsPanel, hooks: Lights
       svg.append(el);
       return el;
     };
-    const { dist, string, loose } = light(b, grid);
+    const { dist, string, loose, loop } = light(b, grid);
     const shownNow = revealed();
     const sparks = new Set(loose.map(([r, c, d]) => `${key(r, c)}:${d}`));
     const { feeds, walls } = b.servings
       ? servings(b, grid)
       : { feeds: new Map<string, number>(), walls: [] };
     const crossing = new Set(walls.map(([r, c, d]) => `${key(r, c)}:${d}`));
-    // A wire across a wall shows red from both sides.
     for (const [r, c, d] of walls) {
       const [dr, dc] = STEP[d] as Spot;
       crossing.add(`${key(r + dr, c + dc)}:${d === E ? WEST : N}`);
     }
+    const secPlug = b.bluePlug ?? b.greenPlug;
+    const secTone = b.bluePlug ? 'b' : 'g';
     const plugTone = (r: number, c: number): string | undefined =>
       r === b.plug[0] && c === b.plug[1]
-        ? WIRE[b.greenPlug ? 'r' : 'w']
-        : b.greenPlug && r === b.greenPlug[0] && c === b.greenPlug[1]
-          ? WIRE.g
+        ? WIRE[secPlug ? 'r' : 'w']
+        : secPlug && r === secPlug[0] && c === secPlug[1]
+          ? WIRE[secTone]
           : undefined;
     // Squares.
     for (let r = 0; r < b.height; r++)
       for (let c = 0; c < b.width; c++) {
         if (!b.inside(r, c)) continue;
         const s = b.slice(r, c);
-        // The pie: slices in two crust browns, the middle (the serving dish) lighter.
         const shade =
           s === '*' ? '#5a4a3a' : s ? (s.charCodeAt(0) % 2 ? '#3a2a22' : '#2e2420') : '#1f2636';
         add('rect', {
@@ -139,7 +226,6 @@ export function mountLights(host: HTMLElement, panel: LightsPanel, hooks: Lights
           height: cell - 2,
           rx: 6,
           fill: shade,
-          // The plug's square is ringed in its string's colour.
           stroke: plugTone(r, c) ?? 'none',
           'stroke-width': plugTone(r, c) ? 3 : 1.5,
         });
@@ -174,6 +260,7 @@ export function mountLights(host: HTMLElement, panel: LightsPanel, hooks: Lights
       row.forEach((m, c) => {
         if (m < 0) return;
         if (darkSet.has(key(r, c)) && !shownNow.has(key(r, c))) {
+          const darkOwn = b.colour(r, c);
           add(
             'text',
             {
@@ -181,7 +268,8 @@ export function mountLights(host: HTMLElement, panel: LightsPanel, hooks: Lights
               y: r * cell + cell * 0.62,
               'text-anchor': 'middle',
               'font-size': cell * 0.4,
-              fill: '#8a8fa6',
+              'font-weight': 700,
+              fill: darkOwn ? (WIRE[darkOwn] ?? '#8a8fa6') : '#8a8fa6',
             },
             '?',
           );
@@ -189,11 +277,14 @@ export function mountLights(host: HTMLElement, panel: LightsPanel, hooks: Lights
         }
         const lit = dist.has(key(r, c));
         const own = b.colour(r, c);
-        // A white light (on a red-and-green board) takes the colour of the string that reaches it.
-        const white = b.greenPlug !== undefined && !own;
+        const white = secPlug !== undefined && !own;
         const reached = string.get(key(r, c));
         const tone = own ?? (white && lit && reached ? reached : 'w');
-        const colour = done ? '#ffd54f' : lit ? WIRE[tone] : DIM[tone];
+        const colour = done
+          ? '#ffd54f'
+          : lit
+            ? (WIRE[tone] ?? '#ffe08a')
+            : (DIM[tone] ?? '#55607a');
         const wrongString = lit && own !== undefined && reached !== undefined && reached !== own;
         const across = (d: number): boolean => crossing.has(`${key(r, c)}:${d}`);
         const cx = c * cell + cell / 2;
@@ -236,7 +327,6 @@ export function mountLights(host: HTMLElement, panel: LightsPanel, hooks: Lights
             r: cell * (white ? 0.13 : 0.09),
             fill: white ? '#ffffff' : colour,
           });
-        // A red or green light on the other string: ringed in orange.
         if (wrongString)
           add('circle', {
             cx,
@@ -248,15 +338,85 @@ export function mountLights(host: HTMLElement, panel: LightsPanel, hooks: Lights
           });
       }),
     );
-    // Plugs, eggs, the star and the slice counts.
-    const plugs: [Spot, keyof typeof WIRE][] = [[b.plug, b.greenPlug ? 'r' : 'w']];
-    if (b.greenPlug) plugs.push([b.greenPlug, 'g']);
+
+    // Snowflakes: frosty frame, mirror line with ❄, and ghost mirror wires
+    if (b.frame) {
+      const f = b.frame;
+      const [fx, fy] = [f.left * cell + 2, f.top * cell + 2];
+      const [fw, fh] = [(f.right - f.left + 1) * cell - 4, (f.bottom - f.top + 1) * cell - 4];
+      add('rect', {
+        x: fx,
+        y: fy,
+        width: fw,
+        height: fh,
+        rx: 8,
+        fill: 'rgba(154, 215, 255, 0.08)',
+        stroke: '#9ad7ff',
+        'stroke-width': 2,
+        'stroke-dasharray': '6 4',
+      });
+      const vertical = f.axis === 'v';
+      const mid = vertical
+        ? ((f.left + f.right + 1) * cell) / 2
+        : ((f.top + f.bottom + 1) * cell) / 2;
+      const [x1, y1, x2, y2] = vertical ? [mid, fy, mid, fy + fh] : [fx, mid, fx + fw, mid];
+      add('line', {
+        x1,
+        y1,
+        x2,
+        y2,
+        stroke: '#9ad7ff',
+        'stroke-width': 1.8,
+        'stroke-dasharray': '3 4',
+      });
+      for (const [x, y] of [
+        [x1, y1],
+        [x2, y2],
+      ]) {
+        add(
+          'text',
+          {
+            x: x ?? 0,
+            y: (y ?? 0) + cell * 0.1,
+            'text-anchor': 'middle',
+            'font-size': cell * 0.28,
+          },
+          '❄',
+        );
+      }
+      // Ghost mirror wires for joined edges inside the frame
+      const visibleGrid = grid.map((row, r) =>
+        row.map((m, c) => (darkSet.has(key(r, c)) && !shownNow.has(key(r, c)) ? -1 : m)),
+      );
+      const drawn = wiresOf(visibleGrid);
+      for (const seg of drawn) {
+        if (!inside(f, seg)) continue;
+        const m = mirrorKey(f, seg);
+        if (drawn.has(m)) continue;
+        const [r1 = 0, c1 = 0, r2 = 0, c2 = 0] = m.slice(1).split(',').map(Number);
+        add('line', {
+          x1: c1 * cell + cell / 2,
+          y1: r1 * cell + cell / 2,
+          x2: c2 * cell + cell / 2,
+          y2: r2 * cell + cell / 2,
+          stroke: '#9ad7ff',
+          'stroke-width': cell * 0.12,
+          'stroke-dasharray': '4 4',
+          'stroke-linecap': 'round',
+          opacity: 0.7,
+        });
+      }
+    }
+
+    // Plugs, eggs, letters, the star and the slice counts.
+    const plugs: [Spot, string][] = [[b.plug, secPlug ? 'r' : 'w']];
+    if (secPlug) plugs.push([secPlug, secTone]);
     for (const [[r, c], tone] of plugs) {
       add('circle', {
         cx: c * cell + cell * 0.2,
         cy: r * cell + cell * 0.8,
         r: cell * 0.16,
-        fill: WIRE[tone],
+        fill: WIRE[tone] ?? WIRE['w'] ?? '#ffe08a',
       });
       add(
         'text',
@@ -271,7 +431,13 @@ export function mountLights(host: HTMLElement, panel: LightsPanel, hooks: Lights
     }
     for (const [r, c, n] of b.eggs) {
       const reached = dist.get(key(r, c));
-      const fill = reached === undefined ? '#fff6dc' : reached === n ? '#7ed37e' : '#ff8a80';
+      const fill = done
+        ? '#ffd54f'
+        : reached === undefined
+          ? '#fff6dc'
+          : reached === n
+            ? '#7ed37e'
+            : '#ff8a80';
       add('ellipse', {
         cx: c * cell + cell * 0.75,
         cy: r * cell + cell * 0.27,
@@ -292,6 +458,46 @@ export function mountLights(host: HTMLElement, panel: LightsPanel, hooks: Lights
           fill: '#3a2f25',
         },
         String(n),
+      );
+    }
+    const letterDistCounts = new Map<number, Set<string>>();
+    for (const [r, c, ch] of b.letters) {
+      const d = dist.get(key(r, c));
+      if (d !== undefined) {
+        const set = letterDistCounts.get(d) ?? new Set<string>();
+        set.add(ch);
+        letterDistCounts.set(d, set);
+      }
+    }
+    for (const [r, c, ch] of b.letters) {
+      const reached = dist.get(key(r, c));
+      const conflict = reached !== undefined && (letterDistCounts.get(reached)?.size ?? 0) > 1;
+      const fill = done
+        ? '#ffd54f'
+        : reached === undefined
+          ? '#fff6dc'
+          : blankSet.has(reached) && !conflict
+            ? '#7ed37e'
+            : '#ff8a80';
+      add('circle', {
+        cx: c * cell + cell * 0.75,
+        cy: r * cell + cell * 0.27,
+        r: cell * 0.21,
+        fill,
+        stroke: '#d4af37',
+        'stroke-width': 2,
+      });
+      add(
+        'text',
+        {
+          x: c * cell + cell * 0.75,
+          y: r * cell + cell * 0.35,
+          'text-anchor': 'middle',
+          'font-size': cell * 0.22,
+          'font-weight': 700,
+          fill: '#3a2f25',
+        },
+        ch,
       );
     }
     if (panel.star) {
@@ -398,19 +604,34 @@ export function mountLights(host: HTMLElement, panel: LightsPanel, hooks: Lights
       if (own && own !== tone) wrongStrings = true;
     }
     const eggWrong = b.eggs.some(([r, c, n]) => dist.has(key(r, c)) && dist.get(key(r, c)) !== n);
+    const letterWrong =
+      b.letters.some(
+        ([r, c]) =>
+          dist.has(key(r, c)) &&
+          (!blankSet.has(dist.get(key(r, c)) ?? -1) ||
+            (letterDistCounts.get(dist.get(key(r, c)) ?? -1)?.size ?? 0) > 1),
+      ) ||
+      (b.blanks.length > 0 && spell(b, grid).includes('_'));
     hooks.status(
       done
         ? 'Lit!'
         : dist.size === total && !loose.length
-          ? eggWrong
-            ? 'Everything’s lit, but an egg is the wrong number of steps from the plug'
-            : wrongStrings
-              ? 'Everything’s lit, but a light is on the wrong-coloured string'
-              : walls.length
-                ? 'Everything’s lit, but a wire crosses between two slices'
-                : 'Everything’s lit, but a slice gets more than one serving'
+          ? loop
+            ? 'Everything’s lit, but the wires form a loop'
+            : eggWrong
+              ? 'Everything’s lit, but an egg is the wrong number of steps from the plug'
+              : letterWrong
+                ? 'Everything’s lit, but a letter bulb is not on one of the message’s distances'
+                : wrongStrings
+                  ? 'Everything’s lit, but a light is on the wrong-coloured string'
+                  : b.frame && !solved(b, grid)
+                    ? 'Everything’s lit, but the wires inside the frosty frame don’t mirror yet'
+                    : walls.length
+                      ? 'Everything’s lit, but a wire crosses between two slices'
+                      : 'Everything’s lit, but a slice gets more than one serving'
           : `${dist.size} of ${total} lit`,
     );
   };
+  drawNote();
   render();
 }

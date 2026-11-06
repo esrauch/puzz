@@ -12,11 +12,16 @@ Prototypes are deliberately unthemed: they test whether each puzzle is fun.
 - **Twists revised:** Christmas is now **snowflakes** and the Fourth of July
   **red, white and blue**; red and green and edge flags are retired. The
   full puzzle-by-twist map is [PUZZLES.md](PUZZLES.md).
-- **Generators:** `src/gen/` holds the new architecture. Webs is migrated
-  and generates the plain puzzle and its twists (dark, letters, colours,
-  eggs, cuts, snowflakes; flags still there, to remove) at easy, medium and
-  hard (5×5, 7×7, 9×9), offline (`tools/make-panels.ts`) or in the browser
-  (the Webs workshop, `?p=webworkshop`, through a Web Worker).
+- **Generators:** `src/gen/` holds the new architecture. Webs, Carving,
+  Words, Bunny hops, and Lights are migrated and generate the plain puzzle and their twists at easy,
+  medium and hard (5×5, 7×7, 9×9), offline (`tools/make-panels.ts webs|carving|words|hops|lights`)
+  or in the browser (the workshops, `?p=webworkshop`,
+  `?p=carvingworkshop`, `?p=wordsworkshop`, `?p=hopsworkshop`, `?p=lightsworkshop`, through a Web Worker). Webs: dark, letters, colours,
+  eggs, cuts, snowflakes. Carving: dark, letters, colours (red, white and
+  blue), cuts, Easter baskets, snowflakes
+  (a frame). Words: dark, letters (the code), colours, eggs, cuts,
+  snowflakes (mirror pairs). Bunny hops: courses, colours, burrows, snow, letters, dark.
+  Lights: snowflakes, dark, letters, eggs, colours, slices. All generating in seconds.
 - **Not cleaned up yet:** the rooms below were built before the revision;
   the ones using red and green or flags (Tree-Top Star, Stocking, Christmas
   Tree, Star-Spangled Flag, Hot Dog, Tuesday) still do.

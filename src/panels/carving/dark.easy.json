@@ -1,0 +1,31 @@
+{
+  "genre": "carving",
+  "twists": ["dark"],
+  "tier": "easy",
+  "panels": [
+    {
+      "seed": 1,
+      "stats": { "plain": 1, "steps": 19 },
+      "panel": {
+        "name": "Carving, dark: easy 1",
+        "rows": ["6 . . 2 .", ". . . . .", "? . 2 3 .", ". . . . .", ". . 2 . 4"]
+      }
+    },
+    {
+      "seed": 4,
+      "stats": { "plain": 1, "steps": 15 },
+      "panel": {
+        "name": "Carving, dark: easy 2",
+        "rows": [". . 3 . .", ". 2 2 . .", ". . ? . 2", "5 . . 2 2", ". . 3 . ."]
+      }
+    },
+    {
+      "seed": 8,
+      "stats": { "plain": 1, "steps": 9 },
+      "panel": {
+        "name": "Carving, dark: easy 3",
+        "rows": ["3 . . . .", ". . . . .", "2 . . . 6", ". . 6 2 2", "2 . ? . ."]
+      }
+    }
+  ]
+}

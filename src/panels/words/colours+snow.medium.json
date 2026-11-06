@@ -1,0 +1,213 @@
+{
+  "genre": "words",
+  "twists": ["colours", "snow"],
+  "tier": "medium",
+  "panels": [
+    {
+      "seed": 49,
+      "stats": { "words": 8, "steps": 937 },
+      "panel": {
+        "name": "Words, colours and snow: medium 1",
+        "theme": "Garden of love",
+        "rows": ["YPOMBL", "NPPOOC", "ORNVLA", "THEIIL", "RTCOLE", "ASLTET", "UTOPAL"],
+        "words": [
+          {
+            "word": "POPPY",
+            "cells": [
+              [1, 2],
+              [0, 2],
+              [1, 1],
+              [0, 1],
+              [0, 0]
+            ]
+          },
+          {
+            "word": "NECTAR",
+            "cells": [
+              [2, 2],
+              [3, 2],
+              [4, 2],
+              [4, 1],
+              [5, 0],
+              [4, 0]
+            ]
+          },
+          {
+            "word": "LOTUS",
+            "cells": [
+              [5, 2],
+              [6, 2],
+              [6, 1],
+              [6, 0],
+              [5, 1]
+            ]
+          },
+          {
+            "word": "THORN",
+            "cells": [
+              [3, 0],
+              [3, 1],
+              [2, 0],
+              [2, 1],
+              [1, 0]
+            ]
+          },
+          {
+            "word": "BLOOM",
+            "cells": [
+              [0, 4],
+              [0, 5],
+              [1, 4],
+              [1, 3],
+              [0, 3]
+            ]
+          },
+          {
+            "word": "VIOLET",
+            "cells": [
+              [2, 3],
+              [3, 3],
+              [4, 3],
+              [4, 4],
+              [4, 5],
+              [5, 5]
+            ]
+          },
+          {
+            "word": "PETAL",
+            "cells": [
+              [6, 3],
+              [5, 4],
+              [5, 3],
+              [6, 4],
+              [6, 5]
+            ]
+          },
+          {
+            "word": "LILAC",
+            "cells": [
+              [2, 4],
+              [3, 4],
+              [3, 5],
+              [2, 5],
+              [1, 5]
+            ]
+          }
+        ],
+        "frame": { "top": 0, "bottom": 6, "left": 0, "right": 5, "axis": "v" },
+        "colours": ["......", "b....r", "bbrbrr", "bbrbrr", "rrrbbb", "rbbrrb", "bbbrrr"],
+        "bows": [
+          [4, 1],
+          [6, 1],
+          [3, 1],
+          [4, 5],
+          [6, 5],
+          [3, 5]
+        ]
+      }
+    },
+    {
+      "seed": 235,
+      "stats": { "words": 8, "steps": 728 },
+      "panel": {
+        "name": "Words, colours and snow: medium 2",
+        "theme": "Spring fling",
+        "rows": ["MBLRIB", "EOONOE", "TIKTSN", "TSPCAR", "URRMOR", "SOEETO", "HOWADW"],
+        "words": [
+          {
+            "word": "KITE",
+            "cells": [
+              [2, 2],
+              [2, 1],
+              [2, 0],
+              [1, 0]
+            ]
+          },
+          {
+            "word": "SHOWER",
+            "cells": [
+              [5, 0],
+              [6, 0],
+              [6, 1],
+              [6, 2],
+              [5, 2],
+              [4, 2]
+            ]
+          },
+          {
+            "word": "SPROUT",
+            "cells": [
+              [3, 1],
+              [3, 2],
+              [4, 1],
+              [5, 1],
+              [4, 0],
+              [3, 0]
+            ]
+          },
+          {
+            "word": "BLOOM",
+            "cells": [
+              [0, 1],
+              [0, 2],
+              [1, 2],
+              [1, 1],
+              [0, 0]
+            ]
+          },
+          {
+            "word": "NEST",
+            "cells": [
+              [2, 5],
+              [1, 5],
+              [2, 4],
+              [2, 3]
+            ]
+          },
+          {
+            "word": "MEADOW",
+            "cells": [
+              [4, 3],
+              [5, 3],
+              [6, 3],
+              [6, 4],
+              [5, 5],
+              [6, 5]
+            ]
+          },
+          {
+            "word": "CARROT",
+            "cells": [
+              [3, 3],
+              [3, 4],
+              [3, 5],
+              [4, 5],
+              [4, 4],
+              [5, 4]
+            ]
+          },
+          {
+            "word": "ROBIN",
+            "cells": [
+              [0, 3],
+              [1, 4],
+              [0, 5],
+              [0, 4],
+              [1, 3]
+            ]
+          }
+        ],
+        "frame": { "top": 0, "bottom": 6, "left": 0, "right": 5, "axis": "v" },
+        "colours": ["rrrbbb", ".rrbb.", "......", "bbbrrr", "bbrbrr", "rbrbrb", "rrrbbb"],
+        "bows": [
+          [5, 0],
+          [4, 1],
+          [0, 0],
+          [5, 3],
+          [5, 4],
+          [0, 3]
+        ]
+      }
+    }
+  ]
+}

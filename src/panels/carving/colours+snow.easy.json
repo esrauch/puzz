@@ -1,0 +1,27 @@
+{
+  "genre": "carving",
+  "twists": ["colours", "snow"],
+  "tier": "easy",
+  "panels": [
+    {
+      "seed": 24,
+      "stats": { "plain": 3, "without colours": 2, "without snow": 2, "steps": 13 },
+      "panel": {
+        "name": "Carving, colours and snow: easy 1",
+        "rows": [". 5 . . .", ". . . . 4", ". . 2 . .", "4 2 . . 4", ". . 2 . 2"],
+        "colours": [".....", "....r", ".....", ".r.b.", "b...r"],
+        "frame": { "top": 1, "left": 0, "bottom": 4, "right": 2, "axis": "h" }
+      }
+    },
+    {
+      "seed": 158,
+      "stats": { "plain": 3, "without colours": 2, "without snow": 2, "steps": 19 },
+      "panel": {
+        "name": "Carving, colours and snow: easy 2",
+        "rows": ["2 . 2 . .", ". 6 . . .", ". . . 4 .", "2 . 2 . 5", ". 2 . . ."],
+        "colours": ["...r.", "..b..", ".....", "r....", ".b..b"],
+        "frame": { "top": 1, "left": 2, "bottom": 4, "right": 4, "axis": "h" }
+      }
+    }
+  ]
+}

@@ -1,0 +1,97 @@
+{
+  "genre": "lights",
+  "twists": ["slices"],
+  "tier": "hard",
+  "panels": [
+    {
+      "seed": 1,
+      "stats": { "steps": 101 },
+      "panel": {
+        "name": "Lights, slices: hard 1",
+        "rows": [
+          "6aae86ec4",
+          "3ac7a9539",
+          "4297c6b84",
+          "3e81512e9",
+          "47ac7ead4",
+          "7d479783d",
+          "555147c29",
+          "57fed17e8",
+          "111112938"
+        ],
+        "plug": [4, 4],
+        "slices": [
+          "BBBBBBBBB",
+          "BBBBBBBBB",
+          "ABBBBBBBC",
+          "AAABBBCCC",
+          "AAAA*CCCC",
+          "AAAAACCCC",
+          "AAAAACCCC",
+          "AAAAACCCC",
+          "AAAAACCCC"
+        ]
+      }
+    },
+    {
+      "seed": 2,
+      "stats": { "steps": 135 },
+      "panel": {
+        "name": "Lights, slices: hard 2",
+        "rows": [
+          "682c46eec",
+          "7ac791555",
+          "1453ea951",
+          "47b8782b8",
+          "3bc6d6e84",
+          "6879513e9",
+          "3ed43eafc",
+          "6917ed695",
+          "382911381"
+        ],
+        "plug": [4, 4],
+        "slices": [
+          "BBCCCCCCC",
+          "BBBCCCCCC",
+          "BBBCCCCCC",
+          "BBBBCCCCC",
+          "BBBB*AAAA",
+          "BBBBAAAAA",
+          "BBBAAAAAA",
+          "BBBAAAAAA",
+          "BBAAAAAAA"
+        ]
+      }
+    },
+    {
+      "seed": 3,
+      "stats": { "steps": 83 },
+      "panel": {
+        "name": "Lights, slices: hard 3",
+        "rows": [
+          "6aac6c6a8",
+          "7829153ac",
+          "3ac447ee9",
+          "2efd7953c",
+          "4513d2969",
+          "7b82f82bc",
+          "12ec3ee81",
+          "4697e9384",
+          "39293aaa9"
+        ],
+        "plug": [4, 4],
+        "slices": [
+          "CCCCAAAAA",
+          "CCCCAAAAA",
+          "CCCCAAAAA",
+          "CCCCAAAAA",
+          "CCCC*AAAA",
+          "CCCBBBAAA",
+          "CBBBBBBBA",
+          "BBBBBBBBB",
+          "BBBBBBBBB"
+        ]
+      }
+    }
+  ]
+}

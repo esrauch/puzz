@@ -443,7 +443,9 @@ export function mountWeb(host: HTMLElement, panel: Panel, hooks: BoardHooks): vo
       const fill = k.colour
         ? k.colour === 'r'
           ? '#d9534f'
-          : '#43a35c'
+          : k.colour === 'b'
+            ? '#3c6fd9'
+            : '#43a35c'
         : k.clue.kind === 'dark'
           ? '#4b4859'
           : done || met

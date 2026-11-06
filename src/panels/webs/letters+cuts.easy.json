@@ -8,19 +8,29 @@
       "stats": { "plain": 2, "without cuts": 2, "steps": 4 },
       "panel": {
         "name": "Webs, letters and cuts: easy 1",
-        "rows": ["1.2.T", ".....", "T...4", "....1", "2...."],
-        "message": "HEAR3",
-        "walls": [[1, 0, "h"]]
+        "rows": ["1.T.3", ".....", "3...R", "....1", "T...."],
+        "message": "24ICK",
+        "walls": [[0, 0, "h"]]
       }
     },
     {
-      "seed": 60,
-      "stats": { "plain": 2, "without cuts": 2, "steps": 7 },
+      "seed": 121,
+      "stats": { "plain": 2, "without cuts": 2, "steps": 4 },
       "panel": {
         "name": "Webs, letters and cuts: easy 2",
-        "rows": ["2...S", "2...S", ".....", ".....", "3..S2"],
-        "message": "KI33",
-        "walls": [[0, 0, "h"]]
+        "rows": ["2.6.E", "....E", ".....", "....O", "..E.O"],
+        "message": "L2V4",
+        "walls": [[3, 4, "h"]]
+      }
+    },
+    {
+      "seed": 348,
+      "stats": { "plain": 2, "without cuts": 2, "steps": 4 },
+      "panel": {
+        "name": "Webs, letters and cuts: easy 3",
+        "rows": [".2.EA", ".2.A.", ".....", ".....", "A3..."],
+        "message": "TR52T",
+        "walls": [[0, 1, "h"]]
       }
     }
   ]

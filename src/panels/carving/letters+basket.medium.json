@@ -1,0 +1,43 @@
+{
+  "genre": "carving",
+  "twists": ["letters", "basket"],
+  "tier": "medium",
+  "panels": [
+    {
+      "seed": 10316,
+      "stats": { "plain": 1, "steps": 77 },
+      "panel": {
+        "name": "Carving, letters and basket: medium 1",
+        "rows": [
+          "🍫 🍫 . 🥕 🥚 . .",
+          "🥕 🥕 🍫 🥚 . . E",
+          "🥚 🥚 🥕 🍫 🥕 A 🥕",
+          "4 🍫 . . . 🥚 .",
+          ". 🥕 🍫 🥚 🥚 . .",
+          "🥚 . . . . 🥕 🍫",
+          "🍫 🥕 . T 🍫 . 🥚"
+        ],
+        "sizeLetters": "     AET ",
+        "message": "8R768"
+      }
+    },
+    {
+      "seed": 17524,
+      "stats": { "plain": 1, "steps": 38 },
+      "panel": {
+        "name": "Carving, letters and basket: medium 2",
+        "rows": [
+          "🍫 . A 🥕 🥚 . 🍫",
+          ". 🍫 K 🥕 . 🍫 .",
+          "🥚 . . . 🥚 . .",
+          "🍫 🥕 🥚 🥚 🥕 . 🥚",
+          "🥚 . 🍫 🍫 S 🥕 .",
+          ". 4 🥕 . 🍫 . .",
+          "🥕 🥚 🍫 🥕 . 🥚 🥕"
+        ],
+        "sizeLetters": "    AS K ",
+        "message": "TH5N86"
+      }
+    }
+  ]
+}

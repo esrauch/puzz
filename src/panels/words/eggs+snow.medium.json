@@ -1,0 +1,200 @@
+{
+  "genre": "words",
+  "twists": ["eggs", "snow"],
+  "tier": "medium",
+  "panels": [
+    {
+      "seed": 49,
+      "stats": { "words": 8, "steps": 908 },
+      "panel": {
+        "name": "Words, eggs and snow: medium 1",
+        "theme": "Garden of love",
+        "rows": ["YPOMBL", "NPPOOC", "ORNVLA", "THEIIL", "RTCOLE", "ASLTET", "UTOPAL"],
+        "words": [
+          {
+            "word": "POPPY",
+            "cells": [
+              [1, 2],
+              [0, 2],
+              [1, 1],
+              [0, 1],
+              [0, 0]
+            ]
+          },
+          {
+            "word": "NECTAR",
+            "cells": [
+              [2, 2],
+              [3, 2],
+              [4, 2],
+              [4, 1],
+              [5, 0],
+              [4, 0]
+            ]
+          },
+          {
+            "word": "LOTUS",
+            "cells": [
+              [5, 2],
+              [6, 2],
+              [6, 1],
+              [6, 0],
+              [5, 1]
+            ]
+          },
+          {
+            "word": "THORN",
+            "cells": [
+              [3, 0],
+              [3, 1],
+              [2, 0],
+              [2, 1],
+              [1, 0]
+            ]
+          },
+          {
+            "word": "BLOOM",
+            "cells": [
+              [0, 4],
+              [0, 5],
+              [1, 4],
+              [1, 3],
+              [0, 3]
+            ]
+          },
+          {
+            "word": "VIOLET",
+            "cells": [
+              [2, 3],
+              [3, 3],
+              [4, 3],
+              [4, 4],
+              [4, 5],
+              [5, 5]
+            ]
+          },
+          {
+            "word": "PETAL",
+            "cells": [
+              [6, 3],
+              [5, 4],
+              [5, 3],
+              [6, 4],
+              [6, 5]
+            ]
+          },
+          {
+            "word": "LILAC",
+            "cells": [
+              [2, 4],
+              [3, 4],
+              [3, 5],
+              [2, 5],
+              [1, 5]
+            ]
+          }
+        ],
+        "frame": { "top": 0, "bottom": 6, "left": 0, "right": 5, "axis": "v" },
+        "eggs": [[2, 4]]
+      }
+    },
+    {
+      "seed": 57,
+      "stats": { "words": 8, "steps": 749 },
+      "panel": {
+        "name": "Words, eggs and snow: medium 2",
+        "theme": "Sweet treats",
+        "rows": ["FDGFEW", "WUERAE", "OLMRRH", "LJAYAC", "YLEOCO", "SLACCA", "UGRREM"],
+        "words": [
+          {
+            "word": "JELLY",
+            "cells": [
+              [3, 1],
+              [4, 2],
+              [4, 1],
+              [5, 1],
+              [4, 0]
+            ]
+          },
+          {
+            "word": "FUDGE",
+            "cells": [
+              [0, 0],
+              [1, 1],
+              [0, 1],
+              [0, 2],
+              [1, 2]
+            ]
+          },
+          {
+            "word": "SUGAR",
+            "cells": [
+              [5, 0],
+              [6, 0],
+              [6, 1],
+              [5, 2],
+              [6, 2]
+            ]
+          },
+          {
+            "word": "MALLOW",
+            "cells": [
+              [2, 2],
+              [3, 2],
+              [2, 1],
+              [3, 0],
+              [2, 0],
+              [1, 0]
+            ]
+          },
+          {
+            "word": "COCOA",
+            "cells": [
+              [5, 4],
+              [4, 3],
+              [4, 4],
+              [4, 5],
+              [3, 4]
+            ]
+          },
+          {
+            "word": "WAFER",
+            "cells": [
+              [0, 5],
+              [1, 4],
+              [0, 3],
+              [0, 4],
+              [1, 3]
+            ]
+          },
+          {
+            "word": "CREAM",
+            "cells": [
+              [5, 3],
+              [6, 3],
+              [6, 4],
+              [5, 5],
+              [6, 5]
+            ]
+          },
+          {
+            "word": "CHERRY",
+            "cells": [
+              [3, 5],
+              [2, 5],
+              [1, 5],
+              [2, 4],
+              [2, 3],
+              [3, 3]
+            ]
+          }
+        ],
+        "frame": { "top": 0, "bottom": 6, "left": 0, "right": 5, "axis": "v" },
+        "eggs": [
+          [5, 4],
+          [4, 3]
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "genre": "lights",
+  "twists": ["colours"],
+  "tier": "easy",
+  "panels": [
+    {
+      "seed": 13,
+      "stats": { "steps": 36 },
+      "panel": {
+        "name": "Lights, colours: easy 1",
+        "rows": ["2c684", "6bba9", "12eec", "2c511", "2bba8"],
+        "plug": [1, 1],
+        "bluePlug": [3, 4],
+        "colours": ["rrrrr", "rrrrr", "rbbww", "wbbbb", "bbbbb"]
+      }
+    },
+    {
+      "seed": 44,
+      "stats": { "steps": 27 },
+      "panel": {
+        "name": "Lights, colours: easy 2",
+        "rows": ["6c6a8", "1796c", "6d451", "51794", "12ba9"],
+        "plug": [3, 0],
+        "bluePlug": [4, 1],
+        "colours": ["rrrrr", "rrrwb", "rwbbb", "rrbbb", "wbbbb"]
+      }
+    },
+    {
+      "seed": 67,
+      "stats": { "steps": 41 },
+      "panel": {
+        "name": "Lights, colours: easy 3",
+        "rows": ["686c4", "5693d", "3b845", "42e91", "3aba8"],
+        "plug": [2, 4],
+        "bluePlug": [4, 3],
+        "colours": ["rrrrr", "rrrrr", "rwwbr", "bbbbw", "bbbbb"]
+      }
+    }
+  ]
+}

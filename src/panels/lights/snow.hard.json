@@ -1,0 +1,67 @@
+{
+  "genre": "lights",
+  "twists": ["snow"],
+  "tier": "hard",
+  "panels": [
+    {
+      "seed": 110,
+      "stats": { "steps": 189 },
+      "panel": {
+        "name": "Lights, snow: hard 1",
+        "rows": [
+          "6c2c2ae84",
+          "53e9443e9",
+          "52bebbeb8",
+          "16ed447ec",
+          "691555511",
+          "1469553c4",
+          "2d52d7855",
+          "6ffed7efd",
+          "111111111"
+        ],
+        "plug": [4, 4],
+        "frame": { "top": 1, "left": 1, "bottom": 8, "right": 8, "axis": "v" }
+      }
+    },
+    {
+      "seed": 164,
+      "stats": { "steps": 127 },
+      "panel": {
+        "name": "Lights, snow: hard 2",
+        "rows": [
+          "2ac42c2ec",
+          "6857c52d1",
+          "56f93fc7c",
+          "3d1441791",
+          "2d2d78784",
+          "2fed7efad",
+          "6951153c1",
+          "16f82fc3c",
+          "293829381"
+        ],
+        "plug": [4, 4],
+        "frame": { "top": 1, "left": 0, "bottom": 8, "right": 7, "axis": "v" }
+      }
+    },
+    {
+      "seed": 368,
+      "stats": { "steps": 140 },
+      "panel": {
+        "name": "Lights, snow: hard 3",
+        "rows": [
+          "46c686868",
+          "3d17c3af8",
+          "2fed3ee94",
+          "2915293a9",
+          "2c452c6ac",
+          "2fbd6bbc1",
+          "2d4796af8",
+          "6bd7c387c",
+          "129138291"
+        ],
+        "plug": [4, 4],
+        "frame": { "top": 0, "left": 1, "bottom": 7, "right": 8, "axis": "h" }
+      }
+    }
+  ]
+}

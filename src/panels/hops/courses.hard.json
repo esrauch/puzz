@@ -1,0 +1,122 @@
+{
+  "genre": "hops",
+  "twists": ["courses"],
+  "tier": "hard",
+  "panels": [
+    {
+      "seed": 2,
+      "stats": { "eggs": 7, "steps": 742 },
+      "panel": {
+        "name": "Bunny hops, courses: hard 1",
+        "rows": [
+          "#########",
+          "#########",
+          "#########",
+          "#########",
+          "#########",
+          "#########",
+          "#########",
+          "#########",
+          "#########"
+        ],
+        "given": [
+          [8, 0, 1],
+          [7, 0, 14],
+          [3, 1, 29],
+          [1, 2, 34],
+          [7, 8, 48],
+          [2, 4, 73],
+          [6, 4, 81]
+        ],
+        "portions": [
+          "BBBBBBBBB",
+          "BBBDDDCCC",
+          "BBBDDDCCC",
+          "BBBDDDCCC",
+          "BBBDDDCCC",
+          "AAADDDDCC",
+          "AAADDDDCC",
+          "AAAAAAACC",
+          "AAAAAAACC"
+        ]
+      }
+    },
+    {
+      "seed": 3,
+      "stats": { "eggs": 7, "steps": 744 },
+      "panel": {
+        "name": "Bunny hops, courses: hard 2",
+        "rows": [
+          "#########",
+          "#########",
+          "#########",
+          "#########",
+          "#########",
+          "#########",
+          "#########",
+          "#########",
+          "#########"
+        ],
+        "given": [
+          [4, 2, 1],
+          [6, 2, 7],
+          [5, 3, 29],
+          [6, 4, 33],
+          [1, 8, 52],
+          [1, 0, 66],
+          [3, 1, 79]
+        ],
+        "portions": [
+          "DDDDCCCCC",
+          "DDDDCCCCC",
+          "DDDDDCCCC",
+          "DDDDDCCCC",
+          "DDABBBBBC",
+          "AAABBBBBC",
+          "AAABBBBBB",
+          "AAABBBBBA",
+          "AAAAAAAAA"
+        ]
+      }
+    },
+    {
+      "seed": 4,
+      "stats": { "eggs": 8, "steps": 399 },
+      "panel": {
+        "name": "Bunny hops, courses: hard 3",
+        "rows": [
+          "#########",
+          "#########",
+          "#########",
+          "#########",
+          "#########",
+          "#########",
+          "#########",
+          "#########",
+          "#########"
+        ],
+        "given": [
+          [7, 5, 1],
+          [5, 5, 11],
+          [0, 3, 30],
+          [2, 5, 48],
+          [6, 8, 55],
+          [3, 2, 70],
+          [6, 3, 76],
+          [7, 1, 81]
+        ],
+        "portions": [
+          "BBBBBBBCC",
+          "BBBBBCCCC",
+          "BBBBBCCCC",
+          "BDDDDDDCC",
+          "BDDDDDCCC",
+          "BDDDAACCC",
+          "BDDDAAACC",
+          "ADDDAAAAA",
+          "AAAAAAAAA"
+        ]
+      }
+    }
+  ]
+}

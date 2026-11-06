@@ -1,0 +1,47 @@
+{
+  "genre": "carving",
+  "twists": ["dark", "letters"],
+  "tier": "hard",
+  "panels": [
+    {
+      "seed": 2,
+      "stats": { "plain": 1, "steps": 11295 },
+      "panel": {
+        "name": "Carving, dark and letters: hard 1",
+        "rows": [
+          ". . ? ? . 6 . . Y",
+          ". . . . . . . . .",
+          "8 . . . . . . Y .",
+          ". . . . . . . . .",
+          "2 3 M . 2 . . . .",
+          ". . . . . . . 2 .",
+          "M . . 6 M Y . 2 .",
+          ". . . . . . A . .",
+          ". 2 4 . . . 5 . ?"
+        ],
+        "sizeLetters": "  M Y  A ",
+        "message": "583"
+      }
+    },
+    {
+      "seed": 16,
+      "stats": { "plain": 1, "steps": 134842 },
+      "panel": {
+        "name": "Carving, dark and letters: hard 2",
+        "rows": [
+          ". . . S . . . . .",
+          ". ? . ? . I . ? .",
+          ". . . . . . . . .",
+          ". . . . 8 I 6 . .",
+          ". . . . . . . . .",
+          "6 . I I . . . . S",
+          ". . S . . S 3 . .",
+          ". . . . . 3 . 6 .",
+          ". . K . . . . . I"
+        ],
+        "sizeLetters": " I SK    ",
+        "message": "5244"
+      }
+    }
+  ]
+}

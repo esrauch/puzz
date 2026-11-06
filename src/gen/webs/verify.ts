@@ -9,13 +9,12 @@ import { type Panel, type Web, parse } from './model';
 import { strokes } from './rules';
 import { countSolutions, solve } from './solve';
 
-export type WebTwist = 'dark' | 'letters' | 'colours' | 'eggs' | 'flags' | 'cuts' | 'snow';
+export type WebTwist = 'dark' | 'letters' | 'colours' | 'eggs' | 'cuts' | 'snow';
 export const WEB_TWISTS: readonly WebTwist[] = [
   'dark',
   'letters',
   'colours',
   'eggs',
-  'flags',
   'cuts',
   'snow',
 ];
@@ -46,9 +45,6 @@ export function without(p: Panel, twist: WebTwist): Panel {
   if (twist === 'eggs') {
     delete q.eggs;
     delete q.home;
-  } else if (twist === 'flags') {
-    delete q.rowFlags;
-    delete q.colFlags;
   } else if (twist === 'colours') delete q.colours;
   else if (twist === 'cuts') delete q.walls;
   else if (twist === 'snow') delete q.frame;
@@ -66,7 +62,6 @@ export function twistsOf(p: Panel): WebTwist[] {
   if (p.rows.some((r) => /[A-Z]/.test(r))) on.push('letters');
   if (p.colours) on.push('colours');
   if (p.eggs?.length) on.push('eggs');
-  if ([...(p.rowFlags ?? []), ...(p.colFlags ?? [])].some((f) => f !== null)) on.push('flags');
   if (p.walls?.length) on.push('cuts');
   if (p.frame) on.push('snow');
   return on;
@@ -74,7 +69,7 @@ export function twistsOf(p: Panel): WebTwist[] {
 
 /**
  * Problems with a panel (empty when it's good). `margin`: without any one
- * twist that adds clues (eggs, flags, colours, letters read as dark), at
+ * twist that adds clues (eggs, cuts, colours, snowflakes, letters read as dark), at
  * least this many answers fit.
  */
 export function problems(p: Panel, margin: number, budget = new Budget(2_000_000)): string[] {
@@ -87,6 +82,9 @@ export function problems(p: Panel, margin: number, budget = new Budget(2_000_000
     const m = countSolutions(parse(without(p, twist)), margin, {}, budget);
     if (m < margin) out.push(`without ${twist}, ${m} answers (want ${margin})`);
   }
+  // Letters: at least two different letters (different counts), or a letter is just a hidden given.
+  const shown = new Set(p.rows.join('').match(/[A-Z]/g) ?? []);
+  if (shown.size === 1) out.push('only one letter');
   // Snowflakes (whole board on Webs): the knots sit in mirror image, the answer draws
   // enough off the axis, and the numbers mustn't simply mirror too (or one half solves the other).
   if (p.frame) {

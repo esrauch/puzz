@@ -1,0 +1,25 @@
+{
+  "genre": "carving",
+  "twists": ["basket", "snow"],
+  "tier": "easy",
+  "panels": [
+    {
+      "seed": 358,
+      "stats": { "plain": 5, "without snow": 5, "steps": 76 },
+      "panel": {
+        "name": "Carving, basket and snow: easy 1",
+        "rows": ["🥕 🥚 . 🥚 5", ". . . 🥕 🥚", "🥕 🥕 🥕 3 🥕", ". 🥚 . 🥚 .", "🥚 3 🥚 🥕 ."],
+        "frame": { "top": 0, "left": 0, "bottom": 3, "right": 3, "axis": "v" }
+      }
+    },
+    {
+      "seed": 382,
+      "stats": { "plain": 3, "without snow": 3, "steps": 72 },
+      "panel": {
+        "name": "Carving, basket and snow: easy 2",
+        "rows": [". 🥚 🥕 🥕 .", "🥚 . 4 🥚 .", "5 🥕 . . 🥕", ". 🥚 . . 🥚", "🥕 🥕 3 🥚 ."],
+        "frame": { "top": 0, "left": 0, "bottom": 3, "right": 3, "axis": "v" }
+      }
+    }
+  ]
+}

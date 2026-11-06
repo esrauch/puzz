@@ -16,17 +16,35 @@ export function solve(
   const noCrossing = rules.noCrossing !== false;
   const connected = rules.connected !== false;
 
-  /** Tighten `val` (-1 unknown) in place; false if it can't be solved. */
-  const propagate = (val: Int8Array): boolean => {
+  /** Tighten `val` (-1 unknown) and link bounds `[minV, maxV]` in place; false if unsolvable. */
+  const propagate = (val: Int8Array, minV: Int8Array, maxV: Int8Array): boolean => {
+    for (let i = 0; i < L; i++) {
+      const v = val[i] ?? -1;
+      if (v >= 0) {
+        minV[i] = v;
+        maxV[i] = v;
+      } else {
+        minV[i] = 0;
+        maxV[i] = 2;
+      }
+    }
     for (let changed = true; changed;) {
       changed = false;
-      // Snowflakes: inside the frame, a segment is drawn exactly when its mirror image is.
-      // Drawn: some link over it has threads; empty: every link over it is settled at none.
+      for (let i = 0; i < L; i++) {
+        const loI = minV[i] ?? 0;
+        const hiI = maxV[i] ?? 2;
+        if (loI > hiI) return false;
+        if (loI === hiI && val[i] === -1) {
+          val[i] = loI;
+          changed = true;
+        }
+      }
+      // Snowflakes: inside the frame, a segment is drawn iff its mirror image is.
       for (const [a, b] of web.framePairs) {
         const state = (seg: string): 'yes' | 'no' | 'maybe' => {
           const over = web.segmentLinks.get(seg) ?? [];
-          if (over.some((i) => (val[i] ?? 0) > 0)) return 'yes';
-          return over.every((i) => val[i] === 0) ? 'no' : 'maybe';
+          if (over.some((i) => (minV[i] ?? 0) > 0)) return 'yes';
+          return over.every((i) => (maxV[i] ?? 2) === 0) ? 'no' : 'maybe';
         };
         const x = state(a);
         const y = state(b);
@@ -34,31 +52,45 @@ export function solve(
         const empty = x === 'no' && y === 'maybe' ? b : y === 'no' && x === 'maybe' ? a : null;
         if (empty)
           for (const i of web.segmentLinks.get(empty) ?? [])
-            if (val[i] === -1) {
+            if ((maxV[i] ?? 2) > 0) {
+              maxV[i] = 0;
+              if ((minV[i] ?? 0) > 0) return false;
               val[i] = 0;
               changed = true;
             }
+        const drawn = x === 'yes' && y === 'maybe' ? b : y === 'yes' && x === 'maybe' ? a : null;
+        if (drawn) {
+          const active = (web.segmentLinks.get(drawn) ?? []).filter((i) => (maxV[i] ?? 2) > 0);
+          if (active.length === 0) return false;
+          if (active.length === 1) {
+            const only = active[0] as number;
+            if ((minV[only] ?? 0) < 1) {
+              minV[only] = 1;
+              changed = true;
+            }
+          }
+        }
       }
       if (noCrossing)
         for (let i = 0; i < L; i++)
-          if (val[i] === -1 && (web.crosses[i] ?? []).some((j) => (val[j] ?? 0) > 0)) {
+          if ((maxV[i] ?? 2) > 0 && (web.crosses[i] ?? []).some((j) => (minV[j] ?? 0) > 0)) {
+            if ((minV[i] ?? 0) > 0) return false;
+            maxV[i] = 0;
             val[i] = 0;
             changed = true;
           }
       const lo = new Array<number>(K).fill(0);
-      const freeCap = new Array<number>(K).fill(0);
+      const hi = new Array<number>(K).fill(0);
       const freeCount = new Array<number>(K).fill(0);
       const deg = new Array<number>(K).fill(0);
       web.links.forEach((l, i) => {
-        const v = val[i] ?? -1;
+        const mn = minV[i] ?? 0;
+        const mx = maxV[i] ?? 2;
         for (const k of [l.a, l.b]) {
-          if (v > 0) {
-            lo[k] = (lo[k] ?? 0) + v;
-            deg[k] = (deg[k] ?? 0) + 1;
-          } else if (v === -1) {
-            freeCap[k] = (freeCap[k] ?? 0) + 2;
-            freeCount[k] = (freeCount[k] ?? 0) + 1;
-          }
+          lo[k] = (lo[k] ?? 0) + mn;
+          hi[k] = (hi[k] ?? 0) + mx;
+          if (mn > 0) deg[k] = (deg[k] ?? 0) + 1;
+          if (val[i] === -1) freeCount[k] = (freeCount[k] ?? 0) + 1;
         }
       });
       // What each knot needs, where it's known: its number, or its letter's value once a knot of that letter is settled.
@@ -82,58 +114,58 @@ export function solve(
       for (const [k, knot] of web.knots.entries()) {
         if (knot.clue.kind !== 'letter' || letterVal.has(knot.clue.letter)) continue;
         const g = groups.get(knot.clue.letter) ?? [1, 99];
-        groups.set(knot.clue.letter, [
-          Math.max(g[0], lo[k] ?? 0),
-          Math.min(g[1], (lo[k] ?? 0) + (freeCap[k] ?? 0)),
-        ]);
+        groups.set(knot.clue.letter, [Math.max(g[0], lo[k] ?? 0), Math.min(g[1], hi[k] ?? 0)]);
       }
       const taken = new Set(letterVal.values());
-      for (const [lo2, hi] of groups.values()) {
-        if (lo2 > hi) return false;
+      for (const [lo2, hi2] of groups.values()) {
+        if (lo2 > hi2) return false;
         let open = false;
-        for (let v = lo2; v <= hi && !open; v++) open = !taken.has(v);
+        for (let v = lo2; v <= hi2 && !open; v++) open = !taken.has(v);
         if (!open) return false;
       }
-      // Each link's capacity: 2, less what a known end still needs.
-      const cap = (i: number): number => {
-        const l = web.links[i] as Link;
-        let c = 2;
-        for (const k of [l.a, l.b]) {
-          const n = need[k];
-          if (n !== undefined) c = Math.min(c, n - (lo[k] ?? 0));
-        }
-        return Math.max(0, c);
-      };
+      // Pigeonhole & capacity interval tightening across all knots
       for (let k = 0; k < K; k++) {
-        const free = (web.incident[k] ?? []).filter((i) => val[i] === -1);
-        const caps = free.map(cap);
-        const room = caps.reduce((s, c) => s + c, 0);
         const n = need[k];
-        const have = lo[k] ?? 0;
+        const lk = lo[k] ?? 0;
+        const hk = hi[k] ?? 0;
         if (n !== undefined) {
-          if (have > n || have + room < n) return false;
-          if (free.length && (have === n || have + room === n)) {
-            free.forEach((i, j) => (val[i] = have === n ? 0 : (caps[j] ?? 0)));
-            changed = true;
-          } else
-            free.forEach((i, j) => {
-              const c = caps[j] ?? 0;
-              const least = n - have - (room - c);
-              if (c === 0 || (least > 0 && least === c)) {
-                val[i] = c;
-                changed = true;
-              }
-            });
-        } else if (K > 1 && have + room < 1) return false;
+          if (lk > n || hk < n) return false;
+          for (const i of web.incident[k] ?? []) {
+            const mn = minV[i] ?? 0;
+            const mx = maxV[i] ?? 2;
+            const newMax = Math.min(mx, n - (lk - mn));
+            const newMin = Math.max(mn, n - (hk - mx));
+            if (newMin > newMax) return false;
+            if (newMax < mx) {
+              maxV[i] = newMax;
+              changed = true;
+            }
+            if (newMin > mn) {
+              minV[i] = newMin;
+              changed = true;
+            }
+            if (minV[i] === maxV[i] && val[i] === -1) {
+              val[i] = minV[i] as number;
+              changed = true;
+            }
+          }
+        } else if (K > 1 && hk < 1) return false;
         if (changed) break;
         if (web.ends) {
           const want = web.ends.includes(k) ? 1 : 2;
           const d = deg[k] ?? 0;
-          const open = free.filter((_, j) => (caps[j] ?? 0) > 0).length;
+          const open = (web.incident[k] ?? []).filter(
+            (i) => (minV[i] ?? 0) === 0 && (maxV[i] ?? 2) > 0,
+          ).length;
           if (d > want || d + open < want) return false;
-          if (d === want && free.length) {
-            free.forEach((i) => (val[i] = 0));
-            changed = true;
+          if (d === want && open > 0) {
+            for (const i of web.incident[k] ?? []) {
+              if ((minV[i] ?? 0) === 0 && (maxV[i] ?? 2) > 0) {
+                maxV[i] = 0;
+                val[i] = 0;
+                changed = true;
+              }
+            }
           }
         }
         if (changed) break;
@@ -155,9 +187,8 @@ export function solve(
         const line =
           a.r === b.r ? (['rows', a.r] as const) : a.c === b.c ? (['cols', a.c] as const) : null;
         if (!line) return;
-        const v = val[i] ?? -1;
-        lo[line[0]][line[1]] = (lo[line[0]][line[1]] ?? 0) + Math.max(v, 0);
-        hi[line[0]][line[1]] = (hi[line[0]][line[1]] ?? 0) + (v === -1 ? 2 : v);
+        lo[line[0]][line[1]] = (lo[line[0]][line[1]] ?? 0) + (minV[i] ?? 0);
+        hi[line[0]][line[1]] = (hi[line[0]][line[1]] ?? 0) + (maxV[i] ?? 2);
       });
       for (const [flags, k] of [
         [web.rowFlags, 'rows'],
@@ -168,11 +199,12 @@ export function solve(
     }
     if (connected) {
       // A finished piece with knots left outside it can never join up.
-      const threads = Array.from(val, (v) => Math.max(0, v));
+      const threads = Array.from(minV, (v) => Math.max(0, v));
       const piece = pieces(web, threads);
       const open = new Set<number>();
       web.links.forEach((l, i) => {
-        if (val[i] === -1) open.add(piece[l.a] ?? -1).add(piece[l.b] ?? -1);
+        if (val[i] === -1 && (maxV[i] ?? 2) > (minV[i] ?? 0))
+          open.add(piece[l.a] ?? -1).add(piece[l.b] ?? -1);
       });
       const all = new Set(piece);
       if (all.size > 1 && [...all].some((p) => !open.has(p))) return false;
@@ -182,16 +214,21 @@ export function solve(
 
   const go = (val: Int8Array): void => {
     budget.tick();
-    if (found.length >= limit || !propagate(val)) return;
+    const minV = new Int8Array(L);
+    const maxV = new Int8Array(L);
+    if (found.length >= limit || !propagate(val, minV, maxV)) return;
     let pick = -1;
     let best = 99;
     for (let i = 0; i < L; i++) {
       if (val[i] !== -1) continue;
       const l = web.links[i] as Link;
-      const free = [l.a, l.b].reduce(
-        (s, k) => s + (web.incident[k] ?? []).filter((j) => val[j] === -1).length,
-        0,
-      );
+      const span = (maxV[i] ?? 2) - (minV[i] ?? 0);
+      const free =
+        span * 10 +
+        [l.a, l.b].reduce(
+          (s, k) => s + (web.incident[k] ?? []).filter((j) => val[j] === -1).length,
+          0,
+        );
       if (free < best) {
         best = free;
         pick = i;
@@ -202,7 +239,9 @@ export function solve(
       if (solved(web, threads, rules)) found.push(threads);
       return;
     }
-    for (const v of [0, 1, 2]) {
+    const loP = minV[pick] ?? 0;
+    const hiP = maxV[pick] ?? 2;
+    for (let v = loP; v <= hiP; v++) {
       const next = Int8Array.from(val);
       next[pick] = v;
       go(next);

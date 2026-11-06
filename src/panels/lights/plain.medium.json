@@ -1,0 +1,34 @@
+{
+  "genre": "lights",
+  "twists": [],
+  "tier": "medium",
+  "panels": [
+    {
+      "seed": 1,
+      "stats": { "steps": 52 },
+      "panel": {
+        "name": "Lights, plain: medium 1",
+        "rows": ["42ac6e8", "784397c", "3e94295", "47afaa9", "512fc68", "3aad3bc", "2aa92a9"],
+        "plug": [3, 3]
+      }
+    },
+    {
+      "seed": 2,
+      "stats": { "steps": 57 },
+      "panel": {
+        "name": "Lights, plain: medium 2",
+        "rows": ["446aaa8", "3d3ec6c", "6bc5115", "383faa9", "6ead6a8", "5545544", "113bbb9"],
+        "plug": [3, 3]
+      }
+    },
+    {
+      "seed": 3,
+      "stats": { "steps": 65 },
+      "panel": {
+        "name": "Lights, plain: medium 3",
+        "rows": ["46ac6ac", "3947bc5", "6c3f811", "53afaa8", "5687ac4", "7bc7839", "3813aa8"],
+        "plug": [3, 3]
+      }
+    }
+  ]
+}

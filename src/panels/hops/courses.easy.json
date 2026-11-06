@@ -1,0 +1,48 @@
+{
+  "genre": "hops",
+  "twists": ["courses"],
+  "tier": "easy",
+  "panels": [
+    {
+      "seed": 1,
+      "stats": { "eggs": 2, "steps": 96 },
+      "panel": {
+        "name": "Bunny hops, courses: easy 1",
+        "rows": ["#####", "#####", "#####", "#####", "#####"],
+        "given": [
+          [2, 4, 1],
+          [0, 4, 25]
+        ],
+        "portions": ["AABBB", "AABBB", "ABBBA", "ABBBA", "AAAAA"]
+      }
+    },
+    {
+      "seed": 2,
+      "stats": { "eggs": 3, "steps": 66 },
+      "panel": {
+        "name": "Bunny hops, courses: easy 2",
+        "rows": ["#####", "#####", "#####", "#####", "#####"],
+        "given": [
+          [2, 0, 1],
+          [4, 2, 21],
+          [4, 0, 23]
+        ],
+        "portions": ["AAAAA", "ABBBA", "ABBBA", "BBBAA", "BBBAA"]
+      }
+    },
+    {
+      "seed": 3,
+      "stats": { "eggs": 3, "steps": 114 },
+      "panel": {
+        "name": "Bunny hops, courses: easy 3",
+        "rows": ["#####", "#####", "#####", "#####", "#####"],
+        "given": [
+          [4, 2, 1],
+          [3, 1, 7],
+          [0, 1, 24]
+        ],
+        "portions": ["BBBBB", "BBBBB", "AAABB", "AAAAA", "AAAAA"]
+      }
+    }
+  ]
+}

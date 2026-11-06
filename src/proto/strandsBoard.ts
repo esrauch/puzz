@@ -7,7 +7,7 @@
  * (a coded letter is then revealed everywhere, and in the key).
  */
 import { blip } from './kit';
-import { type Panel, type Spot, find, key, letterAt, placeIn, touching } from './strands';
+import { type Panel, type Spot, find, key, letterAt, placeIn, touching } from '../gen/words';
 
 const NS = 'http://www.w3.org/2000/svg';
 
@@ -50,7 +50,24 @@ export function mountStrands(host: HTMLElement, panel: Panel, hooks: StrandsHook
     fontWeight: '600',
     color: '#5a4a52',
   });
-  top.append(theme, keyLine, building);
+  // The twists' rules, a line each.
+  const rules: string[] = [];
+  if (panel.frame)
+    rules.push(
+      '❄ Inside the frosty frame, words come in mirror pairs: each word’s squares mirror another word’s, its letters in a different order. No word crosses the frame.',
+    );
+  if (panel.bows) rules.push('A bow shows its word’s colour; two words of one colour never touch.');
+  if (panel.portions)
+    rules.push('No word crosses a fence; each portion holds the same number of words.');
+  if (panel.walls?.length) rules.push('No word steps straight across a fence.');
+  if (panel.eggs?.length) rules.push('An egg’s number is its letter’s place in its word.');
+  const ruleLines = rules.map((text) => {
+    const line = document.createElement('div');
+    line.textContent = text;
+    Object.assign(line.style, { fontSize: '15px', fontWeight: '600', margin: '2px 0' });
+    return line;
+  });
+  top.append(theme, ...ruleLines, keyLine, building);
   const svg = document.createElementNS(NS, 'svg');
   svg.setAttribute('width', String(W));
   svg.setAttribute('height', String(Hpx));
@@ -145,18 +162,16 @@ export function mountStrands(host: HTMLElement, panel: Panel, hooks: StrandsHook
   svg.addEventListener('pointerup', release);
   svg.addEventListener('pointercancel', release);
 
-  /** Red and green: a letter's tint (plain letters white), and a ring in its colour. */
+  /** Colours: a letter's tint (plain letters white), and a ring in its colour (red, white and blue; red and green in older panels). */
+  const TINTS: Record<string, string> = { r: '#fde0dd', g: '#dff3df', b: '#dde6fb' };
+  const RINGS: Record<string, string> = { r: '#d9534f', g: '#43a35c', b: '#3c5aa6' };
   // With bows, only the bowed letters show their colour.
   const bowed = new Set((panel.bows ?? []).map(key));
   const shows = (s: Spot): boolean => !panel.bows || bowed.has(key(s));
   const tint = ([r, c]: Spot): string =>
-    (shows([r, c])
-      ? { r: '#fde0dd', g: '#dff3df' }[panel.colours?.[r]?.[c] as 'r' | 'g']
-      : undefined) ?? '#fff';
+    (shows([r, c]) ? TINTS[panel.colours?.[r]?.[c] ?? ''] : undefined) ?? '#fff';
   const ring = ([r, c]: Spot): string =>
-    (shows([r, c])
-      ? { r: '#d9534f', g: '#43a35c' }[panel.colours?.[r]?.[c] as 'r' | 'g']
-      : undefined) ?? '#d8d0dc';
+    (shows([r, c]) ? RINGS[panel.colours?.[r]?.[c] ?? ''] : undefined) ?? '#d8d0dc';
   const render = (): void => {
     svg.replaceChildren();
     const add = (
@@ -214,6 +229,76 @@ export function mountStrands(host: HTMLElement, panel: Panel, hooks: StrandsHook
               'stroke-width': 4,
             });
         }
+    // Snowflakes: the frosty frame and its mirror line, and a ghost of each found word's
+    // mirror squares until the word that lies there is found too.
+    if (panel.frame) {
+      const f = panel.frame;
+      const [fx, fy] = [f.left * cell + 2, f.top * cell + 2];
+      const [fw, fh] = [(f.right - f.left + 1) * cell - 4, (f.bottom - f.top + 1) * cell - 4];
+      add('rect', {
+        x: fx,
+        y: fy,
+        width: fw,
+        height: fh,
+        rx: 12,
+        fill: 'none',
+        stroke: '#6fb8e8',
+        'stroke-width': 2.5,
+        'stroke-dasharray': '7 5',
+      });
+      const vertical = f.axis === 'v';
+      const mid = vertical
+        ? ((f.left + f.right + 1) * cell) / 2
+        : ((f.top + f.bottom + 1) * cell) / 2;
+      const [x1, y1, x2, y2] = vertical ? [mid, fy, mid, fy + fh] : [fx, mid, fx + fw, mid];
+      add('line', {
+        x1,
+        y1,
+        x2,
+        y2,
+        stroke: '#6fb8e8',
+        'stroke-width': 1.5,
+        'stroke-dasharray': '3 4',
+      });
+      const foundSquares = foundCells();
+      for (const i of found) {
+        const cells = panel.words[i]?.cells ?? [];
+        if (!cells.every(([r, c]) => r >= f.top && r <= f.bottom && c >= f.left && c <= f.right))
+          continue;
+        const mirror = cells.map(([r, c]): Spot =>
+          vertical ? [r, f.left + f.right - c] : [f.top + f.bottom - r, c],
+        );
+        if (mirror.every((s) => foundSquares.has(key(s)))) continue;
+        for (const [r, c] of mirror)
+          add('rect', {
+            x: c * cell + 5,
+            y: r * cell + 5,
+            width: cell - 10,
+            height: cell - 10,
+            rx: 9,
+            fill: 'rgba(111, 184, 232, 0.12)',
+            stroke: '#6fb8e8',
+            'stroke-width': 2,
+            'stroke-dasharray': '4 4',
+          });
+      }
+    }
+    // Cuts: fences on the squares' edges.
+    for (const [r, c, side] of panel.walls ?? []) {
+      const [x1, y1, x2, y2] =
+        side === 'v'
+          ? [(c + 1) * cell, r * cell + 4, (c + 1) * cell, (r + 1) * cell - 4]
+          : [c * cell + 4, (r + 1) * cell, (c + 1) * cell - 4, (r + 1) * cell];
+      add('line', {
+        x1,
+        y1,
+        x2,
+        y2,
+        stroke: '#8b5a2b',
+        'stroke-width': 6,
+        'stroke-linecap': 'round',
+      });
+    }
     for (const i of found) strand(panel.words[i]?.cells ?? [], colourOf(i));
     strand(path, '#c9b6e8');
     const inFound = new Map<string, number>();

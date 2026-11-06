@@ -1,0 +1,54 @@
+{
+  "genre": "carving",
+  "twists": ["cuts", "snow"],
+  "tier": "hard",
+  "panels": [
+    {
+      "seed": 219,
+      "stats": { "plain": 36, "without snow": 6, "without cuts": 6, "steps": 185 },
+      "panel": {
+        "name": "Carving, cuts and snow: hard 1",
+        "rows": [
+          ". . . . . . . . .",
+          "2 . . . 8 . 4 . .",
+          ". 2 2 . . 3 . 6 .",
+          ". 2 . . . . . . .",
+          ". 2 . 6 . . . . 6",
+          "5 . 2 . . 3 . . .",
+          ". . . 3 4 . 6 4 .",
+          ". . 6 . . . . . .",
+          ". . . . 3 . . 2 ."
+        ],
+        "walls": [
+          [2, 7, "h"],
+          [3, 7, "v"],
+          [7, 2, "v"]
+        ],
+        "frame": { "top": 2, "left": 2, "bottom": 5, "right": 6, "axis": "h" }
+      }
+    },
+    {
+      "seed": 288,
+      "stats": { "plain": 20, "without snow": 4, "without cuts": 4, "steps": 55 },
+      "panel": {
+        "name": "Carving, cuts and snow: hard 2",
+        "rows": [
+          ". . . 9 . . . . .",
+          ". . . . . . . . .",
+          ". 9 . . 9 . . . 8",
+          ". . . . 3 . . . .",
+          "2 . . . . . 6 . .",
+          ". . 6 . . . . 4 .",
+          "4 6 . . 3 . . . .",
+          ". . . . . 2 2 . 4",
+          ". . . . . 2 . . 2"
+        ],
+        "walls": [
+          [7, 7, "v"],
+          [3, 4, "v"]
+        ],
+        "frame": { "top": 5, "left": 0, "bottom": 8, "right": 4, "axis": "h" }
+      }
+    }
+  ]
+}

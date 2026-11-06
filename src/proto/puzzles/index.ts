@@ -7,7 +7,13 @@ import { fairylights, goldenegg, pumpkinpie, tree } from './christmas';
 import { breadboard, feast, hotdog, stocking } from './thanksgiving';
 import { tuesday } from './tuesday';
 import { basket, jack, lovenotes, mailbox } from './valentines';
-import { webWorkshop } from './workshop';
+import {
+  carvingWorkshop,
+  hopsWorkshop,
+  lightsWorkshop,
+  webWorkshop,
+  wordsWorkshop,
+} from './workshop';
 
 export const PROTOS: Proto[] = [
   // Valentine's
@@ -44,4 +50,8 @@ export const PROTOS: Proto[] = [
   tuesday,
   // Generated in the browser
   webWorkshop,
+  carvingWorkshop,
+  wordsWorkshop,
+  hopsWorkshop,
+  lightsWorkshop,
 ];

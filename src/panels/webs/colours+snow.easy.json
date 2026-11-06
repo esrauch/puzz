@@ -9,7 +9,7 @@
       "panel": {
         "name": "Webs, colours and snow: easy 1",
         "rows": ["2.3.3", ".....", "3...3", "4.3.3", "1...1"],
-        "colours": ["g.r.g", ".....", "r...r", "..g..", "r...g"],
+        "colours": ["b.r.b", ".....", "r...r", "..b..", "r...b"],
         "frame": { "top": 0, "left": 0, "bottom": 4, "right": 4, "axis": "v" }
       }
     },
@@ -19,7 +19,7 @@
       "panel": {
         "name": "Webs, colours and snow: easy 2",
         "rows": ["2...2", "43255", ".....", ".....", "34.53"],
-        "colours": ["g...g", "rgrgr", ".....", ".....", "gr..g"],
+        "colours": ["b...b", "rbrbr", ".....", ".....", "br..b"],
         "frame": { "top": 0, "left": 0, "bottom": 4, "right": 4, "axis": "v" }
       }
     }

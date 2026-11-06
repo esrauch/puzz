@@ -33,18 +33,40 @@ const filter = <A, C>(
   holds: (clue: Tagged<C>, answer: A) => boolean,
 ): A[] => answers.filter((a) => clues.every((c) => holds(c, a)));
 
-/** Clues that leave exactly one answer (fixed ones first), or null if the candidates can't. */
+/**
+ * Clues that leave exactly one answer (fixed ones first), or null if the candidates can't.
+ * Uses a small random tournament to favour high-leverage break-in clues while giving every
+ * candidate twist a turn before pruning any redundant clues.
+ */
 export function chooseClues<A, C>(o: ChooseOptions<A, C>): Tagged<C>[] | null {
   const fixed = o.fixed ?? [];
   let alive = filter(o.answers, fixed, o.holds);
   const chosen: Tagged<C>[] = [];
-  for (const c of shuffle(o.random, o.candidates)) {
-    if (alive.length <= 1) break;
-    const next = alive.filter((a) => o.holds(c, a));
-    if (next.length < alive.length) {
-      chosen.push(c);
-      alive = next;
+  const pool = shuffle(o.random, o.candidates);
+  const used = new Set<Tagged<C>>();
+  const chosenTwists = new Set<string>(fixed.map((f) => f.twist));
+
+  while (alive.length > 1) {
+    const helpful: { c: Tagged<C>; next: A[] }[] = [];
+    const unrepresented: { c: Tagged<C>; next: A[] }[] = [];
+    for (const c of pool) {
+      if (used.has(c)) continue;
+      const next = alive.filter((a) => o.holds(c, a));
+      if (next.length > 0 && next.length < alive.length) {
+        const item = { c, next };
+        helpful.push(item);
+        if (!chosenTwists.has(c.twist)) unrepresented.push(item);
+        if (helpful.length >= 12 && unrepresented.length >= 4) break;
+      }
     }
+    const window = (unrepresented.length > 0 ? unrepresented : helpful).slice(0, 6);
+    if (!window.length) break;
+    window.sort((x, y) => x.next.length - y.next.length);
+    const pick = window[0] as { c: Tagged<C>; next: A[] };
+    used.add(pick.c);
+    chosen.push(pick.c);
+    chosenTwists.add(pick.c.twist);
+    alive = pick.next;
   }
   if (alive.length !== 1) return null;
   if (o.keepSpare) return [...fixed, ...chosen];

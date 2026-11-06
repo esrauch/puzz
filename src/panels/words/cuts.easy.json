@@ -1,0 +1,202 @@
+{
+  "genre": "words",
+  "twists": ["cuts"],
+  "tier": "easy",
+  "panels": [
+    {
+      "seed": 1,
+      "stats": { "words": 5, "steps": 329 },
+      "panel": {
+        "name": "Words, cuts: easy 1",
+        "theme": "Cupid's kit",
+        "rows": ["BUTDA", "REHTR", "EGEHS", "HRAAS", "CATRT"],
+        "words": [
+          {
+            "word": "CHERUB",
+            "cells": [
+              [4, 0],
+              [3, 0],
+              [2, 0],
+              [1, 0],
+              [0, 1],
+              [0, 0]
+            ]
+          },
+          {
+            "word": "TARGET",
+            "cells": [
+              [4, 2],
+              [4, 1],
+              [3, 1],
+              [2, 1],
+              [1, 1],
+              [0, 2]
+            ]
+          },
+          {
+            "word": "DART",
+            "cells": [
+              [0, 3],
+              [0, 4],
+              [1, 4],
+              [1, 3]
+            ]
+          },
+          {
+            "word": "HEART",
+            "cells": [
+              [1, 2],
+              [2, 2],
+              [3, 2],
+              [4, 3],
+              [4, 4]
+            ]
+          },
+          {
+            "word": "SASH",
+            "cells": [
+              [3, 4],
+              [3, 3],
+              [2, 4],
+              [2, 3]
+            ]
+          }
+        ],
+        "walls": [
+          [3, 3, "h"],
+          [2, 1, "v"],
+          [4, 2, "v"],
+          [3, 1, "v"],
+          [2, 2, "v"]
+        ]
+      }
+    },
+    {
+      "seed": 4,
+      "stats": { "words": 5, "steps": 268 },
+      "panel": {
+        "name": "Words, cuts: easy 2",
+        "theme": "Ghostly crushes",
+        "rows": ["MORBR", "OPCVA", "OAPEE", "TNTIN", "IORKC"],
+        "words": [
+          {
+            "word": "BROOM",
+            "cells": [
+              [0, 3],
+              [0, 2],
+              [0, 1],
+              [1, 0],
+              [0, 0]
+            ]
+          },
+          {
+            "word": "RAVEN",
+            "cells": [
+              [0, 4],
+              [1, 4],
+              [1, 3],
+              [2, 4],
+              [3, 4]
+            ]
+          },
+          {
+            "word": "POTION",
+            "cells": [
+              [1, 1],
+              [2, 0],
+              [3, 0],
+              [4, 0],
+              [4, 1],
+              [3, 1]
+            ]
+          },
+          {
+            "word": "CAPE",
+            "cells": [
+              [1, 2],
+              [2, 1],
+              [2, 2],
+              [2, 3]
+            ]
+          },
+          {
+            "word": "TRICK",
+            "cells": [
+              [3, 2],
+              [4, 2],
+              [3, 3],
+              [4, 4],
+              [4, 3]
+            ]
+          }
+        ],
+        "walls": [[1, 3, "h"]]
+      }
+    },
+    {
+      "seed": 7,
+      "stats": { "words": 5, "steps": 291 },
+      "panel": {
+        "name": "Words, cuts: easy 3",
+        "theme": "Sweet treats",
+        "rows": ["TIMTE", "NTFRB", "RGDUO", "AEMFS", "TUFIN"],
+        "words": [
+          {
+            "word": "MINT",
+            "cells": [
+              [0, 2],
+              [0, 1],
+              [1, 0],
+              [0, 0]
+            ]
+          },
+          {
+            "word": "SORBET",
+            "cells": [
+              [3, 4],
+              [2, 4],
+              [1, 3],
+              [1, 4],
+              [0, 4],
+              [0, 3]
+            ]
+          },
+          {
+            "word": "TART",
+            "cells": [
+              [4, 0],
+              [3, 0],
+              [2, 0],
+              [1, 1]
+            ]
+          },
+          {
+            "word": "FUDGE",
+            "cells": [
+              [1, 2],
+              [2, 3],
+              [2, 2],
+              [2, 1],
+              [3, 1]
+            ]
+          },
+          {
+            "word": "MUFFIN",
+            "cells": [
+              [3, 2],
+              [4, 1],
+              [4, 2],
+              [3, 3],
+              [4, 3],
+              [4, 4]
+            ]
+          }
+        ],
+        "walls": [
+          [2, 3, "h"],
+          [1, 0, "v"]
+        ]
+      }
+    }
+  ]
+}

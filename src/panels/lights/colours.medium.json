@@ -1,0 +1,40 @@
+{
+  "genre": "lights",
+  "twists": ["colours"],
+  "tier": "medium",
+  "panels": [
+    {
+      "seed": 478,
+      "stats": { "steps": 59 },
+      "panel": {
+        "name": "Lights, colours: medium 1",
+        "rows": ["6aac468", "3c2bbbc", "43c2ec1", "56d297c", "7956a95", "3817869", "2aab838"],
+        "plug": [1, 1],
+        "bluePlug": [3, 3],
+        "colours": ["rrrrrrr", "rrrwrrr", "rrrbbbr", "rrrbbbb", "rrrwbbb", "rrwbbbb", "wbbbbbb"]
+      }
+    },
+    {
+      "seed": 1015,
+      "stats": { "steps": 53 },
+      "panel": {
+        "name": "Lights, colours: medium 2",
+        "rows": ["6c446a8", "53d7bac", "56d7ec5", "5111151", "3aaec14", "46ad3a9", "392baa8"],
+        "plug": [5, 2],
+        "bluePlug": [3, 5],
+        "colours": ["rrwbbbb", "rrrwbbb", "rrrbbbb", "rrrbwbb", "rrrrrbr", "rrrrrwr", "rrrrrrr"]
+      }
+    },
+    {
+      "seed": 1386,
+      "stats": { "steps": 68 },
+      "panel": {
+        "name": "Lights, colours: medium 3",
+        "rows": ["6aac6c4", "546b915", "3956aad", "6ad786d", "16d7811", "6917aac", "382ba81"],
+        "plug": [5, 1],
+        "bluePlug": [3, 4],
+        "colours": ["rrrrrwb", "rrrwrrw", "rrrbbbb", "rrrbbbb", "rrrwbbb", "rrrbbbb", "rrbbbbb"]
+      }
+    }
+  ]
+}

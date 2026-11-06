@@ -1,0 +1,100 @@
+{
+  "genre": "lights",
+  "twists": ["colours"],
+  "tier": "hard",
+  "panels": [
+    {
+      "seed": 219,
+      "stats": { "steps": 86 },
+      "panel": {
+        "name": "Lights, colours: hard 1",
+        "rows": [
+          "2eec42c44",
+          "695556bf9",
+          "16d53947c",
+          "691568395",
+          "12abba869",
+          "6c6eeae94",
+          "53917c385",
+          "52c45382d",
+          "3a93baaa9"
+        ],
+        "plug": [1, 2],
+        "bluePlug": [7, 7],
+        "colours": [
+          "rrrwbbbbb",
+          "rrrwbbbbb",
+          "rrrwbbbbb",
+          "rrrrrrbbb",
+          "rrwrrrrbb",
+          "bbbbbbbbb",
+          "bbbbbbbbb",
+          "bbbbbbbbb",
+          "bbbbbbbbb"
+        ]
+      }
+    },
+    {
+      "seed": 303,
+      "stats": { "steps": 154 },
+      "panel": {
+        "name": "Lights, colours: hard 2",
+        "rows": [
+          "6c42c6c2c",
+          "513e95545",
+          "3ead4513d",
+          "2d4393ac5",
+          "2bd468695",
+          "4293bc56d",
+          "52ae83fd1",
+          "3c2bc6954",
+          "2baab92b9"
+        ],
+        "plug": [2, 2],
+        "bluePlug": [5, 4],
+        "colours": [
+          "rrrrrwbbb",
+          "rrrrrwbbb",
+          "rrrrrbbbb",
+          "rrrrrbbbb",
+          "wrrbbbbbb",
+          "bwrbbbbbb",
+          "bbbbbbbbb",
+          "bbbbbbbbb",
+          "bbbbbbbbb"
+        ]
+      }
+    },
+    {
+      "seed": 488,
+      "stats": { "steps": 118 },
+      "panel": {
+        "name": "Lights, colours: hard 3",
+        "rows": [
+          "6e8686c6c",
+          "53aba93d1",
+          "16ac6aebc",
+          "6bc3bc385",
+          "3c3829445",
+          "2946c2d79",
+          "44793ed14",
+          "555469169",
+          "3b93baab8"
+        ],
+        "plug": [3, 0],
+        "bluePlug": [8, 7],
+        "colours": [
+          "rrrrrrrrr",
+          "rrrrrrrrr",
+          "rrrrrrrrr",
+          "rrrrrrrrr",
+          "rrrrwrbrr",
+          "rwbbbbbrr",
+          "bbbbbbbww",
+          "bbbbbbbbb",
+          "bbbbbbbbb"
+        ]
+      }
+    }
+  ]
+}

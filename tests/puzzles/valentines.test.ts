@@ -7,7 +7,7 @@ import {
   letterAt,
   spellings,
   wellFormed,
-} from '../../src/proto/strands';
+} from '../../src/gen/words';
 import { BASKET, JACK, LOVENOTES, MAILBOX } from '../../src/proto/puzzles/valentines';
 
 const all: Panel[] = [...LOVENOTES, ...JACK, ...BASKET, ...MAILBOX];

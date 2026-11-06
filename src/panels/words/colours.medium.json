@@ -1,0 +1,352 @@
+{
+  "genre": "words",
+  "twists": ["colours"],
+  "tier": "medium",
+  "panels": [
+    {
+      "seed": 3,
+      "stats": { "words": 9, "steps": 737 },
+      "panel": {
+        "name": "Words, colours: medium 1",
+        "theme": "Love notes",
+        "rows": ["CHEEGRE", "ALNPRND", "RTSIMOE", "MEHSULT", "PNFEDEB", "AOLMAKS", "SSIARIS"],
+        "words": [
+          {
+            "word": "CHARM",
+            "cells": [
+              [0, 0],
+              [0, 1],
+              [1, 0],
+              [2, 0],
+              [3, 0]
+            ]
+          },
+          {
+            "word": "GENTLE",
+            "cells": [
+              [0, 4],
+              [0, 3],
+              [1, 2],
+              [2, 1],
+              [1, 1],
+              [0, 2]
+            ]
+          },
+          {
+            "word": "TENDER",
+            "cells": [
+              [3, 6],
+              [2, 6],
+              [1, 5],
+              [1, 6],
+              [0, 6],
+              [0, 5]
+            ]
+          },
+          {
+            "word": "PROMISE",
+            "cells": [
+              [1, 3],
+              [1, 4],
+              [2, 5],
+              [2, 4],
+              [2, 3],
+              [2, 2],
+              [3, 1]
+            ]
+          },
+          {
+            "word": "BLUSH",
+            "cells": [
+              [4, 6],
+              [3, 5],
+              [3, 4],
+              [3, 3],
+              [3, 2]
+            ]
+          },
+          {
+            "word": "PASSION",
+            "cells": [
+              [4, 0],
+              [5, 0],
+              [6, 0],
+              [6, 1],
+              [6, 2],
+              [5, 1],
+              [4, 1]
+            ]
+          },
+          {
+            "word": "FLAME",
+            "cells": [
+              [4, 2],
+              [5, 2],
+              [6, 3],
+              [5, 3],
+              [4, 3]
+            ]
+          },
+          {
+            "word": "DEAR",
+            "cells": [
+              [4, 4],
+              [4, 5],
+              [5, 4],
+              [6, 4]
+            ]
+          },
+          {
+            "word": "KISS",
+            "cells": [
+              [5, 5],
+              [6, 5],
+              [5, 6],
+              [6, 6]
+            ]
+          }
+        ],
+        "colours": ["rr...rr", "r..bbrr", "r.bbbbr", "rb....r", "..rrbb.", "..rrbrr", "...rbrr"],
+        "bows": [
+          [0, 0],
+          [0, 5],
+          [1, 3],
+          [4, 3],
+          [5, 4],
+          [6, 5]
+        ]
+      }
+    },
+    {
+      "seed": 9,
+      "stats": { "words": 9, "steps": 905 },
+      "panel": {
+        "name": "Words, colours: medium 2",
+        "theme": "Love letters",
+        "rows": ["NORSCAR", "BIEPWOD", "BAOADDR", "LSSONMS", "TLMOXNI", "EEALBER", "TTRITRE"],
+        "words": [
+          {
+            "word": "RIBBON",
+            "cells": [
+              [0, 2],
+              [1, 1],
+              [2, 0],
+              [1, 0],
+              [0, 1],
+              [0, 0]
+            ]
+          },
+          {
+            "word": "SEAL",
+            "cells": [
+              [0, 3],
+              [1, 2],
+              [2, 1],
+              [3, 0]
+            ]
+          },
+          {
+            "word": "CARD",
+            "cells": [
+              [0, 4],
+              [0, 5],
+              [0, 6],
+              [1, 6]
+            ]
+          },
+          {
+            "word": "POST",
+            "cells": [
+              [1, 3],
+              [2, 2],
+              [3, 1],
+              [4, 0]
+            ]
+          },
+          {
+            "word": "WORDS",
+            "cells": [
+              [1, 4],
+              [1, 5],
+              [2, 6],
+              [2, 5],
+              [3, 6]
+            ]
+          },
+          {
+            "word": "ADMIRER",
+            "cells": [
+              [2, 3],
+              [2, 4],
+              [3, 5],
+              [4, 6],
+              [5, 6],
+              [6, 6],
+              [6, 5]
+            ]
+          },
+          {
+            "word": "SONNET",
+            "cells": [
+              [3, 2],
+              [3, 3],
+              [3, 4],
+              [4, 5],
+              [5, 5],
+              [6, 4]
+            ]
+          },
+          {
+            "word": "LETTER",
+            "cells": [
+              [4, 1],
+              [5, 0],
+              [6, 0],
+              [6, 1],
+              [5, 1],
+              [6, 2]
+            ]
+          },
+          {
+            "word": "MAILBOX",
+            "cells": [
+              [4, 2],
+              [5, 2],
+              [6, 3],
+              [5, 3],
+              [5, 4],
+              [4, 3],
+              [4, 4]
+            ]
+          }
+        ],
+        "colours": ["rrrbrrr", "rrb.bbr", "rb.rrbb", "b.bbbrb", ".brrrbr", "bbrrrbr", "bbbrbrr"],
+        "bows": [
+          [2, 0],
+          [0, 3],
+          [0, 4],
+          [2, 5],
+          [4, 6],
+          [5, 5],
+          [6, 1],
+          [4, 3]
+        ]
+      }
+    },
+    {
+      "seed": 99,
+      "stats": { "words": 9, "steps": 886 },
+      "panel": {
+        "name": "Words, colours: medium 3",
+        "theme": "Cupid's kit",
+        "rows": ["LETSWRE", "RRGIQUV", "UANKFEI", "ADRDUTA", "LAEMLOH", "MSDAUCE", "ANSLPLR"],
+        "words": [
+          {
+            "word": "LAUREL",
+            "cells": [
+              [4, 0],
+              [3, 0],
+              [2, 0],
+              [1, 0],
+              [0, 1],
+              [0, 0]
+            ]
+          },
+          {
+            "word": "DART",
+            "cells": [
+              [3, 1],
+              [2, 1],
+              [1, 1],
+              [0, 2]
+            ]
+          },
+          {
+            "word": "WINGS",
+            "cells": [
+              [0, 4],
+              [1, 3],
+              [2, 2],
+              [1, 2],
+              [0, 3]
+            ]
+          },
+          {
+            "word": "QUIVER",
+            "cells": [
+              [1, 4],
+              [1, 5],
+              [2, 6],
+              [1, 6],
+              [0, 6],
+              [0, 5]
+            ]
+          },
+          {
+            "word": "MARK",
+            "cells": [
+              [5, 0],
+              [4, 1],
+              [3, 2],
+              [2, 3]
+            ]
+          },
+          {
+            "word": "FEATHER",
+            "cells": [
+              [2, 4],
+              [2, 5],
+              [3, 6],
+              [3, 5],
+              [4, 6],
+              [5, 6],
+              [6, 6]
+            ]
+          },
+          {
+            "word": "CLOUD",
+            "cells": [
+              [5, 5],
+              [4, 4],
+              [4, 5],
+              [3, 4],
+              [3, 3]
+            ]
+          },
+          {
+            "word": "PLUME",
+            "cells": [
+              [6, 4],
+              [6, 5],
+              [5, 4],
+              [4, 3],
+              [4, 2]
+            ]
+          },
+          {
+            "word": "SANDALS",
+            "cells": [
+              [5, 1],
+              [6, 0],
+              [6, 1],
+              [5, 2],
+              [5, 3],
+              [6, 3],
+              [6, 2]
+            ]
+          }
+        ],
+        "colours": ["rrbrrbb", "rbrrbbb", "rbr...b", "rb.rr..", "r.bbrr.", ".rrrbr.", "rrrrbb."],
+        "bows": [
+          [0, 1],
+          [1, 1],
+          [0, 3],
+          [1, 4],
+          [3, 4],
+          [5, 4],
+          [6, 3]
+        ]
+      }
+    }
+  ]
+}

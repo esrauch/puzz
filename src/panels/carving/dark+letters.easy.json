@@ -1,0 +1,27 @@
+{
+  "genre": "carving",
+  "twists": ["dark", "letters"],
+  "tier": "easy",
+  "panels": [
+    {
+      "seed": 1,
+      "stats": { "plain": 1, "steps": 112 },
+      "panel": {
+        "name": "Carving, dark and letters: easy 1",
+        "rows": ["? . . Y .", ". . . . .", "6 . Y 3 .", ". . . . .", ". . Y . M"],
+        "sizeLetters": " Y M     ",
+        "message": "2A4"
+      }
+    },
+    {
+      "seed": 4,
+      "stats": { "plain": 1, "steps": 171 },
+      "panel": {
+        "name": "Carving, dark and letters: easy 2",
+        "rows": [". . N . .", ". ? 2 . .", ". . 4 . 2", "R . . 2 2", ". . N . ."],
+        "sizeLetters": "  N R    ",
+        "message": "CO53"
+      }
+    }
+  ]
+}

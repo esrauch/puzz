@@ -35,11 +35,15 @@ export function makeWeb(o: GenOptions): { panel: Panel; threads: number[] } | nu
   const used = new Set<string>(); // points under threads
   const edges: [number, number, number][] = []; // knot, knot, threads
   const isKnot = (r: number, c: number): boolean => spots.some((s) => s[0] === r && s[1] === c);
+  const maxReach = o.reach ?? 4;
   for (let tries = 0; spots.length < o.knots && tries < 4000; tries++) {
     const from = o.string ? spots.length - 1 : Math.floor(random() * spots.length);
     const [r0, c0] = spots[from] as Spot;
     const d = pick(dirs);
-    const len = 1 + Math.floor(random() * (o.reach ?? 4));
+    // Bias toward longer spans while the web is sparse so knots establish cross-board sightlines first
+    const r1 = 1 + Math.floor(random() * maxReach);
+    const r2 = 1 + Math.floor(random() * maxReach);
+    const len = spots.length < o.knots * 0.5 ? Math.max(r1, r2) : r1;
     const r = r0 + d[0] * len;
     const c = c0 + d[1] * len;
     if (
@@ -117,13 +121,13 @@ export function makeWeb(o: GenOptions): { panel: Panel; threads: number[] } | nu
 }
 
 /**
- * Colour a web's knots red and green along its answer's threads, so every
- * thread joins red to green. Knots are coloured one by one, opposite to their
+ * Colour a web's knots red and blue along its answer's threads, so every
+ * thread joins red to blue. Knots are coloured one by one, opposite to their
  * coloured neighbours; one whose neighbours are already both colours (a loop
- * of odd length) stays plain, and plain knots join anything.
+ * of odd length) stays plain (white), and plain knots join anything.
  */
 export function colourWeb(web: Web, threads: number[], random: () => number): string[] {
-  const colour = web.knots.map((): 'r' | 'g' | '.' | null => null);
+  const colour = web.knots.map((): 'r' | 'b' | '.' | null => null);
   const near = web.knots.map((_, k) =>
     (web.incident[k] ?? []).flatMap((i) => {
       const l = web.links[i];
@@ -137,18 +141,18 @@ export function colourWeb(web: Web, threads: number[], random: () => number): st
     while (queue.length) {
       const k = queue.shift() as number;
       const around = new Set(
-        (near[k] ?? []).map((j) => colour[j]).filter((c) => c === 'r' || c === 'g'),
+        (near[k] ?? []).map((j) => colour[j]).filter((c) => c === 'r' || c === 'b'),
       );
       colour[k] =
         around.size === 2
           ? '.'
           : around.has('r')
-            ? 'g'
-            : around.has('g')
+            ? 'b'
+            : around.has('b')
               ? 'r'
               : random() < 0.5
                 ? 'r'
-                : 'g';
+                : 'b';
       for (const j of near[k] ?? [])
         if (!seen.has(j) && colour[j] === null) {
           seen.add(j);

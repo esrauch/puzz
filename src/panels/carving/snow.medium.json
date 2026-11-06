@@ -1,0 +1,58 @@
+{
+  "genre": "carving",
+  "twists": ["snow"],
+  "tier": "medium",
+  "panels": [
+    {
+      "seed": 3,
+      "stats": { "plain": 4, "without snow": 4, "steps": 61 },
+      "panel": {
+        "name": "Carving, snow: medium 1",
+        "rows": [
+          "4 . 2 . . . .",
+          ". 2 . . . . 8",
+          ". . . 6 . . .",
+          ". . . . . . .",
+          ". 6 . 3 . . 3",
+          "2 . . . 6 . .",
+          ". 3 . 2 . 2 ."
+        ],
+        "frame": { "top": 1, "left": 1, "bottom": 3, "right": 4, "axis": "v" }
+      }
+    },
+    {
+      "seed": 12,
+      "stats": { "plain": 3, "without snow": 3, "steps": 37 },
+      "panel": {
+        "name": "Carving, snow: medium 2",
+        "rows": [
+          ". 6 . . . . .",
+          ". . . . . 2 2",
+          ". 8 . . . . .",
+          "3 . . . . . 2",
+          ". . 3 . 6 2 3",
+          ". 3 . 4 . 2 .",
+          "3 . . . . . ."
+        ],
+        "frame": { "top": 0, "left": 0, "bottom": 5, "right": 3, "axis": "v" }
+      }
+    },
+    {
+      "seed": 13,
+      "stats": { "plain": 6, "without snow": 6, "steps": 82 },
+      "panel": {
+        "name": "Carving, snow: medium 3",
+        "rows": [
+          ". . . 8 . . 6",
+          ". . . . . . .",
+          ". . 3 . 2 2 .",
+          "2 . 3 . . . .",
+          ". . . . 3 . 4",
+          ". 4 . 6 . . .",
+          "2 . . . . . 4"
+        ],
+        "frame": { "top": 3, "left": 0, "bottom": 5, "right": 3, "axis": "v" }
+      }
+    }
+  ]
+}

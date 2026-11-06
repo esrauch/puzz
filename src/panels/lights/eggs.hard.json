@@ -1,0 +1,76 @@
+{
+  "genre": "lights",
+  "twists": ["eggs"],
+  "tier": "hard",
+  "panels": [
+    {
+      "seed": 1,
+      "stats": { "steps": 200 },
+      "panel": {
+        "name": "Lights, eggs: hard 1",
+        "rows": [
+          "6aaec6aac",
+          "52c1516c5",
+          "3ad696d15",
+          "6c53a97a9",
+          "53b86c3ac",
+          "542e93c69",
+          "7b812e954",
+          "52ec692bd",
+          "1293baaa9"
+        ],
+        "plug": [8, 4],
+        "eggs": [
+          [5, 2, 11],
+          [6, 2, 40]
+        ]
+      }
+    },
+    {
+      "seed": 2,
+      "stats": { "steps": 290 },
+      "panel": {
+        "name": "Lights, eggs: hard 2",
+        "rows": [
+          "46c2ec6ac",
+          "553e93945",
+          "3f87aaa95",
+          "6b83ac445",
+          "12e82bb95",
+          "683ee86a9",
+          "56ed147ac",
+          "395569145",
+          "2a93baab9"
+        ],
+        "plug": [8, 4],
+        "eggs": [
+          [4, 1, 7],
+          [4, 4, 30]
+        ]
+      }
+    },
+    {
+      "seed": 3,
+      "stats": { "steps": 292 },
+      "panel": {
+        "name": "Lights, eggs: hard 3",
+        "rows": [
+          "6aaeae868",
+          "56ab812bc",
+          "5382eae85",
+          "3ea8783e9",
+          "43c696c3c",
+          "7ed5693ad",
+          "15393eac1",
+          "6942e9414",
+          "383ababa9"
+        ],
+        "plug": [8, 4],
+        "eggs": [
+          [2, 7, 17],
+          [1, 4, 37]
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "genre": "lights",
+  "twists": ["letters"],
+  "tier": "medium",
+  "panels": [
+    {
+      "seed": 1,
+      "stats": { "steps": 129 },
+      "panel": {
+        "name": "Lights, letters: medium 1",
+        "rows": ["42aec6c", "3ae97d1", "2eb813c", "6d2eaa9", "516b82c", "3c52ee9", "293a938"],
+        "plug": [6, 3],
+        "letters": [
+          [4, 4, "S"],
+          [3, 2, "N"],
+          [6, 1, "O"],
+          [2, 1, "W"]
+        ],
+        "message": "5 6 24 18",
+        "word": "SNOW",
+        "blanks": [5, 6, 24, 18]
+      }
+    },
+    {
+      "seed": 2,
+      "stats": { "steps": 185 },
+      "panel": {
+        "name": "Lights, letters: medium 2",
+        "rows": ["6ac6ac4", "52b9455", "3e86955", "692d2bd", "52abe81", "7c2c3ac", "13abaa9"],
+        "plug": [6, 3],
+        "letters": [
+          [1, 5, "S"],
+          [1, 0, "T"],
+          [1, 1, "A"],
+          [4, 5, "R"]
+        ],
+        "message": "19 10 15 8",
+        "word": "STAR",
+        "blanks": [19, 10, 15, 8]
+      }
+    },
+    {
+      "seed": 3,
+      "stats": { "steps": 201 },
+      "panel": {
+        "name": "Lights, letters: medium 3",
+        "rows": ["42c6ac4", "52bd2b9", "7e83e84", "53c6fa9", "38393c4", "2ec6ad5", "293b839"],
+        "plug": [6, 3],
+        "letters": [
+          [3, 4, "C"],
+          [2, 5, "O"],
+          [2, 1, "Z"],
+          [1, 1, "Y"]
+        ],
+        "message": "6 8 12 11",
+        "word": "COZY",
+        "blanks": [6, 8, 12, 11]
+      }
+    }
+  ]
+}

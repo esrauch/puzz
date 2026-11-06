@@ -9,20 +9,20 @@
       "panel": {
         "name": "Webs, colours and eggs: easy 1",
         "rows": [".3..4", "133.4", ".....", ".23..", ".2..3"],
-        "colours": [".g..r", "gr..g", ".....", ".gr..", ".g..r"],
+        "colours": [".r..b", "rb..r", ".....", ".rb..", ".r..b"],
         "home": [0, 1],
         "eggs": [[3, 1, 4]]
       }
     },
     {
-      "seed": 7149,
+      "seed": 2722,
       "stats": { "plain": 3, "without colours": 2, "without eggs": 2, "steps": 4 },
       "panel": {
         "name": "Webs, colours and eggs: easy 2",
-        "rows": ["3...4", "..24.", ".....", "3..53", "1..32"],
-        "colours": ["r...g", "..rg.", ".....", "g..rr", "r...g"],
-        "home": [4, 3],
-        "eggs": [[4, 0, 3]]
+        "rows": ["3..31", ".....", ".2.3.", "3...3", "12..3"],
+        "colours": ["b..rr", ".....", ".r.b.", "r...b", "bb..r"],
+        "home": [4, 1],
+        "eggs": [[0, 3, 5]]
       }
     }
   ]

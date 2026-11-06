@@ -1,0 +1,94 @@
+{
+  "genre": "lights",
+  "twists": ["letters"],
+  "tier": "hard",
+  "panels": [
+    {
+      "seed": 2,
+      "stats": { "steps": 221 },
+      "panel": {
+        "name": "Lights, letters: hard 1",
+        "rows": [
+          "2ac46aac4",
+          "42bbfe855",
+          "3e869543d",
+          "696f853a9",
+          "7813c7c2c",
+          "3eac553ad",
+          "692b93c45",
+          "3ae846939",
+          "2a92bbaa8"
+        ],
+        "plug": [8, 4],
+        "letters": [
+          [2, 2, "C"],
+          [0, 5, "H"],
+          [6, 7, "I"],
+          [3, 8, "M"],
+          [6, 2, "E"]
+        ],
+        "message": "28 13 15 19 20",
+        "word": "CHIME",
+        "blanks": [28, 13, 15, 19, 20]
+      }
+    },
+    {
+      "seed": 3,
+      "stats": { "steps": 278 },
+      "panel": {
+        "name": "Lights, letters: hard 2",
+        "rows": [
+          "6e86a86ec",
+          "57a92ad15",
+          "53c6aaf81",
+          "7c1782bac",
+          "556bee845",
+          "57b8552bd",
+          "554693e81",
+          "55556856c",
+          "1393b8391"
+        ],
+        "plug": [8, 4],
+        "letters": [
+          [5, 6, "L"],
+          [7, 2, "I"],
+          [8, 1, "G"],
+          [3, 5, "H"],
+          [7, 6, "T"]
+        ],
+        "message": "19 15 13 14 11",
+        "word": "LIGHT",
+        "blanks": [19, 15, 13, 14, 11]
+      }
+    },
+    {
+      "seed": 4,
+      "stats": { "steps": 267 },
+      "panel": {
+        "name": "Lights, letters: hard 3",
+        "rows": [
+          "6c46ac2c4",
+          "513b83ad5",
+          "5442eaad5",
+          "7b96d6855",
+          "3ea957c55",
+          "416a91795",
+          "3ab846969",
+          "6c2ebbafc",
+          "13abaa811"
+        ],
+        "plug": [8, 4],
+        "letters": [
+          [1, 4, "S"],
+          [7, 6, "H"],
+          [7, 7, "I"],
+          [6, 3, "N"],
+          [4, 4, "E"]
+        ],
+        "message": "19 5 6 21 16",
+        "word": "SHINE",
+        "blanks": [19, 5, 6, 21, 16]
+      }
+    }
+  ]
+}

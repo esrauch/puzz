@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { type Panel, countSolutions, parse } from '../../src/proto/shikaku';
+import { type Panel, countSolutions, parse } from '../../src/gen/carving';
 import { FEAST, HOTDOG, STOCKING, WARMUP } from '../../src/proto/puzzles/thanksgiving';
 
 const count = (p: Panel, limit = 2, rules = {}): number => countSolutions(parse(p), limit, rules);

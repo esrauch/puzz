@@ -1,0 +1,43 @@
+{
+  "genre": "carving",
+  "twists": ["colours", "snow"],
+  "tier": "medium",
+  "panels": [
+    {
+      "seed": 276,
+      "stats": { "plain": 9, "without colours": 3, "without snow": 3, "steps": 48 },
+      "panel": {
+        "name": "Carving, colours and snow: medium 1",
+        "rows": [
+          "4 . 4 3 . . .",
+          ". . . . . . .",
+          ". . . . . . 3",
+          ". 4 . . 6 4 4",
+          ". 2 . 3 . 3 .",
+          ". . 2 . . . .",
+          "3 2 . . 2 . ."
+        ],
+        "colours": ["...r...", "r....br", ".......", ".b.b...", ".......", "..r....", "b....r."],
+        "frame": { "top": 3, "left": 2, "bottom": 5, "right": 5, "axis": "v" }
+      }
+    },
+    {
+      "seed": 2962,
+      "stats": { "plain": 9, "without colours": 3, "without snow": 3, "steps": 67 },
+      "panel": {
+        "name": "Carving, colours and snow: medium 2",
+        "rows": [
+          ". . . . 4 2 .",
+          "6 . . . . . 3",
+          ". 6 . . 2 3 .",
+          ". . . . 2 . .",
+          "3 . . 2 . . .",
+          ". 6 . . 2 . .",
+          ". . . . 2 2 4"
+        ],
+        "colours": [".......", ".b.r..b", "..r.b..", ".......", "....br.", "b....b.", "...r..."],
+        "frame": { "top": 1, "left": 0, "bottom": 4, "right": 2, "axis": "h" }
+      }
+    }
+  ]
+}

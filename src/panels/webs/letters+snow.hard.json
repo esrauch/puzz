@@ -42,6 +42,26 @@
         "message": "263",
         "frame": { "top": 0, "left": 0, "bottom": 8, "right": 8, "axis": "v" }
       }
+    },
+    {
+      "seed": 50,
+      "stats": { "plain": 9, "without snow": 9, "steps": 43 },
+      "panel": {
+        "name": "Webs, letters and snow: hard 3",
+        "rows": [
+          "W.......W",
+          ".W..T..W.",
+          "....2....",
+          "2.......W",
+          "37..S..TS",
+          ".........",
+          "2...1...W",
+          ".4.....3.",
+          "3.......W"
+        ],
+        "message": "53EE4",
+        "frame": { "top": 0, "left": 0, "bottom": 8, "right": 8, "axis": "v" }
+      }
     }
   ]
 }

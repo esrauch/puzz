@@ -1,0 +1,126 @@
+{
+  "genre": "words",
+  "twists": ["cuts", "eggs"],
+  "tier": "easy",
+  "panels": [
+    {
+      "seed": 187,
+      "stats": { "words": 4, "steps": 228 },
+      "panel": {
+        "name": "Words, cuts and eggs: easy 1",
+        "theme": "Date night",
+        "rows": ["SUEBA", "NGOCL", "SDNLL", "EIYSO", "TRBTR"],
+        "words": [
+          {
+            "word": "SUNSET",
+            "cells": [
+              [0, 0],
+              [0, 1],
+              [1, 0],
+              [2, 0],
+              [3, 0],
+              [4, 0]
+            ]
+          },
+          {
+            "word": "BRIDGE",
+            "cells": [
+              [4, 2],
+              [4, 1],
+              [3, 1],
+              [2, 1],
+              [1, 1],
+              [0, 2]
+            ]
+          },
+          {
+            "word": "BALCONY",
+            "cells": [
+              [0, 3],
+              [0, 4],
+              [1, 4],
+              [1, 3],
+              [1, 2],
+              [2, 2],
+              [3, 2]
+            ]
+          },
+          {
+            "word": "STROLL",
+            "cells": [
+              [3, 3],
+              [4, 3],
+              [4, 4],
+              [3, 4],
+              [2, 4],
+              [2, 3]
+            ]
+          }
+        ],
+        "walls": [[1, 4, "h"]],
+        "eggs": [[2, 3]]
+      }
+    },
+    {
+      "seed": 263,
+      "stats": { "words": 4, "steps": 331 },
+      "panel": {
+        "name": "Words, cuts and eggs: easy 2",
+        "theme": "Love letters",
+        "rows": ["YLRMD", "PEIYA", "ERDER", "RPREV", "APELI"],
+        "words": [
+          {
+            "word": "REPLY",
+            "cells": [
+              [3, 0],
+              [2, 0],
+              [1, 0],
+              [0, 1],
+              [0, 0]
+            ]
+          },
+          {
+            "word": "ADMIRER",
+            "cells": [
+              [1, 4],
+              [0, 4],
+              [0, 3],
+              [1, 2],
+              [2, 1],
+              [1, 1],
+              [0, 2]
+            ]
+          },
+          {
+            "word": "DELIVERY",
+            "cells": [
+              [2, 2],
+              [3, 3],
+              [4, 3],
+              [4, 4],
+              [3, 4],
+              [2, 3],
+              [2, 4],
+              [1, 3]
+            ]
+          },
+          {
+            "word": "PAPER",
+            "cells": [
+              [3, 1],
+              [4, 0],
+              [4, 1],
+              [4, 2],
+              [3, 2]
+            ]
+          }
+        ],
+        "walls": [
+          [1, 0, "v"],
+          [2, 0, "v"]
+        ],
+        "eggs": [[4, 1]]
+      }
+    }
+  ]
+}

@@ -3,20 +3,27 @@
  * promise back. One worker is kept warm; cancelling ends it (a new one starts
  * next time). Without Worker support it runs on the page instead.
  */
+import type { Panel as CarvePanel } from './carving';
 import type { Made, Spec } from './core/spec';
-import type { Panel, WebTwist } from './webs';
+import type { Panel as HopPanel } from './hops';
+import type { Panel as LightPanel } from './lights';
+import type { Panel as WebPanel } from './webs';
+import type { Panel as WordPanel } from './words';
+
+export type Genre = 'webs' | 'carving' | 'words' | 'hops' | 'lights';
 
 export interface GenRequest {
   id: number;
-  genre: 'webs';
-  spec: Spec<WebTwist>;
+  genre: Genre;
+  /** The twists are the genre's own ids (checked by its generator). */
+  spec: Spec<string>;
   seconds: number;
   seed: number;
 }
 
 export interface GenReply {
   id: number;
-  made: Made<Panel> | null;
+  made: Made<WebPanel | CarvePanel | WordPanel | HopPanel | LightPanel> | null;
   ms: number;
   /** Why attempts were thrown away (for "nothing found"). */
   rejected: string;

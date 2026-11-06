@@ -1,0 +1,208 @@
+{
+  "genre": "words",
+  "twists": ["colours"],
+  "tier": "easy",
+  "panels": [
+    {
+      "seed": 10,
+      "stats": { "words": 5, "steps": 260 },
+      "panel": {
+        "name": "Words, colours: easy 1",
+        "theme": "Ghostly crushes",
+        "rows": ["MSTFA", "INSGN", "IPLLS", "GEBTE", "HTITN"],
+        "words": [
+          {
+            "word": "MIST",
+            "cells": [
+              [0, 0],
+              [1, 0],
+              [0, 1],
+              [0, 2]
+            ]
+          },
+          {
+            "word": "FANGS",
+            "cells": [
+              [0, 3],
+              [0, 4],
+              [1, 4],
+              [1, 3],
+              [2, 4]
+            ]
+          },
+          {
+            "word": "NIGHT",
+            "cells": [
+              [1, 1],
+              [2, 0],
+              [3, 0],
+              [4, 0],
+              [4, 1]
+            ]
+          },
+          {
+            "word": "SPELL",
+            "cells": [
+              [1, 2],
+              [2, 1],
+              [3, 1],
+              [2, 2],
+              [2, 3]
+            ]
+          },
+          {
+            "word": "BITTEN",
+            "cells": [
+              [3, 2],
+              [4, 2],
+              [3, 3],
+              [4, 3],
+              [3, 4],
+              [4, 4]
+            ]
+          }
+        ],
+        "colours": ["...rr", ".rbrr", "rbbbr", "rb...", "rr..."],
+        "bows": [
+          [1, 4],
+          [4, 0],
+          [1, 2]
+        ]
+      }
+    },
+    {
+      "seed": 14,
+      "stats": { "words": 5, "steps": 253 },
+      "panel": {
+        "name": "Words, colours: easy 2",
+        "theme": "Cupid's kit",
+        "rows": ["DOGFL", "LTAGI", "ORBUH", "HRRCT", "SOWEH"],
+        "words": [
+          {
+            "word": "GOLD",
+            "cells": [
+              [0, 2],
+              [0, 1],
+              [1, 0],
+              [0, 0]
+            ]
+          },
+          {
+            "word": "FLIGHT",
+            "cells": [
+              [0, 3],
+              [0, 4],
+              [1, 4],
+              [1, 3],
+              [2, 4],
+              [3, 4]
+            ]
+          },
+          {
+            "word": "SHOT",
+            "cells": [
+              [4, 0],
+              [3, 0],
+              [2, 0],
+              [1, 1]
+            ]
+          },
+          {
+            "word": "ARROW",
+            "cells": [
+              [1, 2],
+              [2, 1],
+              [3, 1],
+              [4, 1],
+              [4, 2]
+            ]
+          },
+          {
+            "word": "CHERUB",
+            "cells": [
+              [3, 3],
+              [4, 4],
+              [4, 3],
+              [3, 2],
+              [2, 3],
+              [2, 2]
+            ]
+          }
+        ],
+        "colours": [".....", ".br..", "brbb.", "brbb.", "brrbb"],
+        "bows": [
+          [1, 1],
+          [4, 1],
+          [3, 2]
+        ]
+      }
+    },
+    {
+      "seed": 17,
+      "stats": { "words": 5, "steps": 243 },
+      "panel": {
+        "name": "Words, colours: easy 3",
+        "theme": "Date night",
+        "rows": ["HNEBP", "CSIKA", "EXAMR", "RATNE", "ENDEU"],
+        "words": [
+          {
+            "word": "BENCH",
+            "cells": [
+              [0, 3],
+              [0, 2],
+              [0, 1],
+              [1, 0],
+              [0, 0]
+            ]
+          },
+          {
+            "word": "PARK",
+            "cells": [
+              [0, 4],
+              [1, 4],
+              [2, 4],
+              [1, 3]
+            ]
+          },
+          {
+            "word": "SERENADE",
+            "cells": [
+              [1, 1],
+              [2, 0],
+              [3, 0],
+              [4, 0],
+              [4, 1],
+              [3, 1],
+              [4, 2],
+              [4, 3]
+            ]
+          },
+          {
+            "word": "TAXI",
+            "cells": [
+              [3, 2],
+              [2, 2],
+              [2, 1],
+              [1, 2]
+            ]
+          },
+          {
+            "word": "MENU",
+            "cells": [
+              [2, 3],
+              [3, 4],
+              [3, 3],
+              [4, 4]
+            ]
+          }
+        ],
+        "colours": ["....r", ".rbrr", "rbb.r", "rrb..", "rrrr."],
+        "bows": [
+          [0, 4],
+          [3, 1],
+          [2, 1]
+        ]
+      }
+    }
+  ]
+}

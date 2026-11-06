@@ -1,0 +1,47 @@
+{
+  "genre": "carving",
+  "twists": ["letters", "basket"],
+  "tier": "hard",
+  "panels": [
+    {
+      "seed": 13325,
+      "stats": { "plain": 1, "steps": 155 },
+      "panel": {
+        "name": "Carving, letters and basket: hard 1",
+        "rows": [
+          ". 🥚 🍫 🥚 . . . Y 🥚",
+          "🥕 🍫 . 🥕 8 . 🥕 🥕 🍫",
+          ". 8 . 🍫 . 🥕 🥚 🥚 .",
+          ". . . . 🥕 🥚 . . .",
+          ". V . 🥚 . R . 🍫 .",
+          "🥚 🥚 . . 🥕 🍫 🍫 🥕 .",
+          "🥕 🥕 🥚 . . . . 🍫 🥚",
+          "🍫 🍫 . 🍫 . . . Y 🥕",
+          ". . 🥕 🍫 . . . 🥚 ."
+        ],
+        "sizeLetters": "   YVR   ",
+        "message": "G6A54"
+      }
+    },
+    {
+      "seed": 15299,
+      "stats": { "plain": 1, "steps": 213 },
+      "panel": {
+        "name": "Carving, letters and basket: hard 2",
+        "rows": [
+          ". 🥕 . . . 🍫 . 🥚 .",
+          "🥚 . 🍫 . 🥚 . 🥕 🥚 .",
+          ". 🥚 🥕 A M 🥕 🥚 . .",
+          "🍫 . . 🍫 🥚 . 🍫 🍫 .",
+          "🥕 A 🥚 🥕 🍫 Y Y 🥕 .",
+          "6 . 🍫 . 🥕 🍫 🥕 🥕 🥚",
+          "🥚 🍫 . 🥕 . 🥕 🥚 . 🍫",
+          ". . 🍫 . . . . . 🥕",
+          "🥕 . A 🥚 . 🥚 🍫 🥚 🍫"
+        ],
+        "sizeLetters": "    YAM  ",
+        "message": "567"
+      }
+    }
+  ]
+}

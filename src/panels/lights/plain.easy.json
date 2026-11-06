@@ -1,0 +1,34 @@
+{
+  "genre": "lights",
+  "twists": [],
+  "tier": "easy",
+  "panels": [
+    {
+      "seed": 1,
+      "stats": { "steps": 26 },
+      "panel": {
+        "name": "Lights, plain: easy 1",
+        "rows": ["2aac4", "686b9", "3afc4", "6a955", "12ab9"],
+        "plug": [2, 2]
+      }
+    },
+    {
+      "seed": 2,
+      "stats": { "steps": 28 },
+      "panel": {
+        "name": "Lights, plain: easy 2",
+        "rows": ["446ac", "55545", "3bf95", "46b85", "392a9"],
+        "plug": [2, 2]
+      }
+    },
+    {
+      "seed": 3,
+      "stats": { "steps": 27 },
+      "panel": {
+        "name": "Lights, plain: easy 3",
+        "rows": ["46ac4", "39695", "6afa9", "5692c", "13aa9"],
+        "plug": [2, 2]
+      }
+    }
+  ]
+}

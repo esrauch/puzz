@@ -1,0 +1,44 @@
+{
+  "genre": "carving",
+  "twists": ["basket", "cuts"],
+  "tier": "medium",
+  "panels": [
+    {
+      "seed": 731,
+      "stats": { "plain": 3, "without cuts": 3, "steps": 58 },
+      "panel": {
+        "name": "Carving, basket and cuts: medium 1",
+        "rows": [
+          ". . . 🍫 🥚 . 🥕",
+          "7 🥕 🍫 🥚 . . .",
+          "🍫 🥚 . . 🥕 🥚 🥕",
+          "🥕 . . 🥚 🍫 6 🍫",
+          ". 🍫 🥕 . . . 🥚",
+          "🥚 🍫 🥕 4 🥚 🍫 🥕",
+          ". 🍫 6 . . 🥚 🥕"
+        ],
+        "walls": [[3, 2, "v"]]
+      }
+    },
+    {
+      "seed": 1003,
+      "stats": { "plain": 4, "without cuts": 4, "steps": 29 },
+      "panel": {
+        "name": "Carving, basket and cuts: medium 2",
+        "rows": [
+          "🍫 . . 🍫 🥕 5 🥚",
+          "🥚 🥕 . . 🥚 . 🍫",
+          ". . 🥕 🥚 . 6 🥚",
+          "🍫 🥕 🥚 . 🥕 🍫 6",
+          ". 🥚 . 🍫 . . 🥕",
+          "4 🥕 🍫 . 🍫 🥚 .",
+          "🍫 🥚 . 🥕 . 🥕 ."
+        ],
+        "walls": [
+          [3, 5, "h"],
+          [1, 1, "h"]
+        ]
+      }
+    }
+  ]
+}

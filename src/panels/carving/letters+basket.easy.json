@@ -1,0 +1,27 @@
+{
+  "genre": "carving",
+  "twists": ["letters", "basket"],
+  "tier": "easy",
+  "panels": [
+    {
+      "seed": 2790,
+      "stats": { "plain": 1, "steps": 45 },
+      "panel": {
+        "name": "Carving, letters and basket: easy 1",
+        "rows": ["🥚 . . . .", ". 🥕 🥕 🥚 .", "N . . 🥚 A", "🥕 🥚 . 🥕 🥕", ". A 🥕 🥚 🥚"],
+        "sizeLetters": "  A N    ",
+        "message": "TH35KS"
+      }
+    },
+    {
+      "seed": 3526,
+      "stats": { "plain": 1, "steps": 52 },
+      "panel": {
+        "name": "Carving, letters and basket: easy 2",
+        "rows": ["🥕 🥚 🥚 🥚 .", ". . . 🥕 .", "🥕 🥕 🥕 N 🥚", ". 🥚 🥚 . S", "🥚 N 🥕 . 🥕"],
+        "sizeLetters": "  N S    ",
+        "message": "THA3K5"
+      }
+    }
+  ]
+}

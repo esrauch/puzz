@@ -8,7 +8,7 @@
  * random search.
  */
 import { run } from '../run';
-import { type Panel } from '../shikaku';
+import { type Panel } from '../../gen/carving';
 import { mountCarving } from '../shikakuBoard';
 
 export const WARMUP: Panel[] = [

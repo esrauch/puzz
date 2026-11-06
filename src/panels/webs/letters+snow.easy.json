@@ -4,22 +4,32 @@
   "tier": "easy",
   "panels": [
     {
-      "seed": 40,
-      "stats": { "plain": 3, "without snow": 3, "steps": 22 },
+      "seed": 78,
+      "stats": { "plain": 4, "without snow": 4, "steps": 19 },
       "panel": {
         "name": "Webs, letters and snow: easy 1",
-        "rows": ["..1..", ".....", ".....", "R.5.R", "R.4.2"],
-        "message": "HEA2T",
+        "rows": ["3...2", ".....", "O...B", ".....", "BBO32"],
+        "message": "233",
         "frame": { "top": 0, "left": 0, "bottom": 4, "right": 4, "axis": "v" }
       }
     },
     {
       "seed": 85,
-      "stats": { "plain": 3, "without snow": 3, "steps": 13 },
+      "stats": { "plain": 2, "without snow": 2, "steps": 13 },
       "panel": {
         "name": "Webs, letters and snow: easy 2",
-        "rows": ["....1", "A5..4", "....3", "24..A", "....1"],
-        "message": "C3NDY",
+        "rows": ["....1", "35..H", "....3", "2H..3", "....G"],
+        "message": "4U1",
+        "frame": { "top": 0, "left": 0, "bottom": 4, "right": 4, "axis": "h" }
+      }
+    },
+    {
+      "seed": 86,
+      "stats": { "plain": 3, "without snow": 3, "steps": 7 },
+      "panel": {
+        "name": "Webs, letters and snow: easy 3",
+        "rows": ["2...D", ".....", "5.2.C", ".....", "3...D"],
+        "message": "4AN3Y",
         "frame": { "top": 0, "left": 0, "bottom": 4, "right": 4, "axis": "h" }
       }
     }

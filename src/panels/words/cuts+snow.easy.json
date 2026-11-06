@@ -1,0 +1,113 @@
+{
+  "genre": "words",
+  "twists": ["cuts", "snow"],
+  "tier": "easy",
+  "panels": [
+    {
+      "seed": 22,
+      "stats": { "words": 4, "steps": 204 },
+      "panel": {
+        "name": "Words, cuts and snow: easy 1",
+        "theme": "Ghostly crushes",
+        "rows": ["SPSP", "RIOK", "TIYO", "EAMO", "PCON"],
+        "words": [
+          {
+            "word": "SPIRIT",
+            "cells": [
+              [0, 0],
+              [0, 1],
+              [1, 1],
+              [1, 0],
+              [2, 1],
+              [2, 0]
+            ]
+          },
+          {
+            "word": "CAPE",
+            "cells": [
+              [4, 1],
+              [3, 1],
+              [4, 0],
+              [3, 0]
+            ]
+          },
+          {
+            "word": "SPOOKY",
+            "cells": [
+              [0, 2],
+              [0, 3],
+              [1, 2],
+              [2, 3],
+              [1, 3],
+              [2, 2]
+            ]
+          },
+          {
+            "word": "MOON",
+            "cells": [
+              [3, 2],
+              [4, 2],
+              [3, 3],
+              [4, 3]
+            ]
+          }
+        ],
+        "frame": { "top": 0, "bottom": 4, "left": 0, "right": 3, "axis": "v" },
+        "walls": [[0, 1, "v"]]
+      }
+    },
+    {
+      "seed": 87,
+      "stats": { "words": 4, "steps": 191 },
+      "panel": {
+        "name": "Words, cuts and snow: easy 2",
+        "theme": "Garden of love",
+        "rows": ["DIPO", "ASPP", "PYYT", "ENHN", "OYRO"],
+        "words": [
+          {
+            "word": "DAISY",
+            "cells": [
+              [0, 0],
+              [1, 0],
+              [0, 1],
+              [1, 1],
+              [2, 1]
+            ]
+          },
+          {
+            "word": "PEONY",
+            "cells": [
+              [2, 0],
+              [3, 0],
+              [4, 0],
+              [3, 1],
+              [4, 1]
+            ]
+          },
+          {
+            "word": "POPPY",
+            "cells": [
+              [1, 2],
+              [0, 3],
+              [0, 2],
+              [1, 3],
+              [2, 2]
+            ]
+          },
+          {
+            "word": "THORN",
+            "cells": [
+              [2, 3],
+              [3, 2],
+              [4, 3],
+              [4, 2],
+              [3, 3]
+            ]
+          }
+        ],
+        "frame": { "top": 0, "bottom": 4, "left": 0, "right": 3, "axis": "v" },
+        "walls": [[0, 3, "h"]]
+      }
+    }
+  ]
+}

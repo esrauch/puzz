@@ -1,0 +1,27 @@
+{
+  "genre": "carving",
+  "twists": ["colours", "cuts"],
+  "tier": "easy",
+  "panels": [
+    {
+      "seed": 24,
+      "stats": { "plain": 3, "without colours": 2, "without cuts": 2, "steps": 11 },
+      "panel": {
+        "name": "Carving, colours and cuts: easy 1",
+        "rows": [". 5 . . .", ". . . . 4", ". . 2 . .", "4 2 . . 4", ". . 2 . 2"],
+        "colours": [".....", "....r", ".....", ".r.b.", "b...r"],
+        "walls": [[3, 2, "h"]]
+      }
+    },
+    {
+      "seed": 158,
+      "stats": { "plain": 3, "without colours": 2, "without cuts": 2, "steps": 17 },
+      "panel": {
+        "name": "Carving, colours and cuts: easy 2",
+        "rows": ["2 . 2 . .", ". 6 . . .", ". . . 4 .", "2 . 2 . 5", ". 2 . . ."],
+        "colours": ["...r.", "..b..", ".....", "r....", ".b..b"],
+        "walls": [[3, 1, "v"]]
+      }
+    }
+  ]
+}

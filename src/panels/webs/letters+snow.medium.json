@@ -22,6 +22,16 @@
         "message": "L1V3",
         "frame": { "top": 0, "left": 0, "bottom": 6, "right": 6, "axis": "v" }
       }
+    },
+    {
+      "seed": 154,
+      "stats": { "plain": 3, "without snow": 3, "steps": 121 },
+      "panel": {
+        "name": "Webs, letters and snow: medium 3",
+        "rows": ["1I.N.N.", ".......", ".N...4N", ".....N.", ".3...5N", ".......", "14.4.3."],
+        "message": "BEM32E",
+        "frame": { "top": 0, "left": 0, "bottom": 6, "right": 6, "axis": "h" }
+      }
     }
   ]
 }

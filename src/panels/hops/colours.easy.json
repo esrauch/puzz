@@ -1,0 +1,51 @@
+{
+  "genre": "hops",
+  "twists": ["colours"],
+  "tier": "easy",
+  "panels": [
+    {
+      "seed": 1,
+      "stats": { "eggs": 3, "steps": 166 },
+      "panel": {
+        "name": "Bunny hops, colours: easy 1",
+        "rows": ["#####", "#####", "#####", "#####", "#####"],
+        "given": [
+          [1, 3, 1],
+          [2, 1, 12],
+          [2, 4, 1]
+        ],
+        "colours": ["rrrrr", "wrrrr", "brwbb", "bwbbb", "bbbbb"]
+      }
+    },
+    {
+      "seed": 3,
+      "stats": { "eggs": 5, "steps": 165 },
+      "panel": {
+        "name": "Bunny hops, colours: easy 2",
+        "rows": ["#####", "#####", "#####", "#####", "#####"],
+        "given": [
+          [0, 4, 1],
+          [0, 0, 9],
+          [4, 0, 1],
+          [3, 3, 7],
+          [4, 4, 9]
+        ],
+        "colours": ["rrrrr", "rrrrr", "rwrbw", "bbwbb", "bbbbb"]
+      }
+    },
+    {
+      "seed": 4,
+      "stats": { "eggs": 3, "steps": 104 },
+      "panel": {
+        "name": "Bunny hops, colours: easy 3",
+        "rows": ["#####", "#####", "#####", "#####", "#####"],
+        "given": [
+          [2, 2, 1],
+          [0, 0, 5],
+          [4, 2, 1]
+        ],
+        "colours": ["rrrrb", "rrrbb", "wrrbb", "bwwbb", "bbbbb"]
+      }
+    }
+  ]
+}

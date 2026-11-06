@@ -1,0 +1,41 @@
+{
+  "genre": "carving",
+  "twists": ["basket", "colours"],
+  "tier": "medium",
+  "panels": [
+    {
+      "seed": 1644,
+      "stats": { "plain": 4, "without colours": 4, "steps": 525 },
+      "panel": {
+        "name": "Carving, basket and colours: medium 1",
+        "rows": [
+          "🍫 . . 🥚 🍫 . 🥕",
+          ". 🍫 🥚 🥕 🥚 . .",
+          "🥕 🥚 🍫 . . . 🥕",
+          "🥚 6 . 🍫 . 🥚 🍫",
+          ". 🥕 🥕 🥚 🥕 🥕 🥚",
+          ". . 🥕 🍫 🍫 6 .",
+          "7 . 🥚 4 . 🍫 ."
+        ],
+        "colours": ["b......", ".....b.", "..b....", ".r..r..", "......r", ".......", "...b..."]
+      }
+    },
+    {
+      "seed": 2259,
+      "stats": { "plain": 3, "without colours": 3, "steps": 57 },
+      "panel": {
+        "name": "Carving, basket and colours: medium 2",
+        "rows": [
+          "🍫 🥕 . . 🥚 . 🥕",
+          "🥚 6 🍫 6 🥚 . 🍫",
+          "🥕 . . 🍫 🥕 . .",
+          "🍫 . 🍫 . . 🍫 🥚",
+          ". 8 🥕 . 🥕 . .",
+          "🥕 🥚 🥚 🍫 🥚 🥚 .",
+          ". . 4 . . 🥕 ."
+        ],
+        "colours": ["...b...", "......b", ".......", ".......", "..rb...", ".......", ".b...r."]
+      }
+    }
+  ]
+}

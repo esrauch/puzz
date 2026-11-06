@@ -4,7 +4,7 @@
  * Solution-first: grow a random web, number every knot, then
  * 1. hide clues (the dark, letters), which makes room for more answers;
  * 2. if no clue-adding twist is on, keep the panel only if it has one answer;
- * 3. otherwise list the board's answers once, and choose eggs, flags (and
+ * 3. otherwise list the board's answers once, and choose eggs, cuts (and
  *    colours) against that list in memory until one answer is left;
  * 4. keep it only if each twist does work by the tier's margin, and the
  *    shared checks (verify.ts) pass.
@@ -16,7 +16,7 @@ import { type Rng, rng, shuffle } from '../core/rng';
 import { type Made, Rejections, type Spec, type Tier, trySeeds } from '../core/spec';
 import { colourWeb, makeMirroredWeb, makeWeb, wholeBoard } from './make';
 import { type Panel, type Wall, type Web, parse, wallsBetween } from './model';
-import { distances, strokes, threadsAlong, totals } from './rules';
+import { distances, strokes, totals } from './rules';
 import { solve } from './solve';
 import { type WebTwist, problems, reach } from './verify';
 
@@ -45,7 +45,7 @@ export const SHAPES: Record<Tier, Shape> = {
     doubles: 0.35,
     margin: 2,
     dark: 2,
-    letters: 1,
+    letters: 2,
   },
   medium: {
     width: 7,
@@ -160,7 +160,6 @@ function encode(p: Panel, threads: number[], count: number, random: Rng): Panel 
 type WebClue =
   | { twist: 'colours' }
   | { twist: 'eggs'; knot: number; n: number }
-  | { twist: 'flags'; axis: 'rows' | 'cols'; line: number; n: number }
   | { twist: 'cuts'; wall: string }
   | { twist: 'snow'; frame: Frame };
 
@@ -179,7 +178,7 @@ export function makePanel(
       // Each extra clue-adding twist needs more answers to work on: more knots and loops (the board stays the tier's size).
       const extraTwists = Math.max(
         0,
-        (['colours', 'eggs', 'flags', 'cuts', 'snow'] as const).filter((t) => on.has(t)).length - 1,
+        (['colours', 'eggs', 'cuts', 'snow'] as const).filter((t) => on.has(t)).length - 1,
       );
       const growing = {
         ...shape,
@@ -208,9 +207,7 @@ export function makePanel(
       // The grown web (no colours: its threads are numbered on it), and the coloured one (for what can reach what).
       const grown = parse({ name: 'grown', rows: made.panel.rows });
       const coloured = parse(made.panel);
-      const adding = (['colours', 'eggs', 'flags', 'cuts', 'snow'] as const).filter((t) =>
-        on.has(t),
-      );
+      const adding = (['colours', 'eggs', 'cuts', 'snow'] as const).filter((t) => on.has(t));
 
       // 1. Hide clues.
       let p: Panel = { name: 'generated', rows: made.panel.rows };
@@ -247,12 +244,8 @@ export function makePanel(
           )[0] ?? 0)
         : 0;
       const distOf = new Map<number[], number[]>();
-      const alongOf = new Map<number[], { rows: number[]; cols: number[] }>();
       const dist = (a: number[]): number[] =>
         distOf.get(a) ?? (distOf.set(a, distances(web, a, home)), distOf.get(a) ?? []);
-      const along = (a: number[]): { rows: number[]; cols: number[] } =>
-        alongOf.get(a) ??
-        (alongOf.set(a, threadsAlong(web, a)), alongOf.get(a) ?? { rows: [], cols: [] });
       const holds = (t: Tagged<WebClue>, a: number[]): boolean => {
         const c = t.clue;
         if (c.twist === 'colours')
@@ -263,20 +256,22 @@ export function makePanel(
           });
         if (c.twist === 'eggs') return dist(a)[c.knot] === c.n;
         if (c.twist === 'cuts') return (across.get(c.wall) ?? []).every((i) => !a[i]);
-        if (c.twist === 'snow') return symmetricIn(c.frame, drawn(a));
-        return along(a)[c.axis][c.line] === c.n;
+        return symmetricIn(c.frame, drawn(a));
       };
       // Snowflakes: what each answer draws (memoised).
       const drawnOf = new Map<number[], Set<string>>();
       const drawn = (a: number[]): Set<string> =>
         drawnOf.get(a) ?? (drawnOf.set(a, strokes(web, a)), drawnOf.get(a) ?? new Set());
-      // Cuts: which links would cross each wall.
+      // Cuts: which links would cross each wall (placed at the middle of the gap between knots).
       const across = new Map<string, number[]>();
       web.links.forEach((l, i) => {
         const a = web.knots[l.a];
         const b = web.knots[l.b];
-        if (a && b)
-          for (const w of wallsBetween(a, b)) across.set(w, [...(across.get(w) ?? []), i]);
+        if (a && b) {
+          const ws = wallsBetween(a, b);
+          const mid = ws[Math.floor(ws.length / 2)];
+          if (mid) across.set(mid, [...(across.get(mid) ?? []), i]);
+        }
       });
       const candidates: Tagged<WebClue>[] = [];
       if (on.has('cuts'))
@@ -291,21 +286,6 @@ export function makePanel(
           if (k !== home && n >= 2 && n > (near[k] ?? 0))
             candidates.push({ twist: 'eggs', clue: { twist: 'eggs', knot: k, n } });
         });
-      }
-      if (on.has('flags')) {
-        const lines = { rows: new Set<number>(), cols: new Set<number>() };
-        web.links.forEach((l) => {
-          const a = web.knots[l.a];
-          const b = web.knots[l.b];
-          if (a && b && a.r === b.r) lines.rows.add(a.r);
-          if (a && b && a.c === b.c) lines.cols.add(a.c);
-        });
-        for (const axis of ['rows', 'cols'] as const)
-          for (const line of lines[axis])
-            candidates.push({
-              twist: 'flags',
-              clue: { twist: 'flags', axis, line, n: along(truth)[axis][line] ?? 0 },
-            });
       }
       // Snowflakes: on Webs, the whole board is the frame (the joins mirror; singles and doubles don't).
       const frameOptions: (Frame | null)[] = on.has('snow')
@@ -362,15 +342,6 @@ export function makePanel(
           const [r, c, side] = w.split(',');
           return [Number(r), Number(c), side === 'v' ? 'v' : 'h'] as Wall;
         });
-      const flags = chosen.flatMap((c) => (c.clue.twist === 'flags' ? [c.clue] : []));
-      if (flags.length) {
-        out.rowFlags = p.rows.map(
-          (_, r) => flags.find((f) => f.axis === 'rows' && f.line === r)?.n ?? null,
-        );
-        out.colFlags = [...(p.rows[0] ?? '')].map(
-          (_, c) => flags.find((f) => f.axis === 'cols' && f.line === c)?.n ?? null,
-        );
-      }
       return finish(out, shape.margin, {
         plain: answers.length,
         ...Object.fromEntries([...m].map(([t, n]) => [`without ${t}`, n])),

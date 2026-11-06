@@ -1,0 +1,52 @@
+{
+  "genre": "hops",
+  "twists": ["courses"],
+  "tier": "medium",
+  "panels": [
+    {
+      "seed": 1,
+      "stats": { "eggs": 5, "steps": 157 },
+      "panel": {
+        "name": "Bunny hops, courses: medium 1",
+        "rows": ["#######", "#######", "#######", "#######", "#######", "#######", "#######"],
+        "given": [
+          [2, 0, 1],
+          [1, 1, 27],
+          [4, 3, 40],
+          [1, 4, 46],
+          [1, 3, 47]
+        ],
+        "portions": ["AAAAAAA", "ABBCCCA", "ABBCCCA", "BBBCCCA", "BBBCCCA", "BBCCCCA", "BBBBBAA"]
+      }
+    },
+    {
+      "seed": 2,
+      "stats": { "eggs": 3, "steps": 361 },
+      "panel": {
+        "name": "Bunny hops, courses: medium 2",
+        "rows": ["#######", "#######", "#######", "#######", "#######", "#######", "#######"],
+        "given": [
+          [6, 2, 1],
+          [2, 5, 42],
+          [3, 3, 49]
+        ],
+        "portions": ["BBCCCCB", "BBCCCCB", "BBCCCCB", "ABCCCCB", "ABBBBBB", "AAAAAAA", "AAAAAAA"]
+      }
+    },
+    {
+      "seed": 3,
+      "stats": { "eggs": 4, "steps": 638 },
+      "panel": {
+        "name": "Bunny hops, courses: medium 3",
+        "rows": ["#######", "#######", "#######", "#######", "#######", "#######", "#######"],
+        "given": [
+          [0, 0, 1],
+          [4, 0, 5],
+          [4, 4, 43],
+          [2, 4, 49]
+        ],
+        "portions": ["AAACCCC", "AAABCCC", "AABBCCC", "AABBCCC", "AABBCCC", "AABBBBB", "AABBBBB"]
+      }
+    }
+  ]
+}

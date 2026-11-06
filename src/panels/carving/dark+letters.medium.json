@@ -1,0 +1,43 @@
+{
+  "genre": "carving",
+  "twists": ["dark", "letters"],
+  "tier": "medium",
+  "panels": [
+    {
+      "seed": 10,
+      "stats": { "plain": 1, "steps": 325 },
+      "panel": {
+        "name": "Carving, dark and letters: medium 1",
+        "rows": [
+          ". . . . . . .",
+          ". . A . . ? .",
+          ". . . . . . 6",
+          ". 6 . . . . .",
+          ". . Y A . Y .",
+          ". M . . . Y .",
+          ". . . . . . ?"
+        ],
+        "sizeLetters": " Y M A   ",
+        "message": "264"
+      }
+    },
+    {
+      "seed": 26,
+      "stats": { "plain": 1, "steps": 2254 },
+      "panel": {
+        "name": "Carving, dark and letters: medium 2",
+        "rows": [
+          ". ? . . . Y 2",
+          ". . . . 8 . .",
+          ". . Y . . . .",
+          ". . . . . . .",
+          "A . . . M . ?",
+          ". . . 3 . . .",
+          "3 . . . . . ."
+        ],
+        "sizeLetters": "   Y M A ",
+        "message": "486"
+      }
+    }
+  ]
+}

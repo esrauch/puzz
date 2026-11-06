@@ -1,0 +1,49 @@
+{
+  "genre": "hops",
+  "twists": ["snow"],
+  "tier": "easy",
+  "panels": [
+    {
+      "seed": 1,
+      "stats": { "eggs": 3, "steps": 400 },
+      "panel": {
+        "name": "Bunny hops, snow: easy 1",
+        "rows": ["#####", "#####", "#####", "#####", "#####"],
+        "given": [
+          [0, 4, 1],
+          [1, 2, 18],
+          [0, 0, 25]
+        ],
+        "frame": { "top": 1, "left": 0, "bottom": 4, "right": 3, "axis": "h" }
+      }
+    },
+    {
+      "seed": 2,
+      "stats": { "eggs": 3, "steps": 159 },
+      "panel": {
+        "name": "Bunny hops, snow: easy 2",
+        "rows": ["#####", "#####", "#####", "#####", "#####"],
+        "given": [
+          [0, 4, 1],
+          [1, 2, 10],
+          [2, 0, 25]
+        ],
+        "frame": { "top": 1, "left": 1, "bottom": 4, "right": 4, "axis": "h" }
+      }
+    },
+    {
+      "seed": 3,
+      "stats": { "eggs": 3, "steps": 1069 },
+      "panel": {
+        "name": "Bunny hops, snow: easy 3",
+        "rows": ["#####", "#####", "#####", "#####", "#####"],
+        "given": [
+          [0, 4, 1],
+          [1, 4, 2],
+          [0, 1, 22]
+        ],
+        "frame": { "top": 0, "left": 0, "bottom": 3, "right": 3, "axis": "h" }
+      }
+    }
+  ]
+}

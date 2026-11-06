@@ -1,0 +1,34 @@
+{
+  "genre": "carving",
+  "twists": ["snow"],
+  "tier": "easy",
+  "panels": [
+    {
+      "seed": 5,
+      "stats": { "plain": 2, "without snow": 2, "steps": 20 },
+      "panel": {
+        "name": "Carving, snow: easy 1",
+        "rows": ["3 . . . 4", ". . . 2 .", ". . 6 . .", "2 . 4 2 .", ". . . . 2"],
+        "frame": { "top": 1, "left": 0, "bottom": 4, "right": 3, "axis": "h" }
+      }
+    },
+    {
+      "seed": 11,
+      "stats": { "plain": 2, "without snow": 2, "steps": 15 },
+      "panel": {
+        "name": "Carving, snow: easy 2",
+        "rows": [". . 6 . .", ". 4 . . .", ". . . . .", "4 . 6 . .", ". 5 . . ."],
+        "frame": { "top": 0, "left": 0, "bottom": 3, "right": 3, "axis": "v" }
+      }
+    },
+    {
+      "seed": 29,
+      "stats": { "plain": 4, "without snow": 4, "steps": 33 },
+      "panel": {
+        "name": "Carving, snow: easy 3",
+        "rows": ["4 . . . .", ". 4 . . 2", ". . . 4 2", ". . 4 . .", "3 . . 2 ."],
+        "frame": { "top": 1, "left": 0, "bottom": 4, "right": 2, "axis": "h" }
+      }
+    }
+  ]
+}

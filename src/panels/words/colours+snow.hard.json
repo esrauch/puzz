@@ -1,0 +1,182 @@
+{
+  "genre": "words",
+  "twists": ["colours", "snow"],
+  "tier": "hard",
+  "panels": [
+    {
+      "seed": 16,
+      "stats": { "words": 12, "steps": 2033 },
+      "panel": {
+        "name": "Words, colours and snow: hard 1",
+        "theme": "Ghostly crushes",
+        "rows": [
+          "FNTHTREP",
+          "ANGGELES",
+          "IPSIALMU",
+          "KPUNTCTS",
+          "EMPOISOY",
+          "LTTIPRKO",
+          "CSNOTIOP",
+          "ACRMNLNS",
+          "HAEDATER"
+        ],
+        "words": [
+          {
+            "word": "POTION",
+            "cells": [
+              [4, 2],
+              [4, 3],
+              [5, 2],
+              [5, 3],
+              [6, 3],
+              [6, 2]
+            ]
+          },
+          {
+            "word": "CASTLE",
+            "cells": [
+              [6, 0],
+              [7, 0],
+              [6, 1],
+              [5, 1],
+              [5, 0],
+              [4, 0]
+            ]
+          },
+          {
+            "word": "NIGHT",
+            "cells": [
+              [3, 3],
+              [2, 3],
+              [1, 3],
+              [0, 3],
+              [0, 2]
+            ]
+          },
+          {
+            "word": "CHARMED",
+            "cells": [
+              [7, 1],
+              [8, 0],
+              [8, 1],
+              [7, 2],
+              [7, 3],
+              [8, 2],
+              [8, 3]
+            ]
+          },
+          {
+            "word": "FANGS",
+            "cells": [
+              [0, 0],
+              [1, 0],
+              [0, 1],
+              [1, 2],
+              [2, 2]
+            ]
+          },
+          {
+            "word": "PUMPKIN",
+            "cells": [
+              [2, 1],
+              [3, 2],
+              [4, 1],
+              [3, 1],
+              [3, 0],
+              [2, 0],
+              [1, 1]
+            ]
+          },
+          {
+            "word": "SPIRIT",
+            "cells": [
+              [4, 5],
+              [5, 4],
+              [4, 4],
+              [5, 5],
+              [6, 5],
+              [6, 4]
+            ]
+          },
+          {
+            "word": "SPOOKY",
+            "cells": [
+              [7, 7],
+              [6, 7],
+              [6, 6],
+              [5, 7],
+              [5, 6],
+              [4, 7]
+            ]
+          },
+          {
+            "word": "TREAT",
+            "cells": [
+              [0, 4],
+              [0, 5],
+              [1, 4],
+              [2, 4],
+              [3, 4]
+            ]
+          },
+          {
+            "word": "LANTERN",
+            "cells": [
+              [7, 5],
+              [8, 4],
+              [7, 4],
+              [8, 5],
+              [8, 6],
+              [8, 7],
+              [7, 6]
+            ]
+          },
+          {
+            "word": "SPELL",
+            "cells": [
+              [1, 7],
+              [0, 7],
+              [0, 6],
+              [1, 5],
+              [2, 5]
+            ]
+          },
+          {
+            "word": "COSTUME",
+            "cells": [
+              [3, 5],
+              [4, 6],
+              [3, 7],
+              [3, 6],
+              [2, 7],
+              [2, 6],
+              [1, 6]
+            ]
+          }
+        ],
+        "frame": { "top": 0, "bottom": 8, "left": 0, "right": 7, "axis": "v" },
+        "colours": [
+          "rr..bbrr",
+          "rbr.br.r",
+          "bbr.br..",
+          "bbb.b...",
+          ".brr...b",
+          "..rr..bb",
+          "..rr..bb",
+          ".bbbrrrb",
+          "bbbbrrrr"
+        ],
+        "bows": [
+          [6, 2],
+          [8, 2],
+          [0, 0],
+          [1, 1],
+          [7, 7],
+          [1, 4],
+          [8, 6],
+          [1, 5]
+        ]
+      }
+    }
+  ]
+}

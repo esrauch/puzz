@@ -31,7 +31,7 @@ Nothing game-specific yet: `src/main.ts` shows a placeholder scene (a sunny cel-
 
 ### Puzzle generators (`src/gen/`)
 
-Panels for the base puzzles and their twists (see `PUZZLES.md`) are generated
+Panels for the base puzzles and their twists (see `PUZZLES.md` and `PUZZLE_DESIGN.md`) are generated
 at dev time and pinned as JSON; the phone never runs a search.
 
 - `src/gen/core/`: shared infrastructure. `rng.ts` (seeded, wraps
@@ -42,10 +42,13 @@ at dev time and pinned as JSON; the phone never runs a search.
   twists, results, seed loop, rejection counts for tuning).
   `mirror.ts` holds the snowflake helpers (frames, mirrored grid features,
   the symmetry check) that every genre shares.
-- `src/gen/<genre>/`: one folder per base puzzle, so far `webs/` (Hashi):
+- `src/gen/<genre>/`: one folder per base puzzle, so far `webs/` (Hashi),
+  `carving/` (Shikaku), `words/` (Strands, with theme banks in
+  `themes.ts`), `hops/` (Numbrix bunny hops) and `lights/` (Net Christmas
+  lights), each laid out much the same way:
   `model.ts` (panel format, parse), `rules.ts` (what threads add up to,
   `solved`), `solve.ts` (propagation and search, budgeted), `make.ts`
-  (random solution-first webs), `verify.ts` (the checks the generator and
+  (random solution-first boards), `verify.ts` (the checks the generator and
   tests share: one answer, each twist's margin, nothing pointless),
   `generate.ts` (the pipeline and tier shapes).
 - Generation is solution-first: grow an answer, write every clue, hide clues
@@ -55,8 +58,9 @@ at dev time and pinned as JSON; the phone never runs a search.
 - The same generators run in the browser: `src/gen/client.ts` asks a Web
   Worker (`src/gen/worker.ts`) for a panel, so a slow search never freezes the
   page, and cancelling ends the worker. Most specs take under 0.4 s; three
-  clue-adding twists at once can take seconds. The prototypes page's Webs
-  workshop (`?p=webworkshop`) uses it: difficulty, twist checkboxes, Generate.
+  clue-adding twists at once can take seconds. The prototypes page's workshops
+  (`?p=webworkshop`, `?p=carvingworkshop`, `?p=wordsworkshop`, `?p=hopsworkshop`,
+  `?p=lightsworkshop`) use it: difficulty, twist checkboxes, Generate.
 - `tools/make-panels.ts` writes `src/panels/<genre>/<twists>.<tier>.json`
   (with each panel's seed and stats); `tests/panels/` re-checks every pinned
   panel with the genre's `verify.ts`.
