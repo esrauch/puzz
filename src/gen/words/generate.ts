@@ -310,13 +310,82 @@ export function makePanel(
     }) ?? null
   );
 
+  /** Put Red, White & Blue bows on a coloured board, targeting stray word paths between red and blue words. */
+  function placeBows(q: Panel, colours: string[], random: Rng): Spot[] {
+    const baseOpts = framedOptions(q, { noCode: true, noBows: true }, budget);
+    const truth = q.words.map((w) => w.cells.map(key).sort().join(' '));
+    const strayOpts = baseOpts.map((ways, i) => ways.filter((o) => o.cells.join(' ') !== truth[i]));
+    const bowSet = new Set<string>();
+    const bows: Spot[] = [];
+    const addBow = (k: string): void => {
+      if (bowSet.has(k)) return;
+      const [r, c] = k.split(',').map(Number) as Spot;
+      const col = colours[r]?.[c];
+      if (!col || col === '.') return;
+      bowSet.add(k);
+      bows.push([r, c]);
+    };
+
+    // When paired with another clue-adding twist (eggs or cuts), leave some stray words for that twist to resolve
+    const shareWithOtherTwist = on.has('eggs') || on.has('cuts');
+    const maxWordsToTarget = shareWithOtherTwist ? shape.margin : Infinity;
+    let targetedWords = 0;
+    const allStrayCells = new Set(strayOpts.flatMap((ways) => ways.flatMap((o) => o.cells)));
+
+    for (const ways of strayOpts) {
+      if (ways.length === 0 || targetedWords >= maxWordsToTarget) continue;
+      let killedAllInWord = true;
+      for (const o of ways) {
+        const rCells = o.cells.filter((k) => {
+          const [r, c] = k.split(',').map(Number) as Spot;
+          return colours[r]?.[c] === 'r';
+        });
+        const bCells = o.cells.filter((k) => {
+          const [r, c] = k.split(',').map(Number) as Spot;
+          return colours[r]?.[c] === 'b';
+        });
+        if (rCells.length > 0 && bCells.length > 0) {
+          if (!rCells.some((k) => bowSet.has(k))) {
+            const pick = rCells[Math.floor(random() * rCells.length)];
+            if (pick) addBow(pick);
+          }
+          if (!bCells.some((k) => bowSet.has(k))) {
+            const pick = bCells[Math.floor(random() * bCells.length)];
+            if (pick) addBow(pick);
+          }
+        } else {
+          killedAllInWord = false;
+        }
+      }
+      if (killedAllInWord) targetedWords++;
+    }
+
+    q.words.forEach((w) => {
+      const first = w.cells[0];
+      if (!first) return;
+      const col = colours[first[0]]?.[first[1]];
+      if (!col || col === '.') return;
+      if (!w.cells.some((s) => bowSet.has(key(s)))) {
+        const safeCells = shareWithOtherTwist
+          ? w.cells.filter((s) => !allStrayCells.has(key(s)))
+          : [];
+        const pool = safeCells.length > 0 ? safeCells : w.cells;
+        const s = pool[Math.floor(random() * pool.length)];
+        if (s) addBow(key(s));
+      }
+    });
+    return bows;
+  }
+
   /** A board's twists put back on a swapped board (the same squares; the code keeps its letters). */
   function reuse(b: Panel, from: Panel): Panel {
     const q: Panel = { ...b };
     if (from.dark) q.dark = from.dark;
     if (from.code) q.code = from.code;
-    if (from.colours) q.colours = from.colours;
-    if (from.bows) q.bows = from.bows;
+    if (from.colours) {
+      q.colours = from.colours;
+      q.bows = placeBows(q, from.colours, rng(seed * 104729));
+    }
     if (from.eggs) q.eggs = from.eggs;
     if (from.walls) q.walls = from.walls;
     return q;
@@ -326,7 +395,8 @@ export function makePanel(
   function twist(laid: Panel, random: Rng): Panel | null {
     let p: Panel = { ...laid };
     if (on.has('colours')) {
-      // Red, white and blue: touching words differ; every coloured word gets a bow on one letter.
+      // Red, white and blue: touching words differ; prioritize coloring word pairs that share
+      // a stray path with opposite colors ('r' and 'b') so bows disambiguate them.
       const owner = new Map<string, number>();
       p.words.forEach((w, i) => w.cells.forEach((s) => owner.set(key(s), i)));
       const near = p.words.map((w, i) => {
@@ -343,24 +413,72 @@ export function makePanel(
           }
         return out;
       });
-      const tone: (string | null)[] = p.words.map(() => null);
+      const baseOpts = framedOptions(p, { noCode: true, noBows: true }, budget);
+      const truth = p.words.map((w) => w.cells.map(key).sort().join(' '));
+      const strayOpts = baseOpts.map((ways, i) =>
+        ways.filter((o) => o.cells.join(' ') !== truth[i]),
+      );
+      const tone: ('r' | 'b' | null)[] = p.words.map(() => null);
+      const canColor = (wi: number, c: 'r' | 'b'): boolean =>
+        ![...(near[wi] ?? [])].some((nj) => tone[nj] === c);
+
       for (const i of shuffle(
         random,
-        p.words.map((_, i) => i),
+        p.words.map((_, idx) => idx).filter((idx) => (strayOpts[idx]?.length ?? 0) > 0),
       )) {
-        const used = new Set([...(near[i] ?? [])].map((j) => tone[j]));
-        tone[i] = shuffle(random, ['r', 'b']).find((c) => !used.has(c)) ?? null;
+        for (const o of strayOpts[i] ?? []) {
+          const others = [
+            ...new Set(
+              o.cells
+                .map((k) => owner.get(k))
+                .filter((x): x is number => x !== undefined && x !== i),
+            ),
+          ];
+          for (const j of others) {
+            if (tone[i] === null && tone[j] === null) {
+              const pair: ['r', 'b'] | ['b', 'r'] = random() < 0.5 ? ['r', 'b'] : ['b', 'r'];
+              if (canColor(i, pair[0]) && canColor(j, pair[1])) {
+                tone[i] = pair[0];
+                tone[j] = pair[1];
+                break;
+              }
+              if (canColor(i, pair[1]) && canColor(j, pair[0])) {
+                tone[i] = pair[1];
+                tone[j] = pair[0];
+                break;
+              }
+            } else if (tone[i] !== null && tone[j] === null) {
+              const opp = tone[i] === 'r' ? 'b' : 'r';
+              if (canColor(j, opp)) {
+                tone[j] = opp;
+                break;
+              }
+            } else if (tone[i] === null && tone[j] !== null) {
+              const opp = tone[j] === 'r' ? 'b' : 'r';
+              if (canColor(i, opp)) {
+                tone[i] = opp;
+                break;
+              }
+            }
+          }
+        }
       }
-      const colours = p.rows.map((row) => [...row].map(() => '.'));
-      const bows: Spot[] = [];
+      for (const i of shuffle(
+        random,
+        p.words.map((_, idx) => idx),
+      )) {
+        if (tone[i] !== null) continue;
+        tone[i] = shuffle(random, ['r', 'b'] as const).find((c) => canColor(i, c)) ?? null;
+      }
+      const colourGrid = p.rows.map((row) => [...row].map(() => '.'));
       p.words.forEach((w, i) => {
         const t = tone[i];
         if (!t) return;
-        for (const [r, c] of w.cells) (colours[r] as string[])[c] = t;
-        const s = w.cells[Math.floor(random() * w.cells.length)];
-        if (s) bows.push(s);
+        for (const [r, c] of w.cells) (colourGrid[r] as string[])[c] = t;
       });
-      p = { ...p, colours: colours.map((r) => r.join('')), bows };
+      const colours = colourGrid.map((r) => r.join(''));
+      const bows = placeBows(p, colours, random);
+      p = { ...p, colours, bows };
     }
     // Hiding clues: added one at a time, kept only while no word gains a way to lie.
     const load = (q: Panel): number =>

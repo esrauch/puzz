@@ -7,22 +7,22 @@ plain functions); tests in `tests/puzzles/` prove each level is solvable
 (and, where it matters, has exactly one answer or a known best solution).
 Prototypes are deliberately unthemed: they test whether each puzzle is fun.
 
-## Where things stand (2026-11-03)
+## Where things stand (2026-11-07)
 
-- **Twists revised:** Christmas is now **Snowflakes** and the Fourth of July
-  **Red, White and Blue**; red and green and edge flags are retired. The
-  full puzzle-by-twist map is [PUZZLES.md](PUZZLES.md).
-- **Generators:** `src/gen/` holds the new architecture. All six genres — **Spiderweb** (`webs`), **Carving** (`carving`),
-  **Heartstrings** (`words`), **Hops** (`hops`), **Lights** (`lights`), and **Fireworks** (`pictures`) — are migrated and generate the plain puzzle and their twists (**Spooky**, **Love Letters**, **Red, White and Blue**, **Egg Hunt**, **Portions**, **Snowflakes**) at easy,
-  medium and hard (5×5, 7×7, 9×9), offline (`tools/make-panels.ts webs|carving|words|hops|lights|pictures`)
-  or in the browser (the workshops, `?p=webworkshop`,
-  `?p=carvingworkshop`, `?p=wordsworkshop`, `?p=hopsworkshop`, `?p=lightsworkshop`, `?p=picturesworkshop`, through a Web Worker). All generating in seconds.
-- **Not cleaned up yet:** the rooms below were built before the revision;
-  the ones using red and green or flags (Tree-Top Star, Stocking, Christmas
-  Tree, Star-Spangled Flag, Hot Dog, Tuesday) still do.
-- **Next:** continue the generator across the full matrix (each genre
-  migrated into `src/gen/`, every twist at every tier, in any mix), then
-  rebuild the rooms from generated panels.
+- **Puzzles:** all six genres (Spiderweb, Carving, Heartstrings, Hops,
+  Lights, Fireworks) generate the plain puzzle and every twist (Love Letters,
+  Snowflakes, Spooky, Egg Hunt, Red White and Blue, Portions) at easy,
+  medium and hard, in seconds, offline (`tools/make-panels.ts`) or in the
+  browser (the workshops, through a Web Worker). Every room is rebuilt on the
+  current twist set; Santa's merger contract is six two-twist panels.
+- **Game shell:** Holiday Hall (a 3D rotunda: the hall plus six alcoves),
+  room runs, carried items and placement, lamps, the Calendar Desk (daily
+  puzzle and mixer), and a step hint on every board.
+- **Story redesigned** (`GAME.md`, "The story"): you are Ordinary Tuesday,
+  freeing the mascots from CEO Santa's hostile takeover. The code still runs
+  the older story (a Shadowy Figure, then Tuesday unmasked, then Santa), to
+  be replaced.
+- **Next:** `ROADMAP.md`.
 
 ## Status by puzzle (after three rounds of playtesting)
 

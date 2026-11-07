@@ -130,6 +130,35 @@ body {
   animation: pulse-place 1.4s infinite ease-in-out;
 }
 
+.hotspot-pill.hero {
+  padding: 13px 26px;
+  min-width: 220px;
+  max-width: 288px;
+  border-radius: 14px;
+  border-width: 3px;
+  background: #fffdf9;
+  box-shadow:
+    0 5px 0 #1f2430,
+    0 10px 24px rgba(0, 0, 0, 0.35);
+  z-index: 8;
+  animation: pulse-hero 1.8s infinite ease-in-out;
+}
+
+.hotspot-pill.hero:hover {
+  transform: translate(-50%, -4px) scale(1.06);
+  background: #ffffff;
+}
+
+@keyframes pulse-hero {
+  0%,
+  100% {
+    transform: translate(-50%, 0) scale(1);
+  }
+  50% {
+    transform: translate(-50%, -3px) scale(1.04);
+  }
+}
+
 @keyframes pulse-place {
   0%,
   100% {

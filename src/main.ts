@@ -20,12 +20,12 @@ import {
   getBayAngle,
   getBayLightMood,
 } from './game/diorama';
-import { FINALE_PROTO, ROOM_SPECS, STRAY_ITEMS, gameState } from './game/state';
+import { FINALE_PROTO, ROOM_SPECS, type RoomSpec, STRAY_ITEMS, gameState } from './game/state';
 import { type Proto, blip, h } from './proto/kit';
 import { PROTOS } from './proto/puzzles';
 import { celUniforms } from './render/toon';
 import { View } from './render/view';
-import { isSoundEnabled, setSoundEnabled } from './settings';
+import { isFpsEnabled, isSoundEnabled, setFpsEnabled, setSoundEnabled } from './settings';
 import { applyPaletteVars } from './ui/paletteVars';
 
 if (import.meta.env.DEV) installErrorOverlay();
@@ -109,7 +109,31 @@ bottomStack.append(carryTrayHost, storyBannerHost);
 
 const modalHost = h('div', {});
 
-ui.replaceChildren(hotspotLayer, sideArrowsHost, topBar, bottomStack, modalHost);
+const fpsBadge = h(
+  'div',
+  {
+    style: {
+      position: 'fixed',
+      bottom: 'calc(10px + env(safe-area-inset-bottom))',
+      left: 'calc(10px + env(safe-area-inset-left))',
+      zIndex: '40',
+      pointerEvents: 'none',
+      padding: '4px 8px',
+      borderRadius: '7px',
+      background: 'rgba(20, 24, 33, 0.88)',
+      color: '#68d391',
+      border: '1.5px solid #2d3748',
+      fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
+      fontSize: '11.5px',
+      fontWeight: '800',
+      letterSpacing: '0.03em',
+      display: isFpsEnabled() ? 'block' : 'none',
+    },
+  },
+  '-- FPS',
+);
+
+ui.replaceChildren(hotspotLayer, sideArrowsHost, topBar, bottomStack, modalHost, fpsBadge);
 
 interface ProjectedPill {
   hotspot: Hotspot3D;
@@ -518,7 +542,7 @@ function buildHotspotDOM(hotspots: Hotspot3D[]): void {
     const el = h(
       'button',
       {
-        class: `hotspot-pill ${hs.status}`,
+        class: `hotspot-pill ${hs.status}${hs.hero ? ' hero' : ''}`,
         style: {
           borderColor: hs.status === 'ready' || hs.status === 'door' ? hs.accent : undefined,
         },
@@ -527,15 +551,20 @@ function buildHotspotDOM(hotspots: Hotspot3D[]): void {
           hs.onClick();
         },
       },
-      h('span', { style: { fontWeight: '800', fontSize: '10.5px' } }, hs.label),
+      h(
+        'span',
+        { style: { fontWeight: '800', fontSize: hs.hero ? '15.5px' : '10.5px' } },
+        hs.label,
+      ),
       hs.sublabel
         ? h(
             'span',
             {
               style: {
-                fontSize: '9px',
+                fontSize: hs.hero ? '12px' : '9px',
                 fontWeight: '700',
-                opacity: '0.88',
+                opacity: hs.hero ? '0.95' : '0.88',
+                color: hs.hero ? hs.accent : undefined,
               },
             },
             hs.sublabel,
@@ -669,6 +698,139 @@ const ROOM_TINTS: Record<string, string> = {
   fourth: '#eff6ff',
 };
 
+function showUnlockDialog(roomSpec: RoomSpec, kind: 'warm-up' | 'centerpiece'): void {
+  const isWarmup = kind === 'warm-up';
+  const titleText = isWarmup
+    ? `${roomSpec.icon} ${roomSpec.genreLabel} Unlocked at Calendar Desk!`
+    : `${roomSpec.icon} All ${roomSpec.genreLabel} Twists Unlocked!`;
+  const detailText = isWarmup
+    ? `Beating the ${roomSpec.shortTitle} Warm-up (${roomSpec.warmup.title}) unlocked both the Warm-up replay and the Standard (No-Twist) ${roomSpec.genreLabel} generator at Tuesday's Calendar Desk!`
+    : `Beating the ${roomSpec.shortTitle} Centerpiece (${roomSpec.centerpiece.title}) unlocked all 6 holiday twists for ${roomSpec.genreLabel} at Tuesday's Calendar Desk!`;
+
+  const overlay = h(
+    'div',
+    {
+      class: 'puzz-modal-backdrop',
+      style: { zIndex: '55' },
+      onclick: () => overlay.remove(),
+    },
+    h(
+      'div',
+      {
+        style: {
+          width: 'min(420px, 92vw)',
+          background: '#fffdf8',
+          border: `3px solid ${roomSpec.accent}`,
+          borderRadius: '18px',
+          boxShadow: '0 8px 0 #1f2430, 0 20px 44px rgba(0, 0, 0, 0.45)',
+          padding: '20px 22px',
+          textAlign: 'center',
+          fontFamily: 'system-ui, sans-serif',
+          color: '#1f2430',
+          animation: 'puzz-card-in 0.24s cubic-bezier(0.22, 1, 0.36, 1) both',
+        },
+        onclick: (e: MouseEvent) => e.stopPropagation(),
+      },
+      h(
+        'div',
+        {
+          style: {
+            display: 'inline-block',
+            padding: '4px 12px',
+            borderRadius: '999px',
+            background: '#fefcbf',
+            border: '2px solid #d69e2e',
+            color: '#744210',
+            fontWeight: '900',
+            fontSize: '12px',
+            letterSpacing: '0.06em',
+            textTransform: 'uppercase',
+            marginBottom: '10px',
+          },
+        },
+        '🔓 Unlocked!',
+      ),
+      h(
+        'h3',
+        {
+          style: {
+            margin: '0 0 8px 0',
+            fontSize: '19px',
+            lineHeight: '1.22',
+            color: '#1f2430',
+          },
+        },
+        titleText,
+      ),
+      h(
+        'p',
+        {
+          style: {
+            margin: '0 0 16px 0',
+            fontSize: '13.5px',
+            lineHeight: '1.45',
+            color: '#4a5568',
+            fontWeight: '600',
+          },
+        },
+        detailText,
+      ),
+      h(
+        'div',
+        {
+          style: {
+            display: 'flex',
+            gap: '10px',
+            justifyContent: 'center',
+            flexWrap: 'wrap',
+          },
+        },
+        h(
+          'button',
+          {
+            style: {
+              padding: '8px 16px',
+              borderRadius: '999px',
+              fontWeight: '800',
+              fontSize: '13px',
+              cursor: 'pointer',
+              background: '#805ad5',
+              color: '#fff',
+              border: '2px solid #1f2430',
+              boxShadow: '0 2px 0 #1f2430',
+            },
+            onclick: () => {
+              overlay.remove();
+              switchBay('hall');
+              openCalendarDeskModal();
+            },
+          },
+          '📅 Open Calendar Desk',
+        ),
+        h(
+          'button',
+          {
+            style: {
+              padding: '8px 18px',
+              borderRadius: '999px',
+              fontWeight: '800',
+              fontSize: '13px',
+              cursor: 'pointer',
+              background: '#2f855a',
+              color: '#fff',
+              border: '2px solid #1f2430',
+              boxShadow: '0 2px 0 #1f2430',
+            },
+            onclick: () => overlay.remove(),
+          },
+          'Awesome! ✓',
+        ),
+      ),
+    ),
+  );
+  (ui ?? document.body).append(overlay);
+}
+
 function openProtoModal(protoId: string, focusPos: THREE.Vector3, focusLook: THREE.Vector3): void {
   const proto: Proto | undefined =
     protoId === 'tuesday' ? FINALE_PROTO : PROTOS.find((p) => p.id === protoId);
@@ -695,6 +857,7 @@ function openProtoModal(protoId: string, focusPos: THREE.Vector3, focusLook: THR
 
   const body = h('div', {});
   const doneBanner = h('div', { style: { marginTop: '10px' } });
+  let wasAlreadySolved = gameState.solvedRuns.has(proto.id);
 
   const mountPuzzle = (): void => {
     body.replaceChildren();
@@ -708,6 +871,14 @@ function openProtoModal(protoId: string, focusPos: THREE.Vector3, focusLook: THR
         rebuildScene();
         hotspotLayer.style.display = 'none';
         sideArrowsHost.style.display = 'none';
+        if (
+          !wasAlreadySolved &&
+          roomSpec &&
+          (proto.kind === 'warm-up' || proto.kind === 'centerpiece')
+        ) {
+          wasAlreadySolved = true;
+          showUnlockDialog(roomSpec, proto.kind);
+        }
 
         const homeRoom = strayEntry
           ? ROOM_SPECS.find((r) => r.id === strayEntry.homeRoom)
@@ -983,10 +1154,11 @@ function openSettingsModal(): void {
 
   const renderSettingsContent = (): void => {
     const soundOn = isSoundEnabled();
+    const fpsOn = isFpsEnabled();
     const act = gameState.act();
     const lamps = gameState.completedRoomCount();
 
-    // 1. General Settings (Sound Toggle + Reset Progress)
+    // 1. General Settings (Sound Toggle + FPS Counter Toggle + Reset Progress)
     const controlsSection = h(
       'div',
       {
@@ -1028,6 +1200,30 @@ function openSettingsModal(): void {
             },
           },
           soundOn ? '🔊 Sound: ON' : '🔇 Sound: OFF',
+        ),
+        h(
+          'button',
+          {
+            style: {
+              padding: '8px 14px',
+              borderRadius: '10px',
+              fontWeight: '800',
+              fontSize: '13px',
+              cursor: 'pointer',
+              background: fpsOn ? '#2b6cb0' : '#4a5568',
+              color: '#fff',
+              border: '2px solid #1f2430',
+              boxShadow: '0 2px 0 #1f2430',
+            },
+            onclick: () => {
+              const next = !isFpsEnabled();
+              setFpsEnabled(next);
+              fpsBadge.style.display = next ? 'block' : 'none';
+              blip(523, 55);
+              renderSettingsContent();
+            },
+          },
+          fpsOn ? '⏱️ FPS Counter: ON' : '⏱️ FPS Counter: OFF',
         ),
         h(
           'button',
@@ -1490,7 +1686,22 @@ const targetLitColor = new THREE.Color();
 const targetShadeColor = new THREE.Color();
 const targetSunColor = new THREE.Color();
 
+let fpsFrameCount = 0;
+let fpsSampleStart = performance.now();
+
 view.renderer.setAnimationLoop((now) => {
+  fpsFrameCount++;
+  const elapsedMs = now - fpsSampleStart;
+  if (elapsedMs >= 166) {
+    if (isFpsEnabled()) {
+      const fps = Math.round((fpsFrameCount * 1000) / elapsedMs);
+      fpsBadge.textContent = `${fps} FPS`;
+      fpsBadge.style.color = fps >= 50 ? '#68d391' : fps >= 30 ? '#f6e05e' : '#fc8181';
+    }
+    fpsFrameCount = 0;
+    fpsSampleStart = now;
+  }
+
   const t = now / 1000;
   if (activeDiorama) {
     activeDiorama.animate(t, currentBay);

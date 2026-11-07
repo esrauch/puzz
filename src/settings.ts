@@ -10,9 +10,11 @@ const VERSION = 1;
 export interface Settings {
   /** Music and sound volume (0..1). */
   volume: number;
+  /** Show live FPS counter overlay. */
+  showFps?: boolean;
 }
 
-const DEFAULTS: Settings = { volume: 1 };
+const DEFAULTS: Settings = { volume: 1, showFps: false };
 
 export function loadSettings(): Settings {
   try {
@@ -20,7 +22,10 @@ export function loadSettings(): Settings {
     if (!raw) return { ...DEFAULTS };
     const parsed = JSON.parse(raw) as Partial<Settings> & { version?: number };
     if (parsed.version !== VERSION) return { ...DEFAULTS };
-    return { volume: typeof parsed.volume === 'number' ? parsed.volume : DEFAULTS.volume };
+    return {
+      volume: typeof parsed.volume === 'number' ? parsed.volume : DEFAULTS.volume,
+      showFps: typeof parsed.showFps === 'boolean' ? parsed.showFps : false,
+    };
   } catch {
     return { ...DEFAULTS };
   }
@@ -43,5 +48,16 @@ export function isSoundEnabled(): boolean {
 }
 
 export function setSoundEnabled(enabled: boolean): void {
-  saveSettings({ volume: enabled ? 1 : 0 });
+  const cur = cachedSettings ?? loadSettings();
+  saveSettings({ ...cur, volume: enabled ? 1 : 0 });
+}
+
+export function isFpsEnabled(): boolean {
+  cachedSettings ??= loadSettings();
+  return Boolean(cachedSettings.showFps);
+}
+
+export function setFpsEnabled(enabled: boolean): void {
+  const cur = cachedSettings ?? loadSettings();
+  saveSettings({ ...cur, showFps: enabled });
 }

@@ -187,7 +187,7 @@ export const fairylights = run({
   title: 'The Fairy Lights',
   room: 'Christmas',
   kind: 'warm-up',
-  from: "Lights (Net in Simon Tatham's collection), taught panel by panel as in The Witness",
+  from: 'Lights, taught panel by panel',
   rules: `${CONTROLS} (Rules: turn the pieces so the power from the plug reaches every square, with no loose wire ends.)`,
   panels: WARMUP,
   mountPanel,

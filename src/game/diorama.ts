@@ -208,6 +208,7 @@ export interface Hotspot3D {
   icon: string;
   status: 'locked' | 'ready' | 'done' | 'place' | 'door';
   accent: string;
+  hero?: boolean;
   worldPos: THREE.Vector3;
   cameraPos: THREE.Vector3;
   cameraLook: THREE.Vector3;
@@ -3164,13 +3165,15 @@ export function buildHolidayHallDiorama(callbacks: {
 
     const deskFocusPos = bayToWorld(theta, 0.5, 1.9, 3.7);
     const deskFocusLook = bayToWorld(theta, 0.92, 0.8, 1.18);
+    const deskUnlockedCount = gameState.unlockedDeskGenreCount();
     hotspots.push({
       id: 'desk:calendar',
       bay: 'hall',
       label: '📅 Calendar Desk',
-      sublabel: 'Daily & Mixer',
+      sublabel:
+        deskUnlockedCount === 0 ? '🔒 Beat a Warm-up' : `${deskUnlockedCount}/6 Types Unlocked`,
       icon: '📅',
-      status: gameState.freePlayUnlocked ? 'done' : 'ready',
+      status: deskUnlockedCount === 0 ? 'locked' : deskUnlockedCount >= 6 ? 'done' : 'ready',
       accent: '#805ad5',
       worldPos: bayToWorld(theta, 0.92, 0.28, 1.48),
       cameraPos: deskFocusPos,
@@ -3509,25 +3512,26 @@ export function buildHolidayHallDiorama(callbacks: {
       }
     });
 
-    // TIER 4: WARM-UP BUTTON (no 3D lectern; centered and sole button when incomplete, moves to bottom once solved)
-    const warmupFocusPos = bayToWorld(theta, 0, 1.65, 3.8);
-    const warmupFocusLook = bayToWorld(theta, 0, 1.25, 0.5);
-    const warmupWorldPos = warmupDone
-      ? bayToWorld(theta, 0, 0.14, 2.38)
-      : bayToWorld(theta, 0, 1.38, 0.75);
-    hotspots.push({
-      id: `proto:${room.warmup.id}`,
-      bay: room.id,
-      label: `1. ${room.warmup.title}`,
-      sublabel: warmupDone ? '✓ Warm-up Done' : 'Warm-up (Start Here)',
-      icon: warmupDone ? '✓' : '★',
-      status: warmupDone ? 'done' : 'ready',
-      accent: room.accent,
-      worldPos: warmupWorldPos,
-      cameraPos: warmupFocusPos,
-      cameraLook: warmupFocusLook,
-      onClick: () => callbacks.onOpenProto(room.warmup.id, warmupFocusPos, warmupFocusLook),
-    });
+    // TIER 4: WARM-UP BUTTON (centered hero button when incomplete; disappears from diorama once solved, playable from Calendar Desk)
+    if (!warmupDone) {
+      const warmupFocusPos = bayToWorld(theta, 0, 1.65, 3.8);
+      const warmupFocusLook = bayToWorld(theta, 0, 1.25, 0.5);
+      const warmupWorldPos = bayToWorld(theta, 0, 1.38, 0.75);
+      hotspots.push({
+        id: `proto:${room.warmup.id}`,
+        bay: room.id,
+        label: `${room.icon} ${room.warmup.title}`,
+        sublabel: '▶ Tap to Start Warm-up',
+        icon: '★',
+        status: 'ready',
+        accent: room.accent,
+        hero: true,
+        worldPos: warmupWorldPos,
+        cameraPos: warmupFocusPos,
+        cameraLook: warmupFocusLook,
+        onClick: () => callbacks.onOpenProto(room.warmup.id, warmupFocusPos, warmupFocusLook),
+      });
+    }
   }
 
   return {

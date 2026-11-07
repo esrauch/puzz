@@ -8,46 +8,100 @@ of dread. The house, characters, story and puzzles are Puzz's own.
 
 `PUZZLES.md` maps every base puzzle against every holiday twist.
 
-## The idea: the holidays are all mixed up
+## The story: Santa's hostile takeover (decided 2026-11-07)
 
-The holidays live in a house: each one has its own room, a little world
-done up for its day. And someone has **mixed them all up**. There's an
-Easter egg in the Christmas tree, a hot dog at the head of the Thanksgiving
-table, Cupid's bow strung up on the Fourth of July fireworks rack.
+**Santa Claus, CEO of Q4 Everyday, is staging a hostile takeover of every
+holiday.** He has rebranded each holiday's room as a Christmas subsidiary
+("Easter, a Q4 Everyday company"), scrambled their prized things into the
+wrong rooms, and **locked up all six holiday mascots**. Next stop: every day
+of the year is Christmas.
 
-Every **stray item** is caught up in a puzzle, in the style of the holiday
-it landed in. **Beat the puzzle, and the item is yours.** Carry it home to
-its own holiday. Bring a holiday back both its items, and its **centrepiece**
-wakes up: the tree to light, the feast to set, the web to spin. Beat
-that puzzle and the centrepiece is restored.
+He didn't bother locking up **Ordinary Tuesday**. Nobody throws a party for a
+Tuesday; surely Tuesday is nobody important, and will just go along with
+the plan. **You are Ordinary Tuesday**, and you've had enough of being
+overlooked. You set out to free the mascots, one holiday at a time.
 
-You choose the order. Every holiday's door is open and every stray is there
-to find, so there's always something else to try when a puzzle has you stuck
-(as in *Safecracker*, where each safe hands you keys and clues for others).
+When the last mascot is free and Santa's merger is torn up, the mascots
+throw you a party and declare you **Extraordinary Tuesday**.
+
+Christmas is a victim too: the elves, the reindeer and the tree have been
+taken over by their own corporate boss, so Christmas is restored like every
+other room. Santa himself lives outside the six rooms, in his memos.
+
+### The cast
+
+- **You: Ordinary Tuesday.** Beige, understated, quietly determined. Tuesday
+  speaks only in dry one-liners at milestones, usually answering Santa.
+- **Santa, CEO of Q4 Everyday.** Pompous, never menacing: press releases,
+  synergy, "restructuring". He never gets your name right ("Thank you for
+  your continued cooperation, Monday." / "It's Tuesday.") until the very end.
+- **The six mascots**, each caged at its room's centrepiece, freed when you
+  restore it, with a short thank-you; all six come to your party.
+
+| Holiday | Mascot (suggested) |
+|---|---|
+| Halloween | the Spider |
+| Thanksgiving | the Turkey |
+| Christmas | an Elf |
+| Valentine's | Cupid |
+| Easter | the Easter Bunny |
+| Fourth of July | to decide (a firework, or Uncle Sam) |
+
+### How the story is told
+
+- **In the world first.** Every room starts *acquired*: corporate Christmas
+  signage over it, its colours drained, its mascot in a cage at the
+  centrepiece. Freeing its items peels the branding back; restoring the
+  centrepiece opens the cage, brings back the room's own colour and music,
+  and lights its lamp in the hall.
+- **Short beats only at milestones:** entering a room the first time,
+  freeing a stray, bringing an item home, freeing a mascot. Santa's beats are
+  memos and faxes; Tuesday answers in a line. Panels themselves stay clean
+  (rules only): the story never sits between the player and a puzzle.
+- **Santa escalates, never undoes.** His memos change with every lamp you
+  light: smug press releases, then panicked restructuring, then a desperate
+  final offer before the merger contract. He never takes back your progress.
+
+### Progression
+
+1. **Opening, guided.** Santa's takeover memo, addressed to "Monday":
+   carry on as usual. Only **Thanksgiving** is open. Its warm-up teaches
+   carving; freeing its first stray and carrying the item home opens that
+   item's holiday, and with it the rest of the house fans out.
+2. **The loop, in any order.** In each room: the warm-up (the genre's
+   rules), two stray runs (each stray item is caught in this room's genre,
+   twisted by its own holiday), the items carried home, then the
+   centrepiece run, which frees the mascot and lights the lamp. There's
+   always another room or stray to try when a panel has you stuck.
+3. **Optional bonus panels.** A few hard bonus panels per room (generated or
+   hand-picked) earn small visible rewards: a room decoration, a party hat
+   for its mascot. The story never needs them.
+4. **Santa's merger contract.** With all six mascots free, the contract is
+   the run of two-twist panels (each genre with two twists it hasn't had);
+   each panel tears up a clause.
+5. **Tuesday's party.** The freed mascots throw it; its last puzzle is the
+   cake relay (one board, every genre adding to it). They crown you
+   Extraordinary Tuesday, and Santa finally gets your name right.
+6. **After the story: Tuesday's Calendar Desk.** In the hall from the start
+   but dusty, "closed for the merger"; after the party it opens as the
+   endless mode: the daily Tuesday puzzle, and the mixer (any genre, any
+   twists).
+
+**Hints** are the plain step hint on every panel (one correct move), with no
+character voice and no cost.
 
 ## Getting around
 
 - **Each holiday is one diorama, seen in a single fixed view**: the whole
   room laid out like a toy theatre set, everything in it on show. No
   walking about inside a holiday.
-- **Tuesday's hall is the hub**, with a door to each holiday. Click a door
-  to go into that holiday; click to go back to the hall.
+- **Tuesday's hall is the hub** (Holiday Hall: a round toy-theatre room,
+  each holiday an alcove around it). Turn to a holiday to go into it; turn
+  back to the hall.
 - So any holiday is two clicks from any other: the hall in between.
 - Within a diorama you click things: a stray's puzzle, the centrepiece, the
   spot where a returned item belongs (and later, the gags). A puzzle comes up
   close to play, then drops back to the diorama.
-
-## The host: Ordinary Tuesday
-
-**Ordinary Tuesday** is the most ordinary day of the year. Nobody throws a
-party for a Tuesday, nobody sends Tuesday cards, and Tuesday has had enough.
-So Tuesday mixed up all the holidays, to see how *they* like it.
-
-Tuesday is the house's host, the way Stauf hosts *The 7th Guest*, but a
-villain with a soft centre: beige, a bit sulky, very funny about it. Tuesday
-pops up to grumble when you fix things, leaves notes on puzzles, rigs the
-odd trick, and slowly warms to you. The hall that joins the holidays is
-Tuesday's: plain, beige, utterly ordinary, the joke against all that colour.
 
 ## Direction: about 100 small panels (decided 2026-11-02)
 
@@ -131,7 +185,13 @@ panels). They'll be redone from the generators; see `PUZZLES.md`.
 done. Each completed room lights one of six lamps in Tuesday's hall (like
 *The Witness*'s lasers into the mountain).
 
-### The final area: Tuesday's party (tentative, 2026-11-02)
+### The final area: Santa's merger contract, then Tuesday's party
+
+**Story framing (2026-11-07):** the two-twist panels below are Santa's merger
+contract (each panel tears up a clause); the board relay is the last puzzle
+at the mascots' party for Extraordinary Tuesday. The notes below are the
+puzzle design history.
+
 
 With all six lamps lit, Tuesday's door opens on a run of six panels, **one per
 puzzle genre, each with two holiday twists it hasn't had in its own room or
@@ -192,7 +252,8 @@ Between the big puzzles, the inspirations have a lighter layer: *11th Hour*'s
 lids to pair up, clickable scenery and story scenes. Puzz will have one too,
 filled in after the puzzles:
 
-- **Finding the strays:** a teasing note from Tuesday hints where a stray is
+- **Finding the strays:** a line from Tuesday (or a smug memo from Santa)
+  hints where a stray is
   hiding ("Something round and golden is keeping very sweet company").
   Spotting it is the quick win; its puzzle is the big one.
 - **Gags:** clickable jokes and reactions all over each room, above all
@@ -200,8 +261,7 @@ filled in after the puzzles:
 
 Until then strays sit in plain sight and rooms have only their puzzles, but
 the game is built so this layer slots in: each room has hotspots for things
-to look at and react, a stray can start hidden until found, and Tuesday's
-notes have somewhere to live.
+to look at and react, and a stray can start hidden until found.
 
 ## The six holidays
 
@@ -933,9 +993,10 @@ Prototype status, the audit against the inspiration games, and next steps:
 
 ## To decide
 
-- The hint system: Tuesday's grudging hints, the restored holidays' own
-  characters helping, a hint currency?
-- Whether some strays should be gated (say, only visible once a holiday's
-  lights are back on) for a little more structure.
+- The exact lines: Santa's memos (one per milestone and lamp count),
+  Tuesday's replies, each mascot's thank-you.
+- The Fourth of July's mascot.
+- Which bonus panels go in which room, and what each one earns.
+- How the cake relay looks with the mascots at the party.
+- Whether some strays should start hidden (the lighter layer).
 - The lighter layer's riddles and gags (after the panels).
-- Tuesday's look and voice.

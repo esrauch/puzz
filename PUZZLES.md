@@ -10,7 +10,7 @@ one satisfying to play with a thumb.
 **Decided 2026-11-03:** Christmas's twist is **snowflakes** (a mirror) and
 the Fourth of July's is **red, white and blue**. Red and green (the old
 Christmas twist) and edge flags (the old Fourth of July twist) are retired.
-Some built panels still use them; see "Not cleaned up yet" at the end.
+All built rooms now use the current set.
 
 ## The premise
 
@@ -115,18 +115,19 @@ Mirroring everything just halves the puzzle (solve one side, copy it).
 ## The matrix
 
 Rows are puzzles, columns are twists. **Bold** marks the puzzle's own
-holiday's twist, at home. ✅ built (all still need playing); ⚙️ in the
-generator (any tier, any mix of twists); 🟡 tentative (built for Tuesday);
-🔧 built with a retired twist, to be redone; ❓ open (ideas below).
+holiday's twist, at home (the centrepiece). ✅ a built room run (all still
+need playing); ⚙️ in the generator (any tier, any mix of twists). Santa's
+merger contract (`src/proto/puzzles/tuesday.ts`) adds six two-twist panels,
+one per genre, each twist appearing twice.
 
 | Puzzle ↓ / Twist → | Love Letters (Val.) | Snowflakes (Xmas) | Spooky (Hall.) | Egg Hunt (Easter) | Red, White & Blue (4th) | Portions (Thanks.) |
 |---|---|---|---|---|---|---|
-| **Spiderweb** (Halloween) | ✅ Box of Chocolates, ⚙️ | ⚙️ whole board | ✅ **Spider's Web**, ⚙️ | 🟡 Tuesday, ⚙️ | 🔧 Tree-Top Star (red and green), ⚙️ red and blue | ⚙️ cuts |
-| **Carving** (Thanksgiving) | 🟡 Tuesday, ⚙️ | ⚙️ frame | 🟡 Tuesday, ⚙️ | ⚙️ Easter baskets | 🔧 Stocking (red and green), ⚙️ red and blue | ✅ **Feast**, ⚙️ cuts |
-| **Lights** (Christmas) | ⚙️ | ⚙️ frame | 🟡 Tuesday, ⚙️ | ✅ Golden Egg, ⚙️ | ⚙️ red and blue | ✅ Pumpkin Pie, ⚙️ |
-| **Heartstrings** (Valentine's) | ✅ **Valentine Mailbox**, ⚙️ | ⚙️ mirror pairs | ✅ Jack-o'-Lantern, ⚙️ | ✅ Bunny's Basket, ⚙️ | 🔧 Tuesday (red and green bows), ⚙️ red and blue | 🟡 Tuesday, ⚙️ cuts |
-| **Hops** (Easter) | 🟡 Tuesday, ⚙️ | ⚙️ frame | ⚙️ | ✅ **Egg Tree**, ⚙️ | ⚙️ | ✅ Cornucopia, ⚙️ |
-| **Fireworks** (Fourth) | ✅ Cupid's Bow, ⚙️ | ⚙️ frame | ✅ Witch's Broom, ⚙️ | 🟡 Tuesday, ⚙️ | ✅ **Grand Finale**, ⚙️ | 🟡 Tuesday, ⚙️ |
+| **Spiderweb** (Halloween) | ✅ Box of Chocolates, ⚙️ | ✅ Tree-Top Star, ⚙️ | ✅ **Spider's Web**, ⚙️ | ⚙️ | ⚙️ | ⚙️ cuts |
+| **Carving** (Thanksgiving) | ⚙️ | ✅ Stocking, ⚙️ | ⚙️ | ⚙️ Easter baskets | ✅ Hot Dog, ⚙️ | ✅ **Feast**, ⚙️ cuts |
+| **Lights** (Christmas) | ⚙️ | ✅ **Christmas Tree**, ⚙️ | ⚙️ | ✅ Golden Egg, ⚙️ | ⚙️ | ✅ Pumpkin Pie, ⚙️ |
+| **Heartstrings** (Valentine's) | ✅ **Valentine Mailbox**, ⚙️ | ⚙️ mirror pairs | ✅ Jack-o'-Lantern, ⚙️ | ✅ Bunny's Basket, ⚙️ | ⚙️ | ⚙️ cuts |
+| **Hops** (Easter) | ⚙️ | ⚙️ | ⚙️ | ✅ **Egg Tree**, ⚙️ | ✅ Star-Spangled Flag, ⚙️ | ✅ Cornucopia, ⚙️ |
+| **Fireworks** (Fourth) | ✅ Cupid's Bow, ⚙️ | ⚙️ | ✅ Witch's Broom, ⚙️ | ⚙️ | ✅ **Grand Finale**, ⚙️ | ⚙️ |
 
 ---
 
@@ -144,7 +145,7 @@ generator (any tier, any mix of twists); 🟡 tentative (built for Tuesday);
 - **Egg Hunt (Tuesday, 🟡; generator ⚙️):** 🕷 marks the spider's home; an egg's
   number is how many threads it takes to reach it from home, always more
   than the shortest possible path (it refutes the obvious route).
-- **Red, White and Blue (🔧 Tree-Top Star; generator ⚙️):**
+- **Red, White and Blue (generator ⚙️; the Tree-Top Star now carries Snowflakes):**
   knots are coloured, and a thread only joins different colours; plain
   knots join anything. The generator colours a grown web along its threads.
   Knots are red or blue; white ones (the default) join anything.
@@ -176,7 +177,7 @@ Spooky and Portions (cuts) are good; the rest were adjusted as below.
   one 🥕 carrot and one 🍫 chocolate (two foods on easy), with at least half
   the portions' sizes taken away. It's the Feast's fair-share rule with
   Easter food; Carving only, an exception to Easter's numbered eggs.
-- **Red, White and Blue (🔧 Stocking; ⚙️):** portions take the colour of
+- **Red, White and Blue (✅ Hot Dog; ⚙️):** portions take the colour of
   their marks, and two of one colour never share an edge; plain portions
   touch anything. Every portion that can be coloured carries a mark (with
   only the strictly needed marks, the few dots looked pointless).
@@ -238,7 +239,7 @@ at every tier in seconds or less (eggs on hard is the slowest, ~6 s).
   word through them is found; at most one per word, never first or last.
 - **Egg Hunt (Bunny's Basket, ✅; ⚙️):** a letter's egg is its place in its word,
   placed on words that could otherwise be traced another way.
-- **Red, White and Blue (🔧 Tuesday bows; ⚙️):** words are red, white or
+- **Red, White and Blue (⚙️):** words are red, white or
   blue; one letter of each word is bowed to show its colour, and two words
   of one colour never touch.
 - **Portions (⚙️):** short fences between neighbouring squares that no word
@@ -258,7 +259,7 @@ at every tier in seconds or less (eggs on hard is the slowest, ~6 s).
   rock; the last egg gives the route's length).
 - **Egg Hunt, at home (Egg Tree, ✅; ⚙️):** numbered eggs on tree-shaped boards.
   Home-only extra: burrows.
-- **Red, White and Blue (🔧 Tuesday two bunnies; ⚙️):** bunnies of different
+- **Red, White and Blue (✅ Star-Spangled Flag: red and blue bunnies; ⚙️):** bunnies of different
   colours, each over its own colour; plain squares go to any.
 - **Portions (Cornucopia, ✅; ⚙️):** courses: the bunny finishes each
   outlined portion before starting the next.
@@ -290,21 +291,9 @@ twist rules out at least two more answers. Built with the old twist set
 is filled in. The grand finale is a board relay on one board, building
 Tuesday's party cake (outline in `GAME.md`).
 
-## Not cleaned up yet
+## Status (2026-11-07)
 
-The decision above isn't applied to the built rooms yet. Still using
-retired twists, and to be redone:
-
-- **Red and green:** the Tree-Top Star (Halloween), the Stocking
-  (Thanksgiving), the Christmas Tree (Christmas's centrepiece, which needs
-  snowflakes instead), and Tuesday's words and bunnies.
-- **Flags:** the Hot Dog (Thanksgiving), the Star-Spangled Flag (Easter),
-  and Tuesday's webs and lights.
-- **The Webs generator** is up to date (red and blue, white plain; flags gone).
-- **`GAME.md`'s room sections** still describe the old twists.
-
-**Next steps:** keep building the generator out to the full matrix: migrate
-each genre into `src/gen/` the way Webs was, and give each one generators
-for the plain puzzle and every twist (at easy, medium and hard, in any
-mix). Then rebuild the rooms, strays, centrepieces and Tuesday from
-generated panels.
+Every room is rebuilt on the current twist set (no red and green, no edge
+flags left), every genre generates every twist at every tier in seconds,
+and the story has been redesigned (see `GAME.md`, "The story"). What's next
+is in `ROADMAP.md`.

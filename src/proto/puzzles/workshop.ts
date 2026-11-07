@@ -38,7 +38,7 @@ interface Workshop {
 const WEBS: Workshop = {
   genre: 'webs',
   title: 'Spiderweb workshop',
-  from: 'Spiderweb (Hashi), generated in the browser, with any mix of twists',
+  from: 'Spiderweb, generated in the browser, with any mix of twists',
   rules:
     'Pick a difficulty and any twists, then Generate. Drag between knots to spin a thread (again for a double); tap a thread to cut it.',
   twists: [
@@ -60,7 +60,7 @@ const WEBS: Workshop = {
 const CARVING: Workshop = {
   genre: 'carving',
   title: 'Carving workshop',
-  from: 'Carving (Shikaku), generated in the browser, with any mix of twists',
+  from: 'Carving, generated in the browser, with any mix of twists',
   rules:
     'Pick a difficulty and any twists, then Generate. Drag from one square to another to carve a portion; tap a portion to lift it.',
   twists: [
@@ -310,7 +310,7 @@ const workshop = (id: string, w: Workshop): Proto => ({
 const WORDS: Workshop = {
   genre: 'words',
   title: 'Heartstrings workshop',
-  from: 'Heartstrings (Strands), generated in the browser, with any mix of twists',
+  from: 'Heartstrings, generated in the browser, with any mix of twists',
   rules:
     'Pick a difficulty and any twists, then Generate. Drag through touching letters (diagonals too) to find the theme words; every letter is in one.',
   twists: [
@@ -338,8 +338,8 @@ export const carvingWorkshop = workshop('carvingworkshop', CARVING);
 
 const HOPS: Workshop = {
   genre: 'hops',
-  title: 'Hops workshop',
-  from: 'Hops (Numbrix), generated in the browser, with any mix of twists',
+  title: 'Bunny Hops workshop',
+  from: 'Bunny Hops, generated in the browser, with any mix of twists',
   rules:
     'Pick a difficulty and any twists, then Generate. Drag through neighboring spots to lay the bunny’s trail; tap the bunny to step back.',
   shapes: [
@@ -370,7 +370,7 @@ export const hopsWorkshop = workshop('hopsworkshop', HOPS);
 const LIGHTS: Workshop = {
   genre: 'lights',
   title: 'Lights workshop',
-  from: 'Lights (Net), generated in the browser, with any mix of twists',
+  from: 'Lights, generated in the browser, with any mix of twists',
   rules:
     'Pick a difficulty and any twists, then Generate. Tap a piece to turn it a quarter clockwise. Power spreads from the plug to light every square.',
   shapes: [
@@ -407,7 +407,7 @@ export const lightsWorkshop = workshop('lightsworkshop', LIGHTS);
 const PICTURES: Workshop = {
   genre: 'pictures',
   title: 'Fireworks workshop',
-  from: 'Fireworks (Nonograms), generated in the browser, with any mix of twists',
+  from: 'Fireworks, generated in the browser, with any mix of twists',
   rules:
     'Pick a difficulty and any twists, then Generate. Tap to fill, cross out, or clear (or pick a paint in color); drag along a row or column to paint a run.',
   twists: [

@@ -1341,7 +1341,7 @@ export const lovenotes = run({
   title: 'Love Notes',
   room: "Valentine's",
   kind: 'warm-up',
-  from: "Heartstrings (the New York Times' Strands), taught panel by panel as in The Witness",
+  from: 'Heartstrings, taught panel by panel',
   rules: `${CONTROLS} (A spangram, on bigger boards, runs from one side of the board to the other.)`,
   panels: LOVENOTES,
   mountPanel,

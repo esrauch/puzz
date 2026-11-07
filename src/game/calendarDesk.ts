@@ -18,11 +18,12 @@ import { mountLights } from '../proto/netBoard';
 import { mountPicture } from '../proto/pictureBoard';
 import { mountCarving } from '../proto/shikakuBoard';
 import { mountStrands } from '../proto/strandsBoard';
-import { gameState } from './state';
+import { ROOM_SPECS, type RoomId, type RoomSpec, gameState } from './state';
 
 const GENRE_OPTIONS = [
   {
     id: 'webs' as Genre,
+    roomId: 'halloween' as RoomId,
     label: '🎃 Spiderweb (Halloween)',
     twists: [
       { id: 'dark', label: '🎃 Spooky (?)' },
@@ -35,6 +36,7 @@ const GENRE_OPTIONS = [
   },
   {
     id: 'carving' as Genre,
+    roomId: 'thanksgiving' as RoomId,
     label: '🦃 Carving (Thanksgiving)',
     twists: [
       { id: 'dark', label: '🎃 Spooky (?)' },
@@ -47,6 +49,7 @@ const GENRE_OPTIONS = [
   },
   {
     id: 'lights' as Genre,
+    roomId: 'christmas' as RoomId,
     label: '🎄 Lights (Christmas)',
     twists: [
       { id: 'dark', label: '🎃 Spooky (?)' },
@@ -59,6 +62,7 @@ const GENRE_OPTIONS = [
   },
   {
     id: 'words' as Genre,
+    roomId: 'valentines' as RoomId,
     label: "💌 Heartstrings (Valentine's)",
     twists: [
       { id: 'dark', label: '🎃 Spooky (?)' },
@@ -71,6 +75,7 @@ const GENRE_OPTIONS = [
   },
   {
     id: 'hops' as Genre,
+    roomId: 'easter' as RoomId,
     label: '🐰 Bunny Hops (Easter)',
     twists: [
       { id: 'dark', label: '🎃 Spooky (?)' },
@@ -83,6 +88,7 @@ const GENRE_OPTIONS = [
   },
   {
     id: 'pictures' as Genre,
+    roomId: 'fourth' as RoomId,
     label: '🎆 Fireworks (Fourth of July)',
     twists: [
       { id: 'dark', label: '🎃 Spooky (?)' },
@@ -94,6 +100,11 @@ const GENRE_OPTIONS = [
     ] as const,
   },
 ] as const;
+
+function getRoomForGenre(genre: Genre): RoomSpec {
+  const opt = GENRE_OPTIONS.find((g) => g.id === genre) ?? GENRE_OPTIONS[0];
+  return ROOM_SPECS.find((r) => r.id === opt.roomId) ?? (ROOM_SPECS[0] as RoomSpec);
+}
 
 function todayKey(): string {
   const d = new Date();
@@ -161,7 +172,6 @@ export function mountCalendarDesk(host: HTMLElement, onClose: () => void): void 
       },
     ];
 
-  let activeTab: 'daily' | 'custom' = 'daily';
   const dailySolved = new Set<number>();
   let dailyIdx = 0;
 
@@ -235,10 +245,31 @@ export function mountCalendarDesk(host: HTMLElement, onClose: () => void): void 
   const boardHost = h('div', { class: 'puzz-board-stage', style: { minHeight: '240px' } });
   let activeDeskPane: HTMLElement | null = null;
   let deskHeightTimer = 0;
+  let deskViewToken = 0;
+
+  const clearBoardHost = (): void => {
+    deskViewToken++;
+    cancelGenerating();
+    if (deskHeightTimer) {
+      clearTimeout(deskHeightTimer);
+      deskHeightTimer = 0;
+    }
+    boardHost.style.height = '';
+    activeDeskPane = null;
+    remountCurrentBoard = null;
+    boardHost.replaceChildren();
+  };
 
   const swapDeskPane = (dir: 'forward' | 'reset', mountInto: (pane: HTMLElement) => void): void => {
-    const prevPane = activeDeskPane;
+    const prevPane =
+      activeDeskPane && activeDeskPane.parentElement === boardHost ? activeDeskPane : null;
     const prevHeight = prevPane ? boardHost.offsetHeight : 0;
+    // Remove any non-tracked children so two boards can never stack
+    for (const child of Array.from(boardHost.children)) {
+      if (child !== prevPane) {
+        child.remove();
+      }
+    }
     if (prevPane) {
       const pTop = prevPane.offsetTop;
       const pLeft = prevPane.offsetLeft;
@@ -284,6 +315,8 @@ export function mountCalendarDesk(host: HTMLElement, onClose: () => void): void 
     dailyIdx = idx;
     const step = dailySteps[idx] ?? dailySteps[0];
     if (!step) return;
+    const token = ++deskViewToken;
+    cancelGenerating();
     statusEl.textContent = `Generating Daily Panel ${idx + 1}/3 (${step.label})...`;
     const reply = await generateInBrowser({
       genre: step.genre,
@@ -291,6 +324,7 @@ export function mountCalendarDesk(host: HTMLElement, onClose: () => void): void 
       seconds: 8,
       seed: step.seed,
     });
+    if (token !== deskViewToken) return;
     if (!reply.made) {
       statusEl.textContent = 'Could not generate panel; try again.';
       return;
@@ -311,7 +345,7 @@ export function mountCalendarDesk(host: HTMLElement, onClose: () => void): void 
             } else if (idx < 2) {
               statusEl.textContent = `✓ Panel ${idx + 1} solved! Loading next...`;
               window.setTimeout(() => {
-                if (boardHost.isConnected) void loadDailyStep(idx + 1);
+                if (boardHost.isConnected && activeTab === 'daily') void loadDailyStep(idx + 1);
               }, 1350);
             }
           },
@@ -325,33 +359,363 @@ export function mountCalendarDesk(host: HTMLElement, onClose: () => void): void 
     mountStep('forward');
   };
 
-  let customGenre: Genre = 'webs';
+  let activeTab: 'custom' | 'daily' = 'custom';
+  // Level 1 when null (pick a holiday); Level 2 when set (options + board for that holiday)
+  let selectedGenre: Genre | null = null;
+  let customMode: 'generator' | 'warmup' = 'generator';
   let customTier: Tier = 'easy';
-  const customTwists = new Set<string>(['snow']);
+  const customTwists = new Set<string>();
 
-  const renderCustom = (): void => {
-    const gInfo = GENRE_OPTIONS.find((x) => x.id === customGenre) ?? GENRE_OPTIONS[0];
-    const genreSelect = h(
-      'select',
+  const mountWarmupInDesk = (room: RoomSpec): void => {
+    clearBoardHost();
+    const warmupHost = h('div', { style: { marginTop: '8px' } });
+    remountCurrentBoard = () => mountWarmupInDesk(room);
+    room.warmup.mount(warmupHost, {
+      solved: () => {
+        blip(660, 120);
+        gameState.markRunSolved(room.warmup.id);
+      },
+      status: () => {
+        // Warm-up run renders its own status bar
+      },
+    });
+    boardHost.replaceChildren(warmupHost);
+  };
+
+  const generateAndMountStandardOrTwist = async (): Promise<void> => {
+    if (!selectedGenre) return;
+    const genre = selectedGenre;
+    const gInfo = GENRE_OPTIONS.find((x) => x.id === genre) ?? GENRE_OPTIONS[0];
+    const room = getRoomForGenre(genre);
+    if (!gameState.isDeskTwistsUnlocked(room)) {
+      customTwists.clear();
+    }
+    const token = ++deskViewToken;
+    cancelGenerating();
+    const seed = Math.floor(Math.random() * 100_000) + 1;
+    const twistDesc =
+      customTwists.size === 0 ? 'Standard (No Twist)' : `Twists: ${[...customTwists].join(', ')}`;
+    statusEl.textContent = `Generating ${customTier} ${gInfo.label} · ${twistDesc}...`;
+    const reply = await generateInBrowser({
+      genre,
+      spec: { tier: customTier, twists: [...customTwists] },
+      seconds: 10,
+      seed,
+    });
+    if (token !== deskViewToken) return;
+    if (!reply.made) {
+      statusEl.textContent =
+        'No board found for that combination in time — try 1 twist or Easy/Medium.';
+      return;
+    }
+    const mountCustom = (dir: 'forward' | 'reset'): void => {
+      statusEl.textContent = `${gInfo.label} · ${twistDesc} · Seed ${reply.made?.seed}`;
+      swapDeskPane(dir, (pane) => {
+        mountGenrePanel(
+          pane,
+          genre,
+          reply.made?.panel,
+          () => {
+            statusEl.textContent = `✓ Solved! (${twistDesc} · Seed ${reply.made?.seed})`;
+          },
+          (s) => {
+            statusEl.textContent = s;
+          },
+        );
+      });
+    };
+    remountCurrentBoard = () => mountCustom('reset');
+    mountCustom('forward');
+  };
+
+  const renderCustom = (autoGen = false): void => {
+    const currentlyUnlocked = GENRE_OPTIONS.filter((g) =>
+      gameState.isDeskGenreUnlocked(getRoomForGenre(g.id)),
+    );
+
+    if (selectedGenre && !gameState.isDeskGenreUnlocked(getRoomForGenre(selectedGenre))) {
+      selectedGenre = null;
+    }
+
+    // LEVEL 1: Pick a Holiday / Puzzle Type
+    if (selectedGenre === null) {
+      clearBoardHost();
+      const introBanner =
+        currentlyUnlocked.length === 0
+          ? h(
+              'div',
+              {
+                style: {
+                  padding: '14px 16px',
+                  borderRadius: '12px',
+                  background: '#f7fafc',
+                  border: '2px dashed #cbd5e0',
+                  textAlign: 'center',
+                  color: '#2d3748',
+                  marginBottom: '12px',
+                },
+              },
+              h('div', { style: { fontSize: '24px', marginBottom: '4px' } }, '🔒'),
+              h(
+                'h3',
+                { style: { margin: '0 0 4px 0', fontSize: '16px' } },
+                'No Puzzle Types Unlocked Yet',
+              ),
+              h(
+                'p',
+                {
+                  style: {
+                    margin: '0 auto',
+                    maxWidth: '500px',
+                    fontSize: '13px',
+                    lineHeight: '1.42',
+                    color: '#4a5568',
+                  },
+                },
+                'Beat any holiday’s center Warm-up puzzle in its alcove to unlock its Warm-up and Standard (No-Twist) generator here. Beat its Centerpiece to unlock all 6 of its Holiday Twists!',
+              ),
+            )
+          : h(
+              'div',
+              {
+                style: {
+                  fontSize: '13px',
+                  fontWeight: '700',
+                  color: '#4a5568',
+                  marginBottom: '10px',
+                },
+              },
+              'Select an unlocked holiday puzzle type to play its Warm-up or generate Standard & Twist boards:',
+            );
+
+      const holidayMenuGrid = h(
+        'div',
+        {
+          style: {
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+            gap: '10px',
+          },
+        },
+        ...GENRE_OPTIONS.map((g) => {
+          const r = getRoomForGenre(g.id);
+          const unlocked = gameState.isDeskGenreUnlocked(r);
+          const hasTwists = gameState.isDeskTwistsUnlocked(r);
+          const statusBadge = !unlocked
+            ? `🔒 Beat Warm-up (${r.warmup.title})`
+            : hasTwists
+              ? '★ Warm-up + Standard + All 6 Twists'
+              : '✓ Warm-up + Standard Unlocked';
+          return h(
+            'button',
+            {
+              disabled: !unlocked,
+              style: {
+                padding: '12px 14px',
+                borderRadius: '12px',
+                textAlign: 'left',
+                cursor: unlocked ? 'pointer' : 'not-allowed',
+                opacity: unlocked ? '1' : '0.62',
+                border: unlocked ? `2px solid ${r.accent}` : '1.5px solid #cbd5e0',
+                background: unlocked ? '#fffdf9' : '#edf2f7',
+                color: '#1f2430',
+                boxShadow: unlocked ? '0 3px 0 #1f2430' : 'none',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '4px',
+              },
+              onclick: () => {
+                if (!unlocked) return;
+                selectedGenre = g.id;
+                customMode = 'generator';
+                customTwists.clear();
+                renderCustom(true);
+              },
+            },
+            h(
+              'div',
+              {
+                style: {
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  gap: '6px',
+                  width: '100%',
+                },
+              },
+              h('span', { style: { fontWeight: '800', fontSize: '14px' } }, g.label),
+              unlocked
+                ? h(
+                    'span',
+                    {
+                      style: {
+                        fontSize: '12px',
+                        fontWeight: '800',
+                        color: r.accent,
+                      },
+                    },
+                    'Open ▸',
+                  )
+                : null,
+            ),
+            h(
+              'div',
+              {
+                style: {
+                  fontSize: '11.5px',
+                  fontWeight: '700',
+                  color: hasTwists ? '#2f855a' : unlocked ? '#2b6cb0' : '#718096',
+                },
+              },
+              statusBadge,
+            ),
+            !hasTwists
+              ? h(
+                  'div',
+                  { style: { fontSize: '11px', color: '#718096' } },
+                  unlocked
+                    ? `Beat ${r.centerpiece.title} (${r.shortTitle} Centerpiece) for all 6 Twists`
+                    : `Then beat ${r.centerpiece.title} for all 6 Twists`,
+                )
+              : null,
+          );
+        }),
+      );
+
+      content.replaceChildren(introBanner, holidayMenuGrid);
+      return;
+    }
+
+    // LEVEL 2: Options & Board for `selectedGenre`
+    const gInfo = GENRE_OPTIONS.find((x) => x.id === selectedGenre) ?? GENRE_OPTIONS[0];
+    const activeRoom = getRoomForGenre(selectedGenre);
+    const twistsUnlocked = gameState.isDeskTwistsUnlocked(activeRoom);
+    if (!twistsUnlocked) {
+      customTwists.clear();
+    }
+
+    const level2Header = h(
+      'div',
       {
-        style: { padding: '6px 10px', borderRadius: '6px', fontSize: '14px' },
-        onchange: (e: Event) => {
-          customGenre = (e.target as HTMLSelectElement).value as Genre;
-          customTwists.clear();
-          renderCustom();
+        style: {
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: '8px',
+          flexWrap: 'wrap',
+          paddingBottom: '8px',
+          marginBottom: '10px',
+          borderBottom: '1px solid #e2e8f0',
         },
       },
-      ...GENRE_OPTIONS.map((g) =>
-        h('option', { value: g.id, selected: g.id === customGenre }, g.label),
+      h(
+        'button',
+        {
+          style: {
+            padding: '5px 12px',
+            borderRadius: '999px',
+            fontWeight: '800',
+            fontSize: '12.5px',
+            cursor: 'pointer',
+            border: '1.5px solid #2d3748',
+            background: '#fffdf9',
+            color: '#1f2430',
+          },
+          onclick: () => {
+            selectedGenre = null;
+            clearBoardHost();
+            renderCustom(false);
+          },
+        },
+        '← All Holidays',
+      ),
+      h('div', { style: { fontWeight: '800', fontSize: '15px', color: '#1f2430' } }, gInfo.label),
+      h(
+        'span',
+        {
+          style: {
+            fontSize: '11.5px',
+            fontWeight: '800',
+            padding: '3px 9px',
+            borderRadius: '999px',
+            background: twistsUnlocked ? '#f0fff4' : '#ebf8ff',
+            color: twistsUnlocked ? '#22543d' : '#2b6cb0',
+            border: twistsUnlocked ? '1px solid #2f855a' : '1px solid #90cdf4',
+          },
+        },
+        twistsUnlocked ? '★ All 6 Twists Unlocked' : '✓ Warm-up + Standard',
       ),
     );
+
+    const modeSwitchRow = h(
+      'div',
+      {
+        style: {
+          display: 'flex',
+          gap: '8px',
+          flexWrap: 'wrap',
+          alignItems: 'center',
+          marginBottom: '10px',
+        },
+      },
+      h(
+        'button',
+        {
+          style: {
+            padding: '6px 13px',
+            borderRadius: '999px',
+            fontWeight: '800',
+            fontSize: '12.5px',
+            cursor: 'pointer',
+            border: customMode === 'generator' ? '2px solid #1f2430' : '1px solid #cbd5e0',
+            background: customMode === 'generator' ? activeRoom.accent : '#f7fafc',
+            color: customMode === 'generator' ? '#fff' : '#2d3748',
+          },
+          onclick: () => {
+            if (customMode === 'generator') return;
+            customMode = 'generator';
+            clearBoardHost();
+            renderCustom(true);
+          },
+        },
+        '🎲 Standard & Twist Generator',
+      ),
+      h(
+        'button',
+        {
+          style: {
+            padding: '6px 13px',
+            borderRadius: '999px',
+            fontWeight: '800',
+            fontSize: '12.5px',
+            cursor: 'pointer',
+            border: customMode === 'warmup' ? '2px solid #1f2430' : '1px solid #cbd5e0',
+            background: customMode === 'warmup' ? activeRoom.accent : '#f7fafc',
+            color: customMode === 'warmup' ? '#fff' : '#2d3748',
+          },
+          onclick: () => {
+            if (customMode === 'warmup') return;
+            customMode = 'warmup';
+            renderCustom(false);
+          },
+        },
+        `★ Warm-up: ${activeRoom.warmup.title}`,
+      ),
+    );
+
+    if (customMode === 'warmup') {
+      content.replaceChildren(level2Header, modeSwitchRow, boardHost);
+      mountWarmupInDesk(activeRoom);
+      return;
+    }
 
     const tierSelect = h(
       'select',
       {
-        style: { padding: '6px 10px', borderRadius: '6px', fontSize: '14px' },
+        style: { padding: '6px 10px', borderRadius: '6px', fontSize: '13.5px', fontWeight: '700' },
         onchange: (e: Event) => {
           customTier = (e.target as HTMLSelectElement).value as Tier;
+          void generateAndMountStandardOrTwist();
         },
       },
       ...(['easy', 'medium', 'hard'] as const).map((t) =>
@@ -359,34 +723,82 @@ export function mountCalendarDesk(host: HTMLElement, onClose: () => void): void 
       ),
     );
 
+    const noTwistActive = customTwists.size === 0;
+    const standardBtn = h(
+      'button',
+      {
+        style: {
+          padding: '5px 11px',
+          borderRadius: '999px',
+          fontSize: '12.5px',
+          fontWeight: '700',
+          cursor: 'pointer',
+          border: noTwistActive ? '2px solid #2f855a' : '1px solid #cbd5e0',
+          background: noTwistActive ? '#f0fff4' : '#f7fafc',
+          color: noTwistActive ? '#22543d' : '#4a5568',
+        },
+        onclick: () => {
+          customTwists.clear();
+          renderCustom(true);
+        },
+      },
+      '✨ Standard (No Twist)',
+    );
+
     const twistRow = h(
       'div',
       { style: { display: 'flex', gap: '6px', flexWrap: 'wrap', margin: '8px 0' } },
+      standardBtn,
       ...gInfo.twists.map((tw) => {
         const on = customTwists.has(tw.id);
         return h(
           'button',
           {
+            disabled: !twistsUnlocked,
+            title: twistsUnlocked
+              ? tw.label
+              : `Locked: Beat ${activeRoom.centerpiece.title} (${activeRoom.shortTitle} Centerpiece) to unlock twists`,
             style: {
               padding: '5px 10px',
               borderRadius: '999px',
               fontSize: '12.5px',
               fontWeight: '600',
-              cursor: 'pointer',
+              cursor: twistsUnlocked ? 'pointer' : 'not-allowed',
+              opacity: twistsUnlocked ? '1' : '0.55',
               border: on ? '1.5px solid #2b6cb0' : '1px solid #cbd5e0',
               background: on ? '#ebf8ff' : '#f7fafc',
               color: on ? '#2b6cb0' : '#4a5568',
             },
             onclick: () => {
+              if (!twistsUnlocked) return;
               if (on) customTwists.delete(tw.id);
               else if (customTwists.size < 2) customTwists.add(tw.id);
-              renderCustom();
+              renderCustom(true);
             },
           },
-          tw.label,
+          twistsUnlocked ? tw.label : `🔒 ${tw.label}`,
         );
       }),
     );
+
+    const twistLockNotice = !twistsUnlocked
+      ? h(
+          'div',
+          {
+            style: {
+              padding: '6px 11px',
+              borderRadius: '8px',
+              background: '#fffaf0',
+              border: '1px solid #dd6b20',
+              color: '#9c4221',
+              fontSize: '12px',
+              fontWeight: '700',
+              marginBottom: '6px',
+            },
+          },
+          `🔒 Twists Locked: Beat the ${activeRoom.shortTitle} Centerpiece (${activeRoom.centerpiece.icon} ${activeRoom.centerpiece.title}) to unlock all 6 twists for ${gInfo.label}!`,
+        )
+      : null;
 
     const genBtn = h(
       'button',
@@ -400,58 +812,36 @@ export function mountCalendarDesk(host: HTMLElement, onClose: () => void): void 
           border: 'none',
           cursor: 'pointer',
         },
-        onclick: async () => {
-          const seed = Math.floor(Math.random() * 100_000) + 1;
-          statusEl.textContent = `Generating ${customTier} ${gInfo.label}...`;
-          const reply = await generateInBrowser({
-            genre: customGenre,
-            spec: { tier: customTier, twists: [...customTwists] },
-            seconds: 10,
-            seed,
-          });
-          if (!reply.made) {
-            statusEl.textContent =
-              'No board found for that combination in time — try 1 twist or Easy/Medium.';
-            return;
-          }
-          const mountCustom = (dir: 'forward' | 'reset'): void => {
-            statusEl.textContent = `Seed ${reply.made?.seed} (${reply.ms} ms)`;
-            swapDeskPane(dir, (pane) => {
-              mountGenrePanel(
-                pane,
-                customGenre,
-                reply.made?.panel,
-                () => {
-                  statusEl.textContent = `✓ Custom panel solved! (Seed ${reply.made?.seed})`;
-                },
-                (s) => {
-                  statusEl.textContent = s;
-                },
-              );
-            });
-          };
-          remountCurrentBoard = () => mountCustom('reset');
-          mountCustom('forward');
+        onclick: () => {
+          void generateAndMountStandardOrTwist();
         },
       },
-      'Generate Board ▸',
+      'New Board ▸',
     );
 
     content.replaceChildren(
+      level2Header,
+      modeSwitchRow,
       h(
         'div',
         { style: { display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' } },
-        genreSelect,
+        h('span', { style: { fontSize: '12.5px', fontWeight: '800' } }, 'Difficulty:'),
         tierSelect,
         genBtn,
       ),
       twistRow,
+      ...(twistLockNotice ? [twistLockNotice] : []),
       statusRow,
       boardHost,
     );
+
+    if (autoGen) {
+      void generateAndMountStandardOrTwist();
+    }
   };
 
   const renderDaily = (): void => {
+    clearBoardHost();
     const strip = h(
       'div',
       { style: { display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' } },
@@ -506,27 +896,8 @@ export function mountCalendarDesk(host: HTMLElement, onClose: () => void): void 
 
   const tabBar = h('div', { style: { display: 'flex', gap: '8px', marginBottom: '8px' } });
   const renderTabs = (): void => {
+    const anyUnlocked = gameState.unlockedDeskGenreCount() > 0;
     tabBar.replaceChildren(
-      h(
-        'button',
-        {
-          style: {
-            padding: '7px 14px',
-            borderRadius: '8px',
-            fontWeight: '700',
-            cursor: 'pointer',
-            background: activeTab === 'daily' ? '#805ad5' : '#edf2f7',
-            color: activeTab === 'daily' ? '#fff' : '#2d3748',
-            border: 'none',
-          },
-          onclick: () => {
-            activeTab = 'daily';
-            renderTabs();
-            renderDaily();
-          },
-        },
-        `📅 Daily Tuesday (${dateStr})`,
-      ),
       h(
         'button',
         {
@@ -541,11 +912,37 @@ export function mountCalendarDesk(host: HTMLElement, onClose: () => void): void 
           },
           onclick: () => {
             activeTab = 'custom';
+            selectedGenre = null;
+            clearBoardHost();
             renderTabs();
-            renderCustom();
+            renderCustom(false);
           },
         },
-        '🎛️ Custom Holiday Mixer',
+        `🔓 Unlocked Puzzles (${gameState.unlockedDeskGenreCount()}/6)`,
+      ),
+      h(
+        'button',
+        {
+          disabled: !anyUnlocked,
+          style: {
+            padding: '7px 14px',
+            borderRadius: '8px',
+            fontWeight: '700',
+            cursor: anyUnlocked ? 'pointer' : 'not-allowed',
+            opacity: anyUnlocked ? '1' : '0.55',
+            background: activeTab === 'daily' ? '#805ad5' : '#edf2f7',
+            color: activeTab === 'daily' ? '#fff' : '#2d3748',
+            border: 'none',
+          },
+          onclick: () => {
+            if (!anyUnlocked) return;
+            activeTab = 'daily';
+            clearBoardHost();
+            renderTabs();
+            renderDaily();
+          },
+        },
+        anyUnlocked ? `📅 Daily Tuesday (${dateStr})` : '🔒 Daily Tuesday',
       ),
     );
   };
@@ -575,7 +972,7 @@ export function mountCalendarDesk(host: HTMLElement, onClose: () => void): void 
           background: '#f7fafc',
         },
         onclick: () => {
-          cancelGenerating();
+          clearBoardHost();
           onClose();
         },
       },
@@ -583,8 +980,7 @@ export function mountCalendarDesk(host: HTMLElement, onClose: () => void): void 
     ),
   );
 
-  gameState.setFreePlay(true);
   renderTabs();
-  renderDaily();
+  renderCustom(false);
   host.replaceChildren(header, tabBar, content);
 }

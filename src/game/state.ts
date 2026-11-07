@@ -187,7 +187,7 @@ export const ROOM_SPECS: readonly [RoomSpec, RoomSpec, RoomSpec, RoomSpec, RoomS
     title: 'Halloween Porch',
     shortTitle: 'Halloween',
     icon: '🎃',
-    genreLabel: 'Spiderweb (Hashi)',
+    genreLabel: 'Spiderweb',
     accent: '#805ad5',
     secondaryAccent: '#ff7b29',
     wallColor: '#634887',
@@ -208,7 +208,7 @@ export const ROOM_SPECS: readonly [RoomSpec, RoomSpec, RoomSpec, RoomSpec, RoomS
     title: 'Thanksgiving Table',
     shortTitle: 'Thanksgiving',
     icon: '🦃',
-    genreLabel: 'Carving (Shikaku)',
+    genreLabel: 'Carving',
     accent: '#8c4a20',
     secondaryAccent: '#ed8936',
     wallColor: '#e8cfa8',
@@ -229,7 +229,7 @@ export const ROOM_SPECS: readonly [RoomSpec, RoomSpec, RoomSpec, RoomSpec, RoomS
     title: 'Christmas Hearth',
     shortTitle: 'Christmas',
     icon: '🎄',
-    genreLabel: 'Lights (Net)',
+    genreLabel: 'Lights',
     accent: '#2f855a',
     secondaryAccent: '#e53e3e',
     wallColor: '#d9ece2',
@@ -250,7 +250,7 @@ export const ROOM_SPECS: readonly [RoomSpec, RoomSpec, RoomSpec, RoomSpec, RoomS
     title: "Valentine's Parlor",
     shortTitle: "Valentine's",
     icon: '💌',
-    genreLabel: 'Heartstrings (Strands)',
+    genreLabel: 'Heartstrings',
     accent: '#ed64a6',
     secondaryAccent: '#e53e3e',
     wallColor: '#fbe4ec',
@@ -271,7 +271,7 @@ export const ROOM_SPECS: readonly [RoomSpec, RoomSpec, RoomSpec, RoomSpec, RoomS
     title: 'Easter Garden',
     shortTitle: 'Easter',
     icon: '🐰',
-    genreLabel: 'Bunny Hops (Numbrix)',
+    genreLabel: 'Bunny Hops',
     accent: '#ecc94b',
     secondaryAccent: '#f687b3',
     wallColor: '#fefcbf',
@@ -293,7 +293,7 @@ export const ROOM_SPECS: readonly [RoomSpec, RoomSpec, RoomSpec, RoomSpec, RoomS
     title: 'Fourth of July Yard',
     shortTitle: 'Fourth of July',
     icon: '🎆',
-    genreLabel: 'Fireworks (Nonograms)',
+    genreLabel: 'Fireworks',
     accent: '#2b6cb0',
     secondaryAccent: '#e53e3e',
     wallColor: '#dce7f7',
@@ -481,6 +481,20 @@ export class GameState {
 
   isCenterpieceUnlocked(room: RoomSpec): boolean {
     return room.centerpiece.requiredItems.every((id) => this.placedItems.has(id));
+  }
+
+  /** Whether a room's puzzle type (Warm-up + Standard no-twist) is unlocked at the Calendar Desk. */
+  isDeskGenreUnlocked(room: RoomSpec): boolean {
+    return this.solvedRuns.has(room.warmup.id) || this.freePlayUnlocked;
+  }
+
+  /** Whether all holiday twists for a room's puzzle type are unlocked at the Calendar Desk. */
+  isDeskTwistsUnlocked(room: RoomSpec): boolean {
+    return this.solvedRuns.has(room.centerpiece.proto.id) || this.freePlayUnlocked;
+  }
+
+  unlockedDeskGenreCount(): number {
+    return ROOM_SPECS.filter((r) => this.isDeskGenreUnlocked(r)).length;
   }
 
   /** Items whose stray puzzle has been beaten, but not yet placed on their home pedestal. */

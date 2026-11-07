@@ -171,7 +171,7 @@ export const cobwebs = run({
   title: 'The Porch Cobwebs',
   room: 'Halloween',
   kind: 'warm-up',
-  from: "Spiderweb (Nikoli's Hashiwokakero, Tatham's Bridges), taught panel by panel as in The Witness",
+  from: 'Spiderweb, taught panel by panel',
   rules: `${CONTROLS} (Rules: a knot's number is how many threads leave it; threads run straight, one or two between a pair, never crossing; the web hangs together as one.)`,
   panels: WARMUP,
   mountPanel,

@@ -159,7 +159,7 @@ export const sparklers = run({
   title: 'Sparklers',
   room: 'Fourth of July',
   kind: 'warm-up',
-  from: 'Fireworks (nonograms), taught panel by panel as in The Witness',
+  from: 'Fireworks, taught panel by panel',
   rules: CONTROLS,
   panels: SPARKLERS,
   mountPanel,

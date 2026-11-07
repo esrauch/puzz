@@ -200,7 +200,7 @@ export const breadboard = run({
   title: 'The Bread Board',
   room: 'Thanksgiving',
   kind: 'warm-up',
-  from: "Carving (Nikoli's Shikaku, Tatham's Rectangles), taught panel by panel as in The Witness",
+  from: 'Carving, taught panel by panel',
   rules: `${CONTROLS} (Rules: carve the board into rectangles; each holds exactly one number, and the number is its size.)`,
   panels: WARMUP,
   mountPanel,
