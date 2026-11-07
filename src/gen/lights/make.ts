@@ -3,15 +3,7 @@
  * and holiday twist synthesizers.
  */
 import { Budget } from '../core/budget';
-import {
-  area,
-  frames,
-  inside as featureInside,
-  mirrorSquare,
-  offAxis,
-  segment,
-  symmetricIn,
-} from '../core/mirror';
+import { area, frames, inFrame, mirrorSquare, offAxis, segment } from '../core/mirror';
 import { type Rng, shuffle } from '../core/rng';
 import {
   DIRS,
@@ -27,7 +19,7 @@ import {
   key,
   parse,
 } from './model';
-import { light, wiresOf } from './rules';
+import { light, piecesSymmetricIn, wiresOf } from './rules';
 import { countSolutions } from './solve';
 
 /** Theme words with all distinct letters (so different letters always have different distances). */
@@ -472,10 +464,26 @@ export function randomSnowTree(
 
   const straddleCandsFor = (
     f: ReturnType<typeof frames>[number],
-  ): { B: Spot; D: Spot; L1: Spot; L2: Spot; mB: Spot; mL1: Spot }[] => {
-    const inFrame = (r: number, c: number): boolean =>
-      r >= f.top && r <= f.bottom && c >= f.left && c <= f.right;
-    const cands: { B: Spot; D: Spot; L1: Spot; L2: Spot; mB: Spot; mL1: Spot }[] = [];
+  ): {
+    B: Spot;
+    D: Spot;
+    L1: Spot;
+    L2: Spot;
+    mB: Spot;
+    mD: Spot;
+    mL1: Spot;
+    mL2: Spot;
+  }[] => {
+    const cands: {
+      B: Spot;
+      D: Spot;
+      L1: Spot;
+      L2: Spot;
+      mB: Spot;
+      mD: Spot;
+      mL1: Spot;
+      mL2: Spot;
+    }[] = [];
     for (let r = 0; r < H - 1; r++) {
       for (let c = 0; c < Wd - 1; c++) {
         const sq: Spot[] = [
@@ -486,27 +494,48 @@ export function randomSnowTree(
         ];
         if (!sq.every(([rr, cc]) => inside(rr, cc) && !(rr === plug[0] && cc === plug[1])))
           continue;
-        if (sq.filter(([rr, cc]) => inFrame(rr, cc)).length !== 2) continue;
+        if (sq.filter(([rr, cc]) => inFrame(f, rr, cc)).length !== 2) continue;
         for (const diag of [true, false]) {
           const c1 = diag ? (sq[0] as Spot) : (sq[1] as Spot);
           const c2 = diag ? (sq[3] as Spot) : (sq[2] as Spot);
           const o1 = diag ? (sq[1] as Spot) : (sq[0] as Spot);
           const o2 = diag ? (sq[2] as Spot) : (sq[3] as Spot);
-          const B = inFrame(...c1) ? c1 : c2;
-          const D = inFrame(...c1) ? c2 : c1;
-          const L1 = inFrame(...o1) ? o1 : o2;
-          const L2 = inFrame(...o1) ? o2 : o1;
-          if (!inFrame(...B) || inFrame(...D) || !inFrame(...L1) || inFrame(...L2)) continue;
+          const B = inFrame(f, ...c1) ? c1 : c2;
+          const D = inFrame(f, ...c1) ? c2 : c1;
+          const L1 = inFrame(f, ...o1) ? o1 : o2;
+          const L2 = inFrame(f, ...o1) ? o2 : o1;
+          if (!inFrame(f, ...B) || inFrame(f, ...D) || !inFrame(f, ...L1) || inFrame(f, ...L2))
+            continue;
           if (!isInterior(...B) || !isInterior(...D)) continue;
           const mB = mirrorSquare(f, B[0], B[1]);
+          const mD = mirrorSquare(f, D[0], D[1]);
           const mL1 = mirrorSquare(f, L1[0], L1[1]);
-          if (segment(...B, ...L1) === segment(...mB, ...mL1)) continue;
+          const mL2 = mirrorSquare(f, L2[0], L2[1]);
+          if (!inside(...mB) || !inside(...mD) || !inside(...mL1) || !inside(...mL2)) continue;
           if (mL1[0] === plug[0] && mL1[1] === plug[1]) continue;
-          cands.push({ B, D, L1, L2, mB, mL1 });
+          const all8 = new Set([B, D, L1, L2, mB, mD, mL1, mL2].map(([rr, cc]) => key(rr, cc)));
+          if (all8.size !== 8) continue;
+          cands.push({ B, D, L1, L2, mB, mD, mL1, mL2 });
         }
       }
     }
     return cands;
+  };
+
+  const maxDisjoint = (cands: ReturnType<typeof straddleCandsFor>, want: number): number => {
+    if (want <= 0 || cands.length === 0) return 0;
+    if (want === 1) return 1;
+    const sets = cands.map(
+      (c) => new Set([c.B, c.D, c.L1, c.L2, c.mB, c.mD, c.mL1, c.mL2].map((s) => key(...s))),
+    );
+    for (let i = 0; i < sets.length; i++) {
+      const a = sets[i] as Set<string>;
+      for (let j = i + 1; j < sets.length; j++) {
+        const b = sets[j] as Set<string>;
+        if ([...a].every((k) => !b.has(k))) return 2;
+      }
+    }
+    return 1;
   };
 
   const validFrames = shuffle(
@@ -528,19 +557,48 @@ export function randomSnowTree(
       return countIn >= 6 && countIn <= cells.length - 2;
     }),
   );
-  validFrames.sort(
-    (a, b) =>
-      Math.min(wantBlocks, straddleCandsFor(b).length) -
-        Math.min(wantBlocks, straddleCandsFor(a).length) || area(b) - area(a),
+  const frameScore = new Map(
+    validFrames.map((vf) => [vf, maxDisjoint(straddleCandsFor(vf), wantBlocks)]),
   );
-  const f = validFrames[Math.floor(random() * Math.min(validFrames.length, 6))];
+  validFrames.sort(
+    (a, b) => (frameScore.get(b) ?? 0) - (frameScore.get(a) ?? 0) || area(b) - area(a),
+  );
+  const topFrames = validFrames.filter(
+    (vf) => (frameScore.get(vf) ?? 0) === (frameScore.get(validFrames[0] as typeof vf) ?? 0),
+  );
+  const f = topFrames[Math.floor(random() * Math.min(topFrames.length, 8))];
   if (!f) return null;
 
-  const cands = wantBlocks > 0 ? shuffle(random, straddleCandsFor(f)) : [];
+  const rawCands = wantBlocks > 0 ? shuffle(random, straddleCandsFor(f)) : [];
+  // Order rawCands so a disjoint pair comes first when wantBlocks >= 2
+  const cands = [...rawCands];
+  if (wantBlocks >= 2 && cands.length >= 2) {
+    const sets = cands.map(
+      (c) => new Set([c.B, c.D, c.L1, c.L2, c.mB, c.mD, c.mL1, c.mL2].map((s) => key(...s))),
+    );
+    let foundPair: [number, number] | null = null;
+    for (let i = 0; i < sets.length && !foundPair; i++) {
+      const a = sets[i] as Set<string>;
+      for (let j = i + 1; j < sets.length; j++) {
+        const b = sets[j] as Set<string>;
+        if ([...a].every((k) => !b.has(k))) {
+          foundPair = [i, j];
+          break;
+        }
+      }
+    }
+    if (foundPair) {
+      const [i, j] = foundPair;
+      const first = cands[i] as (typeof cands)[number];
+      const second = cands[j] as (typeof cands)[number];
+      const rest = cands.filter((_, idx) => idx !== i && idx !== j);
+      cands.splice(0, cands.length, first, second, ...rest);
+    }
+  }
   const chosen: typeof cands = [];
   const usedKeys = new Set<string>();
   const leafSet = new Set<string>();
-  const hubSet = new Set<string>();
+  const hubCap = new Map<string, number>();
   const hubPairs: [Spot, Spot][] = [];
 
   for (const cand of cands) {
@@ -551,26 +609,45 @@ export function randomSnowTree(
       key(...cand.L1),
       key(...cand.L2),
       key(...cand.mB),
+      key(...cand.mD),
       key(...cand.mL1),
+      key(...cand.mL2),
     ];
     if (keys.some((k) => usedKeys.has(k))) continue;
-    const nextLeaves = new Set([...leafSet, key(...cand.L1), key(...cand.L2)]);
+    const nextLeaves = new Set([...leafSet, key(...cand.L1), key(...cand.L2), key(...cand.mL1)]);
     const nextHubs = [...chosen.flatMap((c) => [c.B, c.D]), cand.B, cand.D];
     const hubsOk = nextHubs.every(([hr, hc]) => {
       let ext = 0;
       for (const d of DIRS) {
         const nr = hr + (STEP[d] as Spot)[0];
         const nc = hc + (STEP[d] as Spot)[1];
-        if (inside(nr, nc) && !nextLeaves.has(key(nr, nc))) ext++;
+        if (!inside(nr, nc) || nextLeaves.has(key(nr, nc))) continue;
+        if (inFrame(f, hr, hc) || inFrame(f, nr, nc)) {
+          const [mhr, mhc] = mirrorSquare(f, hr, hc);
+          const [mnr, mnc] = mirrorSquare(f, nr, nc);
+          if (
+            !inside(mhr, mhc) ||
+            !inside(mnr, mnc) ||
+            nextLeaves.has(key(mhr, mhc)) ||
+            nextLeaves.has(key(mnr, mnc))
+          )
+            continue;
+        }
+        ext++;
       }
       return ext >= 2;
     });
     if (!hubsOk) continue;
     for (const k of keys) usedKeys.add(k);
     chosen.push(cand);
-    leafSet.add(key(...cand.L1)).add(key(...cand.L2));
-    hubSet.add(key(...cand.B)).add(key(...cand.D));
-    hubPairs.push([cand.B, cand.L1], [cand.D, cand.L2]);
+    leafSet
+      .add(key(...cand.L1))
+      .add(key(...cand.L2))
+      .add(key(...cand.mL1));
+    hubCap.set(key(...cand.B), 2);
+    hubCap.set(key(...cand.D), 2);
+    hubCap.set(key(...cand.mB), 3);
+    hubPairs.push([cand.B, cand.L2], [cand.D, cand.L1], [cand.mD, cand.mL1]);
   }
 
   const activeCells = cells.filter(([r, c]) => !leafSet.has(key(r, c)));
@@ -591,20 +668,21 @@ export function randomSnowTree(
     deg.set(key(...b), (deg.get(key(...b)) ?? 0) + 1);
   };
 
-  const preSegs = new Set<string>();
+  // Pre-link (mB, mL2) for each straddle block so mB mirrors B's leaf edge (B, L2) across the frame boundary
+  const seenSegs = new Set<string>();
   for (const cand of chosen) {
     const k1 = find(key(...cand.mB));
-    const k2 = find(key(...cand.mL1));
+    const k2 = find(key(...cand.mL2));
     if (k1 !== k2) {
       parent.set(k1, k2);
-      linkSpots(cand.mB, cand.mL1);
+      linkSpots(cand.mB, cand.mL2);
     }
-    preSegs.add(segment(...cand.B, ...cand.L1)).add(segment(...cand.mB, ...cand.mL1));
+    seenSegs.add(segment(...cand.B, ...cand.L2)).add(segment(...cand.mB, ...cand.mL2));
   }
 
-  // Collect edges inside `f` (grouped with their mirror image) and edges outside `f`
+  // Collect edges touching `f` (grouped with their mirror image so pieces inside `f` are truly symmetric)
+  // and edges strictly outside `f`
   const inEdges: [Spot, Spot, Spot, Spot][] = [];
-  const seenSegs = new Set<string>(preSegs);
   const outEdges: [Spot, Spot][] = [];
 
   for (const [r, c] of activeCells) {
@@ -613,12 +691,18 @@ export function randomSnowTree(
       const r2 = r + dr;
       const c2 = c + dc;
       if (!inside(r2, c2) || leafSet.has(key(r2, c2))) continue;
-      const seg = segment(r, c, r2, c2);
-      if (featureInside(f, seg)) {
+      if (inFrame(f, r, c) || inFrame(f, r2, c2)) {
+        const seg = segment(r, c, r2, c2);
         if (seenSegs.has(seg)) continue;
         const [mr1, mc1] = mirrorSquare(f, r, c);
         const [mr2, mc2] = mirrorSquare(f, r2, c2);
-        if (leafSet.has(key(mr1, mc1)) || leafSet.has(key(mr2, mc2))) continue;
+        if (
+          !inside(mr1, mc1) ||
+          !inside(mr2, mc2) ||
+          leafSet.has(key(mr1, mc1)) ||
+          leafSet.has(key(mr2, mc2))
+        )
+          continue;
         const mseg = segment(mr1, mc1, mr2, mc2);
         seenSegs.add(seg).add(mseg);
         inEdges.push([
@@ -636,22 +720,25 @@ export function randomSnowTree(
     }
   }
 
-  const canUse = (k: string, add = 1): boolean => !hubSet.has(k) || (deg.get(k) ?? 0) + add <= 2;
+  const canUse = (k: string, add = 1): boolean => {
+    const cap = hubCap.get(k);
+    return cap === undefined || (deg.get(k) ?? 0) + add <= cap;
+  };
 
   // First add mirrored edge pairs inside `f` (preferring hub edges and off-axis pairs first)
   const shuffledIn = shuffle(random, inEdges).sort((x, y) => {
     const xHub =
-      hubSet.has(key(...x[0])) ||
-      hubSet.has(key(...x[1])) ||
-      hubSet.has(key(...x[2])) ||
-      hubSet.has(key(...x[3]))
+      hubCap.has(key(...x[0])) ||
+      hubCap.has(key(...x[1])) ||
+      hubCap.has(key(...x[2])) ||
+      hubCap.has(key(...x[3]))
         ? 0
         : 1;
     const yHub =
-      hubSet.has(key(...y[0])) ||
-      hubSet.has(key(...y[1])) ||
-      hubSet.has(key(...y[2])) ||
-      hubSet.has(key(...y[3]))
+      hubCap.has(key(...y[0])) ||
+      hubCap.has(key(...y[1])) ||
+      hubCap.has(key(...y[2])) ||
+      hubCap.has(key(...y[3]))
         ? 0
         : 1;
     if (xHub !== yHub) return xHub - yHub;
@@ -694,8 +781,8 @@ export function randomSnowTree(
 
   // Now complete the spanning tree using edges outside `f`
   const sortedOut = shuffle(random, outEdges).sort((x, y) => {
-    const xHub = hubSet.has(key(...x[0])) || hubSet.has(key(...x[1])) ? 0 : 1;
-    const yHub = hubSet.has(key(...y[0])) || hubSet.has(key(...y[1])) ? 0 : 1;
+    const xHub = hubCap.has(key(...x[0])) || hubCap.has(key(...x[1])) ? 0 : 1;
+    const yHub = hubCap.has(key(...y[0])) || hubCap.has(key(...y[1])) ? 0 : 1;
     return xHub - yHub;
   });
 
@@ -710,8 +797,8 @@ export function randomSnowTree(
     linkSpots(a, b);
   }
 
-  for (const hk of hubSet) {
-    if ((deg.get(hk) ?? 0) !== 2) return null;
+  for (const [hk, cap] of hubCap) {
+    if ((deg.get(hk) ?? 0) !== cap) return null;
   }
 
   // Verify activeCells is a single connected tree
@@ -726,8 +813,9 @@ export function randomSnowTree(
   if (rows.some((row) => row.includes('0'))) return null;
 
   const p: Panel = { name: 'generated', rows, plug, frame: f };
-  const wires = wiresOf(parse(p).solution);
-  if (!symmetricIn(f, wires) || offAxis(f, wires) < 3) return null;
+  const b = parse(p);
+  const wires = wiresOf(b.solution);
+  if (!piecesSymmetricIn(f, b.solution) || offAxis(f, wires) < 3) return null;
   return p;
 }
 
@@ -769,10 +857,10 @@ export function colourTree(
     const m = b.solution[s[0]]?.[s[1]] ?? 0;
     for (const d of [E, S]) {
       if (m & d) {
-        // Don't cut an edge inside a snowflake frame, or the mirror symmetry would break
+        // Don't cut an edge touching a snowflake frame, or the mirror symmetry would break
         if (b.frame) {
           const [dr, dc] = STEP[d] as Spot;
-          if (featureInside(b.frame, segment(s[0], s[1], s[0] + dr, s[1] + dc))) continue;
+          if (inFrame(b.frame, s[0], s[1]) || inFrame(b.frame, s[0] + dr, s[1] + dc)) continue;
         }
         joins.push([s, d]);
       }

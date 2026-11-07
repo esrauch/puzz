@@ -27,9 +27,21 @@ export function loadSettings(): Settings {
 }
 
 export function saveSettings(settings: Settings): void {
+  cachedSettings = { ...settings };
   try {
     localStorage.setItem(KEY, JSON.stringify({ version: VERSION, ...settings }));
   } catch {
     // Storage unavailable: settings last for this session only.
   }
+}
+
+let cachedSettings: Settings | null = null;
+
+export function isSoundEnabled(): boolean {
+  cachedSettings ??= loadSettings();
+  return cachedSettings.volume > 0;
+}
+
+export function setSoundEnabled(enabled: boolean): void {
+  saveSettings({ volume: enabled ? 1 : 0 });
 }

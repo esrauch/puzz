@@ -3,8 +3,8 @@
  * budget capping, and early pruning for all holiday twists.
  */
 import { Budget } from '../core/budget';
-import { inside as featureInside, mirrorSquare, segment } from '../core/mirror';
-import { type Board, DIRS, N, OPP, S, STEP, type Spot, W, key } from './model';
+import { inFrame, mirrorSquare } from '../core/mirror';
+import { type Board, DIRS, N, OPP, STEP, type Spot, W, key, mirrorMask } from './model';
 import { type Rules, options, servings, solved } from './rules';
 
 /** Find up to `limit` answers (each the grid of pieces). */
@@ -45,6 +45,20 @@ export function solve(
       }),
     );
     if (kept.length < list.length) opts.set(k, kept);
+  }
+
+  // Snowflake symmetry filter: inside the frame, keep only orientations whose mirror is also valid
+  if (b.frame && !rules.noSnow) {
+    const f = b.frame;
+    for (const [r, c] of cells) {
+      if (!inFrame(f, r, c)) continue;
+      const [mr, mc] = mirrorSquare(f, r, c);
+      const mList = opts.get(key(mr, mc)) ?? [];
+      const k = key(r, c);
+      const list = opts.get(k) ?? [];
+      const kept = list.filter((m) => mList.includes(mirrorMask(m, f.axis)));
+      if (kept.length < list.length) opts.set(k, kept);
+    }
   }
 
   const grid = b.solution.map((row) => row.map((m) => (m < 0 ? -1 : -2))); // -2: undecided
@@ -102,32 +116,12 @@ export function solve(
       }
       if (!ok) continue;
 
-      if (b.frame && !rules.noSnow) {
-        for (const d of [N, W]) {
-          const [dr, dc] = STEP[d] as Spot;
-          const nr = r + dr;
-          const nc = c + dc;
-          const segKey = segment(r, c, nr, nc);
-          if (featureInside(b.frame, segKey)) {
-            const hasEdge = !!(m & d);
-            const [mr, mc] = mirrorSquare(b.frame, r, c);
-            const [mnr, mnc] = mirrorSquare(b.frame, nr, nc);
-            const mi = index.get(key(mr, mc));
-            const mni = index.get(key(mnr, mnc));
-            if (mi !== undefined && mni !== undefined && mi < i && mni < i) {
-              const mm = grid[mr]?.[mc] ?? -1;
-              const mnm = grid[mnr]?.[mnc] ?? -1;
-              const mdr = mnr - mr;
-              const mdc = mnc - mc;
-              const md = mdr === -1 ? N : mdr === 1 ? S : mdc === 1 ? DIRS[1] : (DIRS[3] as number);
-              const mirrorHasEdge =
-                mm >= 0 && mnm >= 0 && !!(mm & md) && !!(mnm & (OPP[md] as number));
-              if (hasEdge !== mirrorHasEdge) {
-                ok = false;
-                break;
-              }
-            }
-          }
+      if (b.frame && !rules.noSnow && inFrame(b.frame, r, c)) {
+        const [mr, mc] = mirrorSquare(b.frame, r, c);
+        const mi = index.get(key(mr, mc));
+        if (mi !== undefined && mi < i) {
+          const mm = grid[mr]?.[mc] ?? -1;
+          if (mm !== mirrorMask(m, b.frame.axis)) ok = false;
         }
       }
       if (!ok) continue;

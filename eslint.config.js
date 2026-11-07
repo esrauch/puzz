@@ -13,6 +13,8 @@ export default tseslint.config(
     rules: {
       // Parameters named with a leading underscore are intentionally unused.
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+      // Ban unbounded `while (true)` loops so searches and generators always have a cap.
+      'no-constant-condition': ['error', { checkLoops: 'all' }],
     },
   },
   {
@@ -22,7 +24,7 @@ export default tseslint.config(
     rules: { '@typescript-eslint/no-non-null-assertion': 'off' },
   },
   {
-    files: ['tools/**', 'vite.config.ts', 'eslint.config.js'],
+    files: ['tools/**', '.agents/**', 'vite.config.ts', 'eslint.config.js'],
     languageOptions: {
       globals: { ...globals.node },
     },

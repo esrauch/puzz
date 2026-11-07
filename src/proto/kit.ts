@@ -10,7 +10,7 @@ export interface Proto {
   title: string;
   /** The holiday room it's in (or "Tuesday" for the final puzzle). */
   room: string;
-  kind: 'warm-up' | 'stray' | 'centrepiece' | 'final' | 'workshop';
+  kind: 'warm-up' | 'stray' | 'centerpiece' | 'final' | 'workshop';
   /** The puzzle it grows from, and the twist. */
   from: string;
   /** How to play, briefly. */
@@ -95,9 +95,12 @@ export function bfs<S, M>(
   return null;
 }
 
+import { isSoundEnabled } from '../settings';
+
 let audio: AudioContext | null = null;
 /** A short blip (and a buzz on phones). */
 export function blip(freq: number, ms = 60, buzz = 0): void {
+  if (!isSoundEnabled()) return;
   try {
     audio ??= new AudioContext();
     const o = audio.createOscillator();

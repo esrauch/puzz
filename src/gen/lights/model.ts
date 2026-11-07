@@ -14,7 +14,7 @@
  *   white pieces can belong to either;
  * - fair shares / slices (Thanksgiving): pie slices with one serving each, no wires crossing slice walls.
  */
-import type { Frame } from '../core/mirror';
+import { type Frame, inFrame, mirrorSquare } from '../core/mirror';
 import { rng } from '../core/rng';
 
 export type Spot = [number, number];
@@ -39,6 +39,12 @@ export const OPP: Record<number, number> = {
 
 /** Turn a piece a quarter clockwise. */
 export const turn = (m: number): number => ((m << 1) | (m >> 3)) & 15;
+
+/** Reflect a piece mask across a vertical ('v': swap E/W) or horizontal ('h': swap N/S) axis. */
+export const mirrorMask = (m: number, axis: 'v' | 'h'): number =>
+  axis === 'v'
+    ? (m & (N | S)) | (m & E ? W : 0) | (m & W ? E : 0)
+    : (m & (E | W)) | (m & N ? S : 0) | (m & S ? N : 0);
 
 export interface Panel {
   name: string;
@@ -164,7 +170,7 @@ export function startGrid(panel: Panel): number[][] {
   let seed = 7;
   for (const ch of panel.name) seed = (seed * 31 + ch.charCodeAt(0)) >>> 0;
   const random = rng(seed);
-  return b.solution.map((row) =>
+  const out = b.solution.map((row) =>
     row.map((m) => {
       if (m < 0) return m;
       let x = m;
@@ -172,6 +178,21 @@ export function startGrid(panel: Panel): number[][] {
       return x;
     }),
   );
+  // Inside a snowflake frame, mirrored pairs start mirrored so coupled turns stay in sync.
+  if (b.frame) {
+    const f = b.frame;
+    for (let r = f.top; r <= f.bottom; r++) {
+      for (let c = f.left; c <= f.right; c++) {
+        if (!inFrame(f, r, c) || (out[r]?.[c] ?? -1) < 0) continue;
+        const [mr, mc] = mirrorSquare(f, r, c);
+        if (r > mr || (r === mr && c > mc)) {
+          const mm = out[mr]?.[mc] ?? -1;
+          if (mm >= 0) (out[r] as number[])[c] = mirrorMask(mm, f.axis);
+        }
+      }
+    }
+  }
+  return out;
 }
 
 /** A board shape, row by row ('#' a square, '.' none). */

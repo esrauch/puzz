@@ -69,7 +69,7 @@ const CARVING: Workshop = {
       id: 'letters',
       label: "Love Letters (Valentine's): some sizes are letters, with a message",
     },
-    { id: 'colours', label: 'Red, White and Blue (Fourth of July): same colours never touch' },
+    { id: 'colours', label: 'Red, White and Blue (Fourth of July): same colors never touch' },
     { id: 'cuts', label: 'Portions (Thanksgiving): fences no portion may cross' },
     {
       id: 'basket',
@@ -318,7 +318,7 @@ const WORDS: Workshop = {
     { id: 'letters', label: "Love Letters (Valentine's): some letters written as numbers" },
     {
       id: 'colours',
-      label: 'Red, White and Blue (Fourth of July): bows; same colours never touch',
+      label: 'Red, White and Blue (Fourth of July): bows; same colors never touch',
     },
     { id: 'eggs', label: 'Egg Hunt (Easter): a letter’s place in its word' },
     {
@@ -341,7 +341,7 @@ const HOPS: Workshop = {
   title: 'Hops workshop',
   from: 'Hops (Numbrix), generated in the browser, with any mix of twists',
   rules:
-    'Pick a difficulty and any twists, then Generate. Drag through neighbouring spots to lay the bunny’s trail; tap the bunny to step back.',
+    'Pick a difficulty and any twists, then Generate. Drag through neighboring spots to lay the bunny’s trail; tap the bunny to step back.',
   shapes: [
     { id: 'rect', label: 'Lawn (rectangle)' },
     { id: 'tree', label: 'Tree (★ Golden Egg at top)' },
@@ -351,7 +351,7 @@ const HOPS: Workshop = {
     {
       id: 'colours',
       label:
-        'Red, White and Blue (Fourth of July): two bunnies, each over its own colour; white goes to either',
+        'Red, White and Blue (Fourth of July): two bunnies, each over its own color; white goes to either',
     },
     { id: 'burrows', label: 'Egg Hunt (Easter): underground hops between burrows' },
     { id: 'snow', label: 'Snowflakes (Christmas): inside a frame, the trail mirrors' },
@@ -409,7 +409,7 @@ const PICTURES: Workshop = {
   title: 'Fireworks workshop',
   from: 'Fireworks (Nonograms), generated in the browser, with any mix of twists',
   rules:
-    'Pick a difficulty and any twists, then Generate. Tap to fill, cross out, or clear (or pick a paint in colour); drag along a row or column to paint a run.',
+    'Pick a difficulty and any twists, then Generate. Tap to fill, cross out, or clear (or pick a paint in color); drag along a row or column to paint a run.',
   twists: [
     { id: 'dark', label: 'Spooky (Halloween): some run clues hidden (?)' },
     {
@@ -418,7 +418,7 @@ const PICTURES: Workshop = {
     },
     {
       id: 'colours',
-      label: 'Red, White and Blue (Fourth of July): red and blue runs; different colours can touch',
+      label: 'Red, White and Blue (Fourth of July): red and blue runs; different colors can touch',
     },
     {
       id: 'eggs',

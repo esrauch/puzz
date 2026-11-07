@@ -5,6 +5,7 @@ import {
   countSolutions,
   light,
   parse,
+  piecesSymmetricIn,
   solved,
   startGrid,
   turn,
@@ -25,13 +26,22 @@ describe('Christmas lights run', () => {
     for (const p of [...EGG, ...PIE, ...TREE]) expect(problems(p, 2), p.name).toEqual([]);
   }, 120_000);
 
-  it('no panel starts solved', () => {
-    for (const p of all) expect(solved(parse(p), startGrid(p)), p.name).toBe(false);
+  it('no panel starts solved, and snowflake zones start mirrored', () => {
+    for (const p of all) {
+      const b = parse(p);
+      const g = startGrid(p);
+      expect(solved(b, g), p.name).toBe(false);
+      if (b.frame) {
+        expect(piecesSymmetricIn(b.frame, b.solution), p.name).toBe(true);
+        expect(piecesSymmetricIn(b.frame, g), p.name).toBe(true);
+      }
+    }
   });
 
-  it('the eggs and the servings matter', () => {
+  it('the eggs, servings, and snowflakes matter', () => {
     for (const p of EGG) expect(count(p, { noEggs: true }), p.name).toBe(2);
     for (const p of PIE) expect(count(p, { noServings: true }), p.name).toBe(2);
+    for (const p of TREE.slice(1)) expect(count(p, { noSnow: true }), p.name).toBe(2);
   });
 
   it('a wire pointing off the board is a loose end, and lights nothing off it', () => {

@@ -5,7 +5,7 @@
 import { Budget } from '../core/budget';
 import { area, offAxis } from '../core/mirror';
 import { DIRS, type Panel, STEP, type Spot, key, parse } from './model';
-import { type Rules, spell, wiresOf } from './rules';
+import { type Rules, piecesSymmetricIn, spell, wiresOf } from './rules';
 import { countSolutions, solve } from './solve';
 
 export type LightTwist = 'snow' | 'dark' | 'letters' | 'eggs' | 'colours' | 'slices';
@@ -99,6 +99,7 @@ export function problems(p: Panel, margin: number, budget = new Budget(500_000))
       out.push('the frame is too thin to read as a snowflake');
     if ((f.axis === 'v' ? w : h) % 2 !== 0)
       out.push('the mirror line runs through squares, not between them');
+    if (!piecesSymmetricIn(f, b.solution)) out.push('pieces inside the frame are not mirrored');
     if (offAxis(f, wires) < 3) out.push('too few wires in the frame');
   }
 

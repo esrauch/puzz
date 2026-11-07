@@ -1373,7 +1373,7 @@ export const mailbox = run({
   id: 'mailbox',
   title: 'The Valentine Mailbox',
   room: "Valentine's",
-  kind: 'centrepiece',
+  kind: 'centerpiece',
   from: "Heartstrings; Valentine's own Love Letters (the round-one Mailbox's cipher)",
   rules: `${CONTROLS} (Twist: some letters are written as numbers, the same number always the same letter; find a word through one and it's revealed everywhere, and in the key.)`,
   panels: MAILBOX,

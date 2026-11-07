@@ -18,6 +18,7 @@ import {
   parse,
   pieces,
   segmentsBetween,
+  solve,
   solved,
   totals,
   distances,
@@ -72,30 +73,6 @@ export function mountWeb(host: HTMLElement, panel: Panel, hooks: BoardHooks): ()
     userSelect: 'none',
     display: 'block',
   });
-  if (panel.frame) {
-    const legend = document.createElement('div');
-    const f = panel.frame;
-    const whole =
-      f.top === 0 && f.left === 0 && f.bottom === web.height - 1 && f.right === web.width - 1;
-    legend.textContent = whole
-      ? '❄ The joins mirror across the icy line (singles and doubles needn’t).'
-      : '❄ Inside the frosty frame, the threads are their own mirror image (singles and doubles needn’t match). Outside it, anything goes.';
-    Object.assign(legend.style, { fontSize: '16px', fontWeight: '600', margin: '0 0 8px' });
-    host.append(legend);
-  }
-  if (web.walls.size) {
-    const legend = document.createElement('div');
-    legend.textContent = 'No thread may cross a fence.';
-    Object.assign(legend.style, { fontSize: '16px', fontWeight: '600', margin: '0 0 8px' });
-    host.append(legend);
-  }
-  if (web.home !== undefined && web.eggs.length) {
-    const legend = document.createElement('div');
-    legend.textContent =
-      '🕷 is home. An egg’s number is how many threads it takes to reach it from home.';
-    Object.assign(legend.style, { fontSize: '16px', fontWeight: '600', margin: '0 0 8px' });
-    host.append(legend);
-  }
   // A message's blanks, as tiles above the web: each shows its number until the web is spun.
   const tiles = (text: string, isSolved: boolean): HTMLElement => {
     let at = 0;
@@ -142,6 +119,9 @@ export function mountWeb(host: HTMLElement, panel: Panel, hooks: BoardHooks): ()
   let picked: number | null = null;
   let drag: { from: number; x: number; y: number } | null = null;
   let done = false;
+  let cachedSol: number[] | null = null;
+  let lastPulledLink: number | null = null;
+  const prevMetKnots = new Set<number>();
 
   const flash = (keys: string[]): void => {
     keys.forEach((k) => flashing.add(k));
@@ -158,6 +138,7 @@ export function mountWeb(host: HTMLElement, panel: Panel, hooks: BoardHooks): ()
     const blocking = (web.crosses[i] ?? []).filter((j) => threads[j]);
     if (!threads[i] && blocking.length) return flash(blocking.map((j) => `l${j}`));
     threads[i] = ((threads[i] ?? 0) + 1) % 3;
+    lastPulledLink = threads[i] ? i : null;
     blip(threads[i] ? 520 + 140 * (threads[i] ?? 0) : 260, 50, 8);
     settle();
   };
@@ -321,6 +302,138 @@ export function mountWeb(host: HTMLElement, panel: Panel, hooks: BoardHooks): ()
     rubber = null;
   });
 
+  const launchWebCelebration = (): void => {
+    if (typeof requestAnimationFrame !== 'function') return;
+    const hop = distances(web, threads, web.home ?? 0);
+    const layer = document.createElementNS(NS, 'g');
+    layer.setAttribute('style', 'pointer-events: none');
+    svg.append(layer);
+
+    interface SilkGlint {
+      x1: number;
+      y1: number;
+      x2: number;
+      y2: number;
+      delay: number;
+      dur: number;
+      halo: SVGCircleElement;
+      core: SVGCircleElement;
+    }
+    interface DewSpark {
+      cx: number;
+      cy: number;
+      vx: number;
+      vy: number;
+      delay: number;
+      dur: number;
+      el: SVGCircleElement;
+    }
+    const glints: SilkGlint[] = [];
+    const dews: DewSpark[] = [];
+
+    web.links.forEach((l, i) => {
+      if (!threads[i]) return;
+      const ha = hop[l.a] ?? 0;
+      const hb = hop[l.b] ?? 0;
+      const [fromK, toK] = ha <= hb ? [l.a, l.b] : [l.b, l.a];
+      const [x1, y1] = centre(web.knots[fromK] as Knot);
+      const [x2, y2] = centre(web.knots[toK] as Knot);
+      const delay = Math.max(0, Math.min(ha, hb)) * 65;
+
+      const halo = document.createElementNS(NS, 'circle');
+      halo.setAttribute('r', String(cell * 0.14));
+      halo.setAttribute('fill', 'rgba(255, 213, 79, 0.45)');
+      halo.setAttribute('opacity', '0');
+      const core = document.createElementNS(NS, 'circle');
+      core.setAttribute('r', String(cell * 0.065));
+      core.setAttribute('fill', '#fffdf0');
+      core.setAttribute('opacity', '0');
+      layer.append(halo, core);
+      glints.push({ x1, y1, x2, y2, delay, dur: 420, halo, core });
+    });
+
+    web.knots.forEach((k, idx) => {
+      const [cx, cy] = centre(k);
+      const delay = Math.max(0, hop[idx] ?? 0) * 65 + 160;
+      for (let d = 0; d < 6; d++) {
+        const angle = (d / 6) * Math.PI * 2 + (idx % 2) * 0.4;
+        const speed = cell * 0.85;
+        const el = document.createElementNS(NS, 'circle');
+        el.setAttribute('r', String(cell * 0.055));
+        el.setAttribute('fill', d % 2 === 0 ? '#ffd54f' : '#fff8e1');
+        el.setAttribute('opacity', '0');
+        layer.append(el);
+        dews.push({
+          cx,
+          cy,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          delay,
+          dur: 460,
+          el,
+        });
+      }
+    });
+
+    const t0 = performance.now();
+    const tick = (now: number): void => {
+      if (!svg.isConnected) return;
+      if (!layer.isConnected) svg.append(layer);
+      const elapsed = now - t0;
+      let active = false;
+
+      for (const g of glints) {
+        const dt = elapsed - g.delay;
+        if (dt < 0) {
+          active = true;
+          continue;
+        }
+        if (dt > g.dur) {
+          g.halo.setAttribute('opacity', '0');
+          g.core.setAttribute('opacity', '0');
+          continue;
+        }
+        active = true;
+        const p = dt / g.dur;
+        const x = g.x1 + (g.x2 - g.x1) * p;
+        const y = g.y1 + (g.y2 - g.y1) * p;
+        const alpha = Math.sin(p * Math.PI);
+        g.halo.setAttribute('cx', String(x));
+        g.halo.setAttribute('cy', String(y));
+        g.halo.setAttribute('opacity', String(alpha * 0.85));
+        g.core.setAttribute('cx', String(x));
+        g.core.setAttribute('cy', String(y));
+        g.core.setAttribute('opacity', String(alpha));
+      }
+
+      for (const dw of dews) {
+        const dt = elapsed - dw.delay;
+        if (dt < 0) {
+          active = true;
+          continue;
+        }
+        if (dt > dw.dur) {
+          dw.el.setAttribute('opacity', '0');
+          continue;
+        }
+        active = true;
+        const p = dt / dw.dur;
+        const ease = 1 - (1 - p) * (1 - p);
+        const s = (ease * dw.dur) / 1000;
+        dw.el.setAttribute('cx', String(dw.cx + dw.vx * s));
+        dw.el.setAttribute('cy', String(dw.cy + dw.vy * s));
+        dw.el.setAttribute('opacity', String(1 - p));
+      }
+
+      if (active && elapsed < 1200) {
+        requestAnimationFrame(tick);
+      } else {
+        layer.remove();
+      }
+    };
+    requestAnimationFrame(tick);
+  };
+
   const settle = (): void => {
     render();
     if (solved(web, threads)) {
@@ -333,6 +446,7 @@ export function mountWeb(host: HTMLElement, panel: Panel, hooks: BoardHooks): ()
         note = filled;
       }
       render();
+      launchWebCelebration();
       [660, 880, 1100].forEach((f, i) => setTimeout(() => blip(f, 160), i * 110));
       navigator.vibrate?.([20, 40, 20]);
       hooks.solved(web, threads);
@@ -486,6 +600,7 @@ export function mountWeb(host: HTMLElement, panel: Panel, hooks: BoardHooks): ()
             },
             '✕',
           );
+    const solveHop = done ? distances(web, threads, web.home ?? 0) : [];
     web.links.forEach((l: Link, i) => {
       const n = threads[i] ?? 0;
       if (!n) return;
@@ -501,17 +616,38 @@ export function mountWeb(host: HTMLElement, panel: Panel, hooks: BoardHooks): ()
             : split
               ? (PIECE_COLOURS[(piece[l.a] ?? 0) % PIECE_COLOURS.length] as string)
               : '#e8e4f0';
-      for (const o of n === 1 ? [0] : [-1, 1])
-        add('line', {
+      const hopDelay = Math.max(0, Math.min(solveHop[l.a] ?? 0, solveHop[l.b] ?? 0)) * 65;
+      const isJustPulled = !done && lastPulledLink === i;
+      const isFlashingLink = flashing.has(`l${i}`);
+      for (const o of n === 1 ? [0] : [-1, 1]) {
+        const lineEl = add('line', {
           x1: x1 + px * o,
           y1: y1 + py * o,
           x2: x2 + px * o,
           y2: y2 + py * o,
           stroke: colour,
-          'stroke-width': 3,
+          'stroke-width': done ? 3.5 : 3,
           'stroke-linecap': 'round',
         });
+        if (done) {
+          lineEl.setAttribute(
+            'style',
+            `transform-box: fill-box; transform-origin: center; animation: puzz-web-gold-pulse 0.55s cubic-bezier(0.22, 1.35, 0.36, 1) ${hopDelay}ms both;`,
+          );
+        } else if (isFlashingLink) {
+          lineEl.setAttribute(
+            'style',
+            'transform-box: fill-box; transform-origin: center; animation: puzz-error-shake 0.28s ease-in-out both;',
+          );
+        } else if (isJustPulled) {
+          lineEl.setAttribute(
+            'style',
+            'transform-box: fill-box; transform-origin: center; animation: puzz-tap-pop 0.18s cubic-bezier(0.22, 1.5, 0.36, 1) both;',
+          );
+        }
+      }
     });
+    lastPulledLink = null;
     const r = cell * 0.34;
     web.knots.forEach((k, i) => {
       const [x, y] = centre(k);
@@ -520,6 +656,9 @@ export function mountWeb(host: HTMLElement, panel: Panel, hooks: BoardHooks): ()
         (k.clue.kind === 'count' && have > k.clue.n) ||
         (web.ends !== undefined && (deg[i] ?? 0) > (web.ends.includes(i) ? 1 : 2));
       const met = k.clue.kind === 'count' && have === k.clue.n;
+      const justMet = !done && met && !prevMetKnots.has(i);
+      if (met) prevMetKnots.add(i);
+      else prevMetKnots.delete(i);
       const bad = over || flashing.has(`k${i}`) || (lettersBad && k.clue.kind === 'letter');
       const fill = k.colour
         ? k.colour === 'r'
@@ -532,14 +671,39 @@ export function mountWeb(host: HTMLElement, panel: Panel, hooks: BoardHooks): ()
           : done || met
             ? '#7ed37e'
             : '#f4f1ea';
-      add('circle', {
+      const knotCircle = add('circle', {
         cx: x,
         cy: y,
         r,
         fill,
-        stroke: bad ? '#ff5a4f' : picked === i ? '#ffcf6b' : met || done ? '#b8ffb0' : '#8a8596',
+        stroke: bad
+          ? '#ff5a4f'
+          : picked === i
+            ? '#ffcf6b'
+            : done
+              ? '#ffd54f'
+              : met
+                ? '#b8ffb0'
+                : '#8a8596',
         'stroke-width': bad || picked === i || met || done ? 4 : 1.5,
       });
+      if (done) {
+        const knotDelay = Math.max(0, solveHop[i] ?? 0) * 65;
+        knotCircle.setAttribute(
+          'style',
+          `transform-box: fill-box; transform-origin: center; animation: puzz-web-gold-pulse 0.52s cubic-bezier(0.22, 1.35, 0.36, 1) ${knotDelay}ms both;`,
+        );
+      } else if (flashing.has(`k${i}`) || over) {
+        knotCircle.setAttribute(
+          'style',
+          'transform-box: fill-box; transform-origin: center; animation: puzz-error-shake 0.28s ease-in-out both;',
+        );
+      } else if (justMet) {
+        knotCircle.setAttribute(
+          'style',
+          'transform-box: fill-box; transform-origin: center; animation: puzz-clue-met 0.32s cubic-bezier(0.22, 1.45, 0.36, 1) both;',
+        );
+      }
       const ink = k.colour || k.clue.kind === 'dark' ? '#fff' : '#23202b';
       const label =
         k.clue.kind === 'count' ? String(k.clue.n) : k.clue.kind === 'letter' ? k.clue.letter : '';
@@ -590,11 +754,17 @@ export function mountWeb(host: HTMLElement, panel: Panel, hooks: BoardHooks): ()
     // The spider's home, numbered eggs (green when the threads put them that far from home), and edge flags.
     if (web.home !== undefined) {
       const [hx, hy] = centre(web.knots[web.home] as Knot);
-      add(
+      const spiderEl = add(
         'text',
         { x: hx - r * 0.95, y: hy - r * 0.55, 'font-size': r * 0.9, 'text-anchor': 'middle' },
         '🕷',
       );
+      if (done) {
+        spiderEl.setAttribute(
+          'style',
+          'transform-box: fill-box; transform-origin: center; animation: puzz-icon-bounce 0.55s ease-out 0.1s 2;',
+        );
+      }
     }
     if (web.eggs.length) {
       const d = web.home === undefined ? [] : distances(web, threads, web.home);
@@ -723,6 +893,33 @@ export function mountWeb(host: HTMLElement, panel: Panel, hooks: BoardHooks): ()
                 : '',
     );
   };
+  const giveHint = (): void => {
+    if (done) return;
+    cachedSol ??= solve(web, 1)[0] ?? null;
+    if (!cachedSol) return;
+
+    // 1. If any bridge has too many strands or shouldn't exist, fix/remove one wrong bridge
+    const wrongIdx = threads.findIndex((t, i) => t > (cachedSol?.[i] ?? 0));
+    if (wrongIdx !== -1) {
+      const link = web.links[wrongIdx];
+      threads[wrongIdx] = cachedSol[wrongIdx] ?? 0;
+      if (link) flash([`k${link.a}`, `k${link.b}`]);
+      settle();
+      return;
+    }
+
+    // 2. Otherwise add 1 missing strand from the solution
+    const missingIdx = threads.findIndex((t, i) => t < (cachedSol?.[i] ?? 0));
+    if (missingIdx !== -1) {
+      const link = web.links[missingIdx];
+      threads[missingIdx] = (threads[missingIdx] ?? 0) + 1;
+      blip(640, 70, 10);
+      if (link) flash([`k${link.a}`, `k${link.b}`]);
+      settle();
+    }
+  };
+  host.addEventListener('puzz:hint', giveHint);
+
   render();
   return () => ({
     done,

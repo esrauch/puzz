@@ -17,8 +17,10 @@ import {
   firstVisits,
   key,
   parse,
+  solve,
   solved,
   spell,
+  splitRoutes,
   trailSegments,
 } from './hops';
 import { blip, h } from './kit';
@@ -61,41 +63,10 @@ export function mountHops(host: HTMLElement, panel: Panel, hooks: HopsHooks): ()
   let active: 'r' | 'b' | null = null;
   let lastBunny: 'r' | 'b' = 'r';
   let done = false;
+  let lastHoppedSpot: number | null = null;
   const flashing = new Set<number>();
-
-  // Twist legends above the board
-  const rules: string[] = [];
-  if (b.frame) {
-    rules.push(
-      '❄ Inside the frosty frame, the trail’s strokes mirror across the icy line. Outside it, anything goes.',
-    );
-  }
-  if (panel.portions) {
-    rules.push('Courses: finish every square of an outlined portion before hopping into the next.');
-  }
-  if (b.twoBunnies) {
-    rules.push(
-      `Two bunnies: the red bunny visits every red square, the ${secTone === 'g' ? 'green' : 'blue'} bunny every ${secTone === 'g' ? 'green' : 'blue'} square, and white squares go to either.`,
-    );
-  }
-  if (b.burrows.length) {
-    rules.push('Burrows: matching holes are joined underground — hop into one and out the other.');
-  }
-  if (b.dark.some(Boolean)) {
-    rules.push(
-      'The dark: shadowed squares (?) may be lawn or rock; the last egg gives the route’s length.',
-    );
-  }
-  for (const text of rules) {
-    const line = h(
-      'div',
-      {
-        style: { fontSize: '15px', fontWeight: '600', margin: '0 0 6px' },
-      },
-      text,
-    );
-    host.append(line);
-  }
+  let cachedSol: number[] | null = null;
+  const hintOwner = new Map<number, 'r' | 'b'>();
 
   // Message blank tiles for Valentine's letters twist
   const note = b.blanks.length ? h('div', { style: { margin: '0 0 8px' } }) : null;
@@ -220,6 +191,7 @@ export function mountHops(host: HTMLElement, panel: Panel, hooks: HopsHooks): ()
       active = neighborBunny;
       lastBunny = neighborBunny;
       routes[neighborBunny].push(i);
+      lastHoppedSpot = i;
       blip(500 + routes[neighborBunny].length * 12, 30, 6);
     }
     try {
@@ -246,6 +218,7 @@ export function mountHops(host: HTMLElement, panel: Panel, hooks: HopsHooks): ()
         return;
       }
       route.push(j);
+      lastHoppedSpot = j;
     } else {
       return;
     }
@@ -270,6 +243,132 @@ export function mountHops(host: HTMLElement, panel: Panel, hooks: HopsHooks): ()
   svg.addEventListener('pointerup', release);
   svg.addEventListener('pointercancel', release);
 
+  const launchHopsCelebration = (): void => {
+    if (typeof requestAnimationFrame !== 'function') return;
+    const layer = document.createElementNS(NS, 'g');
+    layer.setAttribute('style', 'pointer-events: none');
+    svg.append(layer);
+
+    interface Bloom {
+      x: number;
+      y: number;
+      delay: number;
+      dur: number;
+      el: SVGTextElement;
+    }
+    interface Runner {
+      pts: [number, number][];
+      dur: number;
+      halo: SVGCircleElement;
+      core: SVGCircleElement;
+    }
+    const blooms: Bloom[] = [];
+    const runners: Runner[] = [];
+    const FLOWER_GLYPHS = ['✿', '❀', '✦'];
+    const FLOWER_COLOURS = ['#f48fb1', '#ffd54f', '#ce93d8', '#81c784'];
+
+    for (const [, path] of [
+      ['r', routes.r],
+      ['b', routes.b],
+    ] as const) {
+      if (path.length < 2) continue;
+      const pts: [number, number][] = path.map((idx) => {
+        const [r, c] = b.spots[idx] as Spot;
+        return [c * cell + cell / 2, r * cell + cell / 2];
+      });
+      const halo = document.createElementNS(NS, 'circle');
+      halo.setAttribute('r', String(cell * 0.16));
+      halo.setAttribute('fill', 'rgba(255, 213, 79, 0.5)');
+      halo.setAttribute('opacity', '0');
+      const core = document.createElementNS(NS, 'circle');
+      core.setAttribute('r', String(cell * 0.08));
+      core.setAttribute('fill', '#fffdf0');
+      core.setAttribute('opacity', '0');
+      layer.append(halo, core);
+      runners.push({ pts, dur: Math.min(820, Math.max(420, path.length * 28)), halo, core });
+
+      path.forEach((spotIdx, stepIdx) => {
+        if (stepIdx % 2 !== 0 && stepIdx !== path.length - 1) return;
+        const [r, c] = b.spots[spotIdx] as Spot;
+        const fx = c * cell + (stepIdx % 4 === 0 ? cell * 0.22 : cell * 0.78);
+        const fy = r * cell + cell * 0.28;
+        const el = document.createElementNS(NS, 'text');
+        el.textContent = FLOWER_GLYPHS[stepIdx % FLOWER_GLYPHS.length] ?? '✿';
+        el.setAttribute('x', String(fx));
+        el.setAttribute('y', String(fy));
+        el.setAttribute('text-anchor', 'middle');
+        el.setAttribute('font-size', String(cell * 0.26));
+        el.setAttribute('fill', FLOWER_COLOURS[stepIdx % FLOWER_COLOURS.length] ?? '#f48fb1');
+        el.setAttribute('opacity', '0');
+        layer.append(el);
+        blooms.push({
+          x: fx,
+          y: fy,
+          delay: stepIdx * 26,
+          dur: 640,
+          el,
+        });
+      });
+    }
+
+    const t0 = performance.now();
+    const tick = (now: number): void => {
+      if (!svg.isConnected) return;
+      if (!layer.isConnected) svg.append(layer);
+      const elapsed = now - t0;
+      let active = false;
+
+      for (const rn of runners) {
+        if (elapsed > rn.dur) {
+          rn.halo.setAttribute('opacity', '0');
+          rn.core.setAttribute('opacity', '0');
+          continue;
+        }
+        active = true;
+        const p = elapsed / rn.dur;
+        const totalSegs = rn.pts.length - 1;
+        const exact = p * totalSegs;
+        const seg = Math.min(totalSegs - 1, Math.floor(exact));
+        const frac = exact - seg;
+        const p1 = rn.pts[seg] ?? [0, 0];
+        const p2 = rn.pts[seg + 1] ?? p1;
+        const x = p1[0] + (p2[0] - p1[0]) * frac;
+        const y = p1[1] + (p2[1] - p1[1]) * frac;
+        const alpha = Math.sin(p * Math.PI);
+        rn.halo.setAttribute('cx', String(x));
+        rn.halo.setAttribute('cy', String(y));
+        rn.halo.setAttribute('opacity', String(alpha * 0.9));
+        rn.core.setAttribute('cx', String(x));
+        rn.core.setAttribute('cy', String(y));
+        rn.core.setAttribute('opacity', String(alpha));
+      }
+
+      for (const bl of blooms) {
+        const dt = elapsed - bl.delay;
+        if (dt < 0) {
+          active = true;
+          continue;
+        }
+        if (dt > bl.dur) {
+          bl.el.setAttribute('opacity', '0');
+          continue;
+        }
+        active = true;
+        const p = dt / bl.dur;
+        const alpha = p < 0.25 ? p / 0.25 : 1 - (p - 0.25) / 0.75;
+        bl.el.setAttribute('y', String(bl.y - p * cell * 0.18));
+        bl.el.setAttribute('opacity', String(alpha * 0.95));
+      }
+
+      if (active && elapsed < 1250) {
+        requestAnimationFrame(tick);
+      } else {
+        layer.remove();
+      }
+    };
+    requestAnimationFrame(tick);
+  };
+
   const settle = (): void => {
     const full = combinedRoute();
     if (solved(b, full)) {
@@ -278,6 +377,7 @@ export function mountHops(host: HTMLElement, panel: Panel, hooks: HopsHooks): ()
       navigator.vibrate?.([20, 40, 20]);
       drawNote();
       render();
+      launchHopsCelebration();
       hooks.solved();
     } else {
       drawNote();
@@ -333,16 +433,33 @@ export function mountHops(host: HTMLElement, panel: Panel, hooks: HopsHooks): ()
               ? (TINT[col] ?? '#e3f2d9')
               : '#e3f2d9';
       const stroke = flash ? '#d32f2f' : inDark && !done ? '#7e7894' : col ? '#d8d0c5' : 'none';
-      add('rect', {
+      const lawnRect = add('rect', {
         x: c * cell + 2,
         y: r * cell + 2,
         width: cell - 4,
         height: cell - 4,
         rx: 8,
         fill,
-        stroke,
-        'stroke-width': flash ? 3 : 1.5,
+        stroke: done && visitedSet.has(i) ? '#8bc34a' : stroke,
+        'stroke-width': flash ? 3 : done && visitedSet.has(i) ? 2 : 1.5,
       });
+      if (done && visitedSet.has(i)) {
+        const delay = ((stepNumber.get(i) ?? 1) - 1) * 26;
+        lawnRect.setAttribute(
+          'style',
+          `transform-box: fill-box; transform-origin: center; animation: puzz-hop-ripple 0.45s cubic-bezier(0.22, 1.35, 0.36, 1) ${delay}ms both;`,
+        );
+      } else if (!done && flash) {
+        lawnRect.setAttribute(
+          'style',
+          'transform-box: fill-box; transform-origin: center; animation: puzz-error-shake 0.26s ease-in-out both;',
+        );
+      } else if (!done && lastHoppedSpot === i) {
+        lawnRect.setAttribute(
+          'style',
+          'transform-box: fill-box; transform-origin: center; animation: puzz-tap-pop 0.16s cubic-bezier(0.22, 1.5, 0.36, 1) both;',
+        );
+      }
       if (inDark && !done && !visitedSet.has(i)) {
         add(
           'text',
@@ -523,7 +640,8 @@ export function mountHops(host: HTMLElement, panel: Panel, hooks: HopsHooks): ()
 
       if (g !== undefined || letter !== undefined) {
         const gold = panel.golden && key(panel.golden) === key(s);
-        const eggTone: 'r' | 'b' = b.twoBunnies && b.colour[i] === secTone ? 'b' : 'r';
+        const eggTone: 'r' | 'b' =
+          hintOwner.get(i) ?? (b.twoBunnies && b.colour[i] === secTone ? 'b' : 'r');
         const myRoute = routes[eggTone];
         const byMe = !b.twoBunnies || owner(i) === eggTone;
         const late = g !== undefined && n === undefined && myRoute.length >= g;
@@ -534,14 +652,14 @@ export function mountHops(host: HTMLElement, panel: Panel, hooks: HopsHooks): ()
           (g !== undefined && byMe && n === g) ||
           (letter !== undefined && n !== undefined && owner(i) === 'r' && blankSteps.has(n));
         const strokeCol = b.twoBunnies
-          ? b.colour[i] === secTone
+          ? eggTone === 'b'
             ? TRAIL[secTone]
             : '#d9534f'
           : gold
             ? '#c9a227'
             : '#b89a6a';
 
-        add('ellipse', {
+        const eggEl = add('ellipse', {
           cx: x,
           cy: y,
           rx: cell * 0.27,
@@ -551,7 +669,7 @@ export function mountHops(host: HTMLElement, panel: Panel, hooks: HopsHooks): ()
           stroke: strokeCol,
           'stroke-width': 2.2,
         });
-        add(
+        const eggText = add(
           'text',
           {
             x,
@@ -563,6 +681,18 @@ export function mountHops(host: HTMLElement, panel: Panel, hooks: HopsHooks): ()
           },
           letter ?? String(g),
         );
+        if (done) {
+          const delay = ((stepNumber.get(i) ?? 1) - 1) * 26;
+          const anim = `transform-box: fill-box; transform-origin: center; animation: puzz-icon-bounce 0.5s ease-out ${delay}ms both;`;
+          eggEl.setAttribute('style', anim);
+          eggText.setAttribute('style', anim);
+        } else if (lastHoppedSpot === i && (right || wrong)) {
+          const anim = right
+            ? 'transform-box: fill-box; transform-origin: center; animation: puzz-clue-met 0.3s cubic-bezier(0.22, 1.45, 0.36, 1) both;'
+            : 'transform-box: fill-box; transform-origin: center; animation: puzz-error-shake 0.26s ease-in-out both;';
+          eggEl.setAttribute('style', anim);
+          eggText.setAttribute('style', anim);
+        }
       } else if (n !== undefined) {
         add(
           'text',
@@ -579,7 +709,7 @@ export function mountHops(host: HTMLElement, panel: Panel, hooks: HopsHooks): ()
       }
 
       if (isBunny) {
-        add(
+        const bunnyEl = add(
           'text',
           {
             x: x + cell * 0.26,
@@ -589,6 +719,12 @@ export function mountHops(host: HTMLElement, panel: Panel, hooks: HopsHooks): ()
           },
           '🐇',
         );
+        if (done) {
+          bunnyEl.setAttribute(
+            'style',
+            'transform-box: fill-box; transform-origin: center; animation: puzz-icon-bounce 0.48s ease-out 0.12s 2;',
+          );
+        }
       }
     });
 
@@ -651,7 +787,89 @@ export function mountHops(host: HTMLElement, panel: Panel, hooks: HopsHooks): ()
           ? `${left} hop${left === 1 ? '' : 's'} left`
           : 'Check your route — a clue or rule isn’t met yet',
     );
+    lastHoppedSpot = null;
   };
+
+  const giveHint = (): void => {
+    if (done) return;
+    cachedSol ??= solve(b, 1)[0] ?? null;
+    if (!cachedSol) return;
+    const [solR, solB] = splitRoutes(b, cachedSol);
+    const canStamp = (spot: number | undefined): spot is number =>
+      spot !== undefined && !b.given.has(spot) && !b.letterAt.has(spot);
+
+    const stampEgg = (spot: number, stepNum: number, bunny: 'r' | 'b'): void => {
+      b.given.set(spot, stepNum);
+      hintOwner.set(spot, bunny);
+      if (b.dark[spot]) b.dark[spot] = false;
+      blip(660, 70, 10);
+      flashSpots([spot]);
+    };
+
+    // 1. Check if either bunny's current route has diverged from the solution
+    const bunnies: [number[], number[], 'r' | 'b'][] = b.twoBunnies
+      ? [
+          [routes.r, solR, 'r'],
+          [routes.b, solB, 'b'],
+        ]
+      : [[routes.r, solR, 'r']];
+
+    for (const [userRoute, solRoute, bunny] of bunnies) {
+      const divIdx = userRoute.findIndex((s, idx) => s !== solRoute[idx]);
+      if (divIdx !== -1) {
+        // Prefer stamping the true spot at the first divergence step
+        const trueSpot = solRoute[divIdx];
+        if (canStamp(trueSpot)) {
+          stampEgg(trueSpot, divIdx + 1, bunny);
+          return;
+        }
+        // Otherwise check if the wrong square the player stepped on can be stamped with its true step
+        const wrongSpot = userRoute[divIdx];
+        if (canStamp(wrongSpot)) {
+          const inR = solR.indexOf(wrongSpot);
+          if (inR !== -1) {
+            stampEgg(wrongSpot, inR + 1, 'r');
+            return;
+          }
+          const inB = solB.indexOf(wrongSpot);
+          if (inB !== -1) {
+            stampEgg(wrongSpot, inB + 1, 'b');
+            return;
+          }
+        }
+        // Otherwise stamp the next available un-egged spot along the solution from divIdx
+        for (let k = divIdx; k < solRoute.length; k++) {
+          const cand = solRoute[k];
+          if (canStamp(cand)) {
+            stampEgg(cand, k + 1, bunny);
+            return;
+          }
+        }
+      }
+    }
+
+    // 2. Path is on track so far: stamp an un-egged spot a couple steps ahead of the bunny's tip
+    const orderedBunnies = b.twoBunnies && lastBunny === 'b' ? [...bunnies].reverse() : bunnies;
+    for (const [userRoute, solRoute, bunny] of orderedBunnies) {
+      if (!userRoute || !solRoute) continue;
+      const aheadIdx = Math.min(solRoute.length - 1, userRoute.length + 1);
+      for (let k = aheadIdx; k < solRoute.length; k++) {
+        const cand = solRoute[k];
+        if (canStamp(cand)) {
+          stampEgg(cand, k + 1, bunny);
+          return;
+        }
+      }
+      for (let k = userRoute.length; k < aheadIdx; k++) {
+        const cand = solRoute[k];
+        if (canStamp(cand)) {
+          stampEgg(cand, k + 1, bunny);
+          return;
+        }
+      }
+    }
+  };
+  host.addEventListener('puzz:hint', giveHint);
 
   drawNote();
   render();

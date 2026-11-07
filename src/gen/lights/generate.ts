@@ -89,11 +89,7 @@ function makePanel(spec: Spec<LightTwist>, seed: number, why: Rejections): Made<
       ? makePieSlices(H, W, shape.slices, random, hasEggsOrLetters, boardShape)
       : undefined;
     const mid = Math.floor(W / 2);
-    const rawPlug: Spot = pie
-      ? pie.plug
-      : twists.has('snow') && spec.shape !== 'tree' && boardShape[Math.floor(H / 2)]?.[mid] === '#'
-        ? [Math.floor(H / 2), mid]
-        : [H - 1, mid];
+    const rawPlug: Spot = pie ? pie.plug : [H - 1, mid];
     const plug: Spot =
       boardShape[rawPlug[0]]?.[rawPlug[1]] === '#'
         ? rawPlug

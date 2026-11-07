@@ -40,46 +40,30 @@ export function mountStrands(host: HTMLElement, panel: Panel, hooks: StrandsHook
   const code = panel.code ?? '';
   let path: Spot[] = [];
   let shake = 0;
+  let hintedWord: number | null = null;
+  let lastFoundWord: number | null = null;
 
   const top = document.createElement('div');
   Object.assign(top.style, { margin: '0 0 6px' });
   const theme = document.createElement('div');
   theme.textContent = `Theme: ${panel.theme}`;
-  Object.assign(theme.style, { fontSize: '18px', fontWeight: '700' });
+  Object.assign(theme.style, { fontSize: '15px', fontWeight: '700' });
   const building = document.createElement('div');
   Object.assign(building.style, {
-    minHeight: '34px',
-    fontSize: '26px',
+    minHeight: '30px',
+    fontSize: '24px',
     fontWeight: '800',
     letterSpacing: '3px',
     color: '#7a1f3d',
   });
   const keyLine = document.createElement('div');
   Object.assign(keyLine.style, {
-    fontSize: '16px',
+    fontSize: '14.5px',
     margin: '2px 0',
     fontWeight: '600',
     color: '#5a4a52',
   });
-  // The twists' rules, a line each.
-  const rules: string[] = [];
-  if (panel.frame)
-    rules.push(
-      '❄ Inside the frosty frame, words come in mirror pairs: each word’s squares mirror another word’s, its letters in a different order. No word crosses the frame.',
-    );
-  if (panel.bows) rules.push('A bow shows its word’s colour; two words of one colour never touch.');
-  if (panel.portions)
-    rules.push('No word crosses a fence; each portion holds the same number of words.');
-  if (panel.walls?.length)
-    rules.push('No word steps across a fence (or diagonally through its corner).');
-  if (panel.eggs?.length) rules.push('An egg’s number is its letter’s place in its word.');
-  const ruleLines = rules.map((text) => {
-    const line = document.createElement('div');
-    line.textContent = text;
-    Object.assign(line.style, { fontSize: '15px', fontWeight: '600', margin: '2px 0' });
-    return line;
-  });
-  top.append(theme, ...ruleLines, keyLine, building);
+  top.append(theme, keyLine, building);
   const svg = document.createElementNS(NS, 'svg');
   svg.setAttribute('width', String(W));
   svg.setAttribute('height', String(Hpx));
@@ -90,10 +74,15 @@ export function mountStrands(host: HTMLElement, panel: Panel, hooks: StrandsHook
   /** Squares in found words. */
   const foundCells = (): Set<string> =>
     new Set([...found].flatMap((i) => (panel.words[i]?.cells ?? []).map(key)));
+  /** Squares in the currently hinted word. */
+  const hintedCells = (): Set<string> =>
+    hintedWord !== null && !found.has(hintedWord)
+      ? new Set((panel.words[hintedWord]?.cells ?? []).map(key))
+      : new Set<string>();
   /** Coded letters revealed (by a found word through one). */
   const revealed = (): Set<string> => {
     const out = new Set<string>();
-    for (const k of foundCells()) {
+    for (const k of [...foundCells(), ...hintedCells()]) {
       const [r, c] = k.split(',').map(Number) as Spot;
       out.add(letterAt(panel, [r, c]));
     }
@@ -102,8 +91,8 @@ export function mountStrands(host: HTMLElement, panel: Panel, hooks: StrandsHook
   /** What a square shows: its letter, a blank in the dark, or its code number. */
   const shown = (s: Spot): string => {
     const letter = letterAt(panel, s);
-    const isFound = foundCells().has(key(s));
-    if (dark.has(key(s)) && !isFound) return '?';
+    const isFoundOrHinted = foundCells().has(key(s)) || hintedCells().has(key(s));
+    if (dark.has(key(key(s) ? s : s)) && !isFoundOrHinted) return '?';
     const n = code.indexOf(letter);
     if (n >= 0 && !revealed().has(letter)) return String(n + 1);
     return letter;
@@ -151,17 +140,104 @@ export function mountStrands(host: HTMLElement, panel: Panel, hooks: StrandsHook
     blip(600 + path.length * 40, 20);
     render();
   });
+  const launchStrandsCelebration = (): void => {
+    if (typeof requestAnimationFrame !== 'function') return;
+    const layer = document.createElementNS(NS, 'g');
+    layer.setAttribute('style', 'pointer-events: none');
+    svg.append(layer);
+
+    interface HeartFloat {
+      cx: number;
+      cy: number;
+      amp: number;
+      freq: number;
+      phase: number;
+      rise: number;
+      delay: number;
+      dur: number;
+      el: SVGTextElement;
+    }
+    const floats: HeartFloat[] = [];
+    const HEART_TONES = ['#e91e63', '#ff5252', '#ffd54f', '#ff80ab'];
+
+    panel.words.forEach((w, wIdx) => {
+      const isSpan = Boolean(panel.spangram && wIdx === 0);
+      w.cells.forEach(([r, c], cIdx) => {
+        if (!isSpan && cIdx % 2 !== 0 && cIdx !== w.cells.length - 1) return;
+        const cx = c * cell + cell / 2;
+        const cy = r * cell + cell / 2;
+        const delay = wIdx * 55 + cIdx * 35;
+        const el = document.createElementNS(NS, 'text');
+        el.textContent = isSpan && cIdx % 2 === 1 ? '✦' : '♥';
+        el.setAttribute('text-anchor', 'middle');
+        el.setAttribute('font-size', String(cell * (isSpan ? 0.34 : 0.28)));
+        el.setAttribute(
+          'fill',
+          isSpan ? '#f59f00' : (HEART_TONES[(wIdx + cIdx) % HEART_TONES.length] ?? '#e91e63'),
+        );
+        el.setAttribute('opacity', '0');
+        layer.append(el);
+        floats.push({
+          cx,
+          cy: cy - cell * 0.12,
+          amp: cell * (0.12 + (cIdx % 2) * 0.06),
+          freq: 5 + (cIdx % 3),
+          phase: wIdx * 1.1 + cIdx * 0.8,
+          rise: cell * (0.85 + (cIdx % 3) * 0.15),
+          delay,
+          dur: 680,
+          el,
+        });
+      });
+    });
+
+    const t0 = performance.now();
+    const tick = (now: number): void => {
+      if (!svg.isConnected) return;
+      if (!layer.isConnected) svg.append(layer);
+      const elapsed = now - t0;
+      let active = false;
+      for (const fl of floats) {
+        const dt = elapsed - fl.delay;
+        if (dt < 0) {
+          active = true;
+          continue;
+        }
+        if (dt > fl.dur) {
+          fl.el.setAttribute('opacity', '0');
+          continue;
+        }
+        active = true;
+        const p = dt / fl.dur;
+        const x = fl.cx + Math.sin(p * fl.freq + fl.phase) * fl.amp;
+        const y = fl.cy - p * fl.rise;
+        const alpha = p < 0.2 ? p / 0.2 : 1 - (p - 0.2) / 0.8;
+        fl.el.setAttribute('x', String(x));
+        fl.el.setAttribute('y', String(y));
+        fl.el.setAttribute('opacity', String(alpha * 0.92));
+      }
+      if (active && elapsed < 1200) {
+        requestAnimationFrame(tick);
+      } else {
+        layer.remove();
+      }
+    };
+    requestAnimationFrame(tick);
+  };
+
   const release = (): void => {
     if (!path.length) return;
     const i = find(panel, path);
     if (i >= 0 && !found.has(i)) {
       found.add(i);
+      lastFoundWord = i;
       blip(880, 120, 15);
       if (found.size === panel.words.length) {
         [660, 880, 1100, 1320].forEach((f, k) => setTimeout(() => blip(f, 150), k * 110));
         navigator.vibrate?.([20, 40, 20]);
         path = [];
         render();
+        launchStrandsCelebration();
         hooks.solved();
         return;
       }
@@ -317,9 +393,31 @@ export function mountStrands(host: HTMLElement, panel: Panel, hooks: StrandsHook
       });
     }
     for (const i of found) strand(panel.words[i]?.cells ?? [], colourOf(i));
+    if (hintedWord !== null && !found.has(hintedWord)) {
+      for (const [r, c] of panel.words[hintedWord]?.cells ?? []) {
+        add('rect', {
+          x: c * cell + 4,
+          y: r * cell + 4,
+          width: cell - 8,
+          height: cell - 8,
+          rx: 10,
+          fill: 'rgba(245, 197, 66, 0.18)',
+          stroke: '#d69e2e',
+          'stroke-width': 2.5,
+          'stroke-dasharray': '5 4',
+        });
+      }
+    }
     strand(path, '#c9b6e8');
+    const isAllSolved = found.size === panel.words.length;
     const inFound = new Map<string, number>();
-    for (const i of found) for (const s of panel.words[i]?.cells ?? []) inFound.set(key(s), i);
+    const cellStepInWord = new Map<string, number>();
+    for (const i of found) {
+      (panel.words[i]?.cells ?? []).forEach((s, idx) => {
+        inFound.set(key(s), i);
+        cellStepInWord.set(key(s), idx);
+      });
+    }
     const inPath = new Set(path.map(key));
     for (let r = 0; r < H; r++)
       for (let c = 0; c < Wd; c++) {
@@ -329,7 +427,7 @@ export function mountStrands(host: HTMLElement, panel: Panel, hooks: StrandsHook
         const text = shown(s);
         const isDark = text === '?';
         const coded = /[0-9]/.test(text);
-        add('circle', {
+        const circEl = add('circle', {
           cx: x,
           cy: y,
           r: cell * 0.36,
@@ -343,10 +441,16 @@ export function mountStrands(host: HTMLElement, panel: Panel, hooks: StrandsHook
                   : coded
                     ? '#fde7ef'
                     : tint(s),
-          stroke: coded ? '#c2185b' : panel.colours ? ring(s) : 'none',
+          stroke: coded
+            ? '#c2185b'
+            : isAllSolved && f === 0 && panel.spangram
+              ? '#b28704'
+              : panel.colours
+                ? ring(s)
+                : 'none',
           'stroke-width': 2,
         });
-        add(
+        const textEl = add(
           'text',
           {
             x,
@@ -358,6 +462,26 @@ export function mountStrands(host: HTMLElement, panel: Panel, hooks: StrandsHook
           },
           text,
         );
+        if (isAllSolved && f !== undefined) {
+          const delay = f * 55 + (cellStepInWord.get(key(s)) ?? 0) * 35;
+          const animStyle = `transform-box: fill-box; transform-origin: center; animation: puzz-strand-pop 0.46s cubic-bezier(0.22, 1.35, 0.36, 1) ${delay}ms both;`;
+          circEl.setAttribute('style', animStyle);
+          textEl.setAttribute('style', animStyle);
+        } else if (!isAllSolved && f !== undefined && f === lastFoundWord) {
+          const delay = (cellStepInWord.get(key(s)) ?? 0) * 30;
+          const animStyle = `transform-box: fill-box; transform-origin: center; animation: puzz-clue-met 0.3s cubic-bezier(0.22, 1.45, 0.36, 1) ${delay}ms both;`;
+          circEl.setAttribute('style', animStyle);
+          textEl.setAttribute('style', animStyle);
+        } else if (
+          !isAllSolved &&
+          path.length > 0 &&
+          key(path[path.length - 1] as Spot) === key(s)
+        ) {
+          const animStyle =
+            'transform-box: fill-box; transform-origin: center; animation: puzz-tap-pop 0.16s cubic-bezier(0.22, 1.5, 0.36, 1) both;';
+          circEl.setAttribute('style', animStyle);
+          textEl.setAttribute('style', animStyle);
+        }
         if (eggs.has(key(s))) {
           add('ellipse', {
             cx: x + cell * 0.3,
@@ -392,7 +516,43 @@ export function mountStrands(host: HTMLElement, panel: Panel, hooks: StrandsHook
       hooks.status(
         `${found.size} of ${panel.words.length} theme words${panel.spangram && !found.has(0) ? ' (one is a spangram, side to side)' : ''}`,
       );
+    lastFoundWord = null;
   };
+
+  const giveHint = (): void => {
+    if (found.size >= panel.words.length) return;
+    // 2nd click on the currently hinted word: auto-trace and lock it in
+    if (hintedWord !== null && !found.has(hintedWord)) {
+      found.add(hintedWord);
+      hintedWord = null;
+      path = [];
+      blip(880, 120, 15);
+      if (found.size === panel.words.length) {
+        [660, 880, 1100, 1320].forEach((f, k) => setTimeout(() => blip(f, 150), k * 110));
+        navigator.vibrate?.([20, 40, 20]);
+        render();
+        launchStrandsCelebration();
+        hooks.solved();
+        return;
+      }
+      render();
+      return;
+    }
+
+    // 1st click: pick an unfound word (preferring non-spangram theme words first) and outline its squares
+    const order = panel.words.map((_, i) => i);
+    if (panel.spangram && order.length > 1) {
+      order.push(order.shift() as number);
+    }
+    const nextWord = order.find((i) => !found.has(i));
+    if (nextWord !== undefined) {
+      hintedWord = nextWord;
+      blip(620, 70, 10);
+      render();
+    }
+  };
+  host.addEventListener('puzz:hint', giveHint);
+
   render();
   return () => ({
     done: found.size === panel.words.length,

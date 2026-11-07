@@ -30,6 +30,12 @@ import {
 
 const NS = 'http://www.w3.org/2000/svg';
 const PAINT: Record<string, string> = { '#': '#2b2a33', R: '#d9534f', B: '#3c5aa6', G: '#e0a62a' };
+const SPARK_PALETTE: Record<string, readonly string[]> = {
+  '#': ['#ffd54f', '#ffab40', '#fff8e1', '#ff7043'],
+  R: ['#ff5252', '#ff8a80', '#ffd54f', '#ffffff'],
+  B: ['#4dabf7', '#a5d8ff', '#ffffff', '#ffd54f'],
+  G: ['#ffd54f', '#ffe082', '#ffffff', '#ffab40'],
+};
 const CROSS = -2;
 
 export interface PictureHooks {
@@ -52,6 +58,8 @@ export function mountPicture(host: HTMLElement, panel: Panel, hooks: PictureHook
   const Hpx = clueH + H * cell;
   // 0 empty, CROSS crossed out, 1.. a colour.
   const grid = Array.from({ length: H }, () => new Array<number>(W).fill(0));
+  const solGrid = picture(panel);
+  const lockedCells = new Set<string>();
   let tool = 1;
   let done = false;
 
@@ -89,27 +97,17 @@ export function mountPicture(host: HTMLElement, panel: Panel, hooks: PictureHook
   };
   if (note) host.append(note);
 
-  if (panel.frame) {
-    host.append(
-      h(
-        'div',
-        { style: { fontSize: '16px', fontWeight: '600', margin: '0 0 8px' } },
-        '❄ Inside the frosty frame, the filled squares are their own mirror image. Outside it, anything goes.',
-      ),
-    );
-  }
-
   const share = panel.portions ? ([...portionCounts(panel, picture(panel)).values()][0] ?? 0) : 0;
   const portionBar = panel.portions
     ? h('div', {
         style: {
           display: 'flex',
-          gap: '8px',
+          gap: '6px',
           alignItems: 'center',
           flexWrap: 'wrap',
-          fontSize: '16px',
-          fontWeight: '600',
-          margin: '0 0 8px',
+          fontSize: '13.5px',
+          fontWeight: '700',
+          margin: '0 0 6px',
         },
       })
     : null;
@@ -117,7 +115,7 @@ export function mountPicture(host: HTMLElement, panel: Panel, hooks: PictureHook
     if (!portionBar || !panel.portions) return;
     const counts = portionCounts(panel, grid);
     portionBar.replaceChildren(
-      h('span', {}, `Every portion gets ${share} filled squares:`),
+      h('span', {}, `Share (${share} each):`),
       ...[...counts.entries()].map(([k, have]) =>
         h(
           'span',
@@ -136,16 +134,6 @@ export function mountPicture(host: HTMLElement, panel: Panel, hooks: PictureHook
     );
   };
   if (portionBar) host.append(portionBar);
-
-  if (panel.eggs?.length) {
-    host.append(
-      h(
-        'div',
-        { style: { fontSize: '16px', fontWeight: '600', margin: '0 0 8px' } },
-        'An egg on a row clue marks which run in that row covers the egg square.',
-      ),
-    );
-  }
 
   // Paints (colour panels only).
   const bar =
@@ -197,10 +185,14 @@ export function mountPicture(host: HTMLElement, panel: Panel, hooks: PictureHook
     return r >= 0 && r < H && cc >= 0 && cc < W ? [r, cc] : null;
   };
   let drag: { r: number; c: number; value: number; axis: 'row' | 'col' | null } | null = null;
+  let lastPaintedCell: string | null = null;
+  const prevDoneLines = new Set<string>();
   const paint = (r: number, cc: number, value: number): void => {
+    if (lockedCells.has(`${r},${cc}`)) return;
     const row = grid[r] as number[];
     if (row[cc] === value) return;
     row[cc] = value;
+    lastPaintedCell = value !== 0 ? `${r},${cc}` : null;
     blip(value > 0 ? 560 : value === CROSS ? 380 : 260, 25, 5);
   };
   svg.addEventListener('pointerdown', (e) => {
@@ -235,6 +227,168 @@ export function mountPicture(host: HTMLElement, panel: Panel, hooks: PictureHook
     drawPortionBar();
     render();
   });
+  const launchBoardFireworks = (): void => {
+    if (typeof requestAnimationFrame !== 'function') return;
+    const painted: { r: number; cc: number; sym: string }[] = [];
+    grid.forEach((row, r) =>
+      row.forEach((v, cc) => {
+        if (v > 0) {
+          painted.push({ r, cc, sym: (palette[v - 1] as string) ?? '#' });
+        }
+      }),
+    );
+    if (!painted.length) return;
+
+    // Pick up to 12 evenly-spaced painted squares across the board pattern as firework launch sites
+    const maxBursts = Math.min(12, painted.length);
+    const step = painted.length / maxBursts;
+    const chosen = Array.from(
+      { length: maxBursts },
+      (_, idx) => painted[Math.floor(idx * step)] ?? painted[0],
+    ).filter((x): x is { r: number; cc: number; sym: string } => x !== undefined);
+
+    const layer = document.createElementNS(NS, 'g');
+    layer.setAttribute('style', 'pointer-events: none');
+    svg.append(layer);
+
+    interface Spark {
+      cx: number;
+      cy: number;
+      vx: number;
+      vy: number;
+      col: string;
+      delay: number;
+      dur: number;
+      size: number;
+      line: SVGLineElement;
+      head: SVGCircleElement;
+    }
+    interface Ring {
+      cx: number;
+      cy: number;
+      col: string;
+      delay: number;
+      dur: number;
+      el: SVGCircleElement;
+    }
+    const sparks: Spark[] = [];
+    const rings: Ring[] = [];
+
+    chosen.forEach((site, bIdx) => {
+      const cx = clueW + site.cc * cell + cell / 2;
+      const cy = clueH + site.r * cell + cell / 2;
+      const tones = SPARK_PALETTE[site.sym] ?? SPARK_PALETTE['#'] ?? ['#ffd54f'];
+      const delay = (site.r + site.cc) * 28 + bIdx * 24;
+
+      const ringEl = document.createElementNS(NS, 'circle');
+      ringEl.setAttribute('cx', String(cx));
+      ringEl.setAttribute('cy', String(cy));
+      ringEl.setAttribute('r', '1');
+      ringEl.setAttribute('fill', 'none');
+      ringEl.setAttribute('stroke', tones[0] ?? '#ffd54f');
+      ringEl.setAttribute('stroke-width', '2.5');
+      ringEl.setAttribute('opacity', '0');
+      layer.append(ringEl);
+      rings.push({ cx, cy, col: tones[0] ?? '#ffd54f', delay, dur: 460, el: ringEl });
+
+      const count = 10;
+      for (let k = 0; k < count; k++) {
+        const angle = (k / count) * Math.PI * 2 + (bIdx % 2) * 0.31;
+        const speed = cell * (0.95 + ((k * 7 + bIdx * 3) % 5) * 0.24);
+        const col = tones[k % tones.length] ?? '#ffd54f';
+        const line = document.createElementNS(NS, 'line');
+        line.setAttribute('stroke', col);
+        line.setAttribute('stroke-width', '2.2');
+        line.setAttribute('stroke-linecap', 'round');
+        line.setAttribute('opacity', '0');
+        const head = document.createElementNS(NS, 'circle');
+        head.setAttribute('r', String(Math.max(1.8, cell * 0.075)));
+        head.setAttribute('fill', col);
+        head.setAttribute('opacity', '0');
+        layer.append(line, head);
+        sparks.push({
+          cx,
+          cy,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed - cell * 0.18,
+          col,
+          delay,
+          dur: 620 + (k % 3) * 70,
+          size: Math.max(1.8, cell * 0.075),
+          line,
+          head,
+        });
+      }
+    });
+
+    setTimeout(() => blip(1560, 45, 4), 220);
+    setTimeout(() => blip(1760, 45, 4), 420);
+
+    const t0 = performance.now();
+    const gravity = cell * 1.4;
+    const tick = (now: number): void => {
+      if (!svg.isConnected) return;
+      if (!layer.isConnected) svg.append(layer);
+      const elapsed = now - t0;
+      let active = false;
+
+      for (const rg of rings) {
+        const dt = elapsed - rg.delay;
+        if (dt < 0) {
+          active = true;
+          continue;
+        }
+        if (dt > rg.dur) {
+          rg.el.setAttribute('opacity', '0');
+          continue;
+        }
+        active = true;
+        const p = dt / rg.dur;
+        const ease = 1 - (1 - p) * (1 - p);
+        rg.el.setAttribute('r', String(cell * (0.2 + ease * 0.95)));
+        rg.el.setAttribute('opacity', String((1 - p) * 0.85));
+      }
+
+      for (const sp of sparks) {
+        const dt = elapsed - sp.delay;
+        if (dt < 0) {
+          active = true;
+          continue;
+        }
+        if (dt > sp.dur) {
+          sp.line.setAttribute('opacity', '0');
+          sp.head.setAttribute('opacity', '0');
+          continue;
+        }
+        active = true;
+        const p = dt / sp.dur;
+        const s = dt / 1000;
+        const sPrev = Math.max(0, (dt - 65) / 1000);
+        const x = sp.cx + sp.vx * s;
+        const y = sp.cy + sp.vy * s + 0.5 * gravity * s * s;
+        const tx = sp.cx + sp.vx * sPrev;
+        const ty = sp.cy + sp.vy * sPrev + 0.5 * gravity * sPrev * sPrev;
+        const alpha = p < 0.2 ? p / 0.2 : 1 - (p - 0.2) / 0.8;
+        sp.line.setAttribute('x1', String(tx));
+        sp.line.setAttribute('y1', String(ty));
+        sp.line.setAttribute('x2', String(x));
+        sp.line.setAttribute('y2', String(y));
+        sp.line.setAttribute('opacity', String(alpha * 0.9));
+        sp.head.setAttribute('cx', String(x));
+        sp.head.setAttribute('cy', String(y));
+        sp.head.setAttribute('r', String(sp.size * (1 - p * 0.35)));
+        sp.head.setAttribute('opacity', String(alpha));
+      }
+
+      if (active && elapsed < 1300) {
+        requestAnimationFrame(tick);
+      } else {
+        layer.remove();
+      }
+    };
+    requestAnimationFrame(tick);
+  };
+
   const release = (): void => {
     if (!drag) return;
     drag = null;
@@ -245,6 +399,7 @@ export function mountPicture(host: HTMLElement, panel: Panel, hooks: PictureHook
       drawNote();
       drawPortionBar();
       render();
+      launchBoardFireworks();
       hooks.solved();
       return;
     }
@@ -332,6 +487,10 @@ export function mountPicture(host: HTMLElement, panel: Panel, hooks: PictureHook
     c.rows.forEach((runs, r) => {
       const effRow = Array.from({ length: W }, (_, cc) => effective(r, cc));
       const grey = done || lineDone(runs, effRow);
+      const lineKey = `r${r}`;
+      const justMet = !done && grey && !prevDoneLines.has(lineKey);
+      if (grey) prevDoneLines.add(lineKey);
+      else prevDoneLines.delete(lineKey);
       runs.forEach((run, k) => {
         const cx = clueW - (runs.length - k - 0.5) * cell * 0.62;
         const cy = clueH + r * cell + cell / 2;
@@ -348,7 +507,7 @@ export function mountPicture(host: HTMLElement, panel: Panel, hooks: PictureHook
             'stroke-width': 2,
           });
         }
-        add(
+        const clueEl = add(
           'text',
           {
             x: cx,
@@ -360,13 +519,23 @@ export function mountPicture(host: HTMLElement, panel: Panel, hooks: PictureHook
           },
           label(run),
         );
+        if (justMet) {
+          clueEl.setAttribute(
+            'style',
+            'transform-box: fill-box; transform-origin: center; animation: puzz-clue-met 0.32s cubic-bezier(0.22, 1.45, 0.36, 1) both;',
+          );
+        }
       });
     });
     c.cols.forEach((runs, cc) => {
       const effCol = Array.from({ length: H }, (_, r) => effective(r, cc));
       const grey = done || lineDone(runs, effCol);
-      runs.forEach((run, k) =>
-        add(
+      const lineKey = `c${cc}`;
+      const justMet = !done && grey && !prevDoneLines.has(lineKey);
+      if (grey) prevDoneLines.add(lineKey);
+      else prevDoneLines.delete(lineKey);
+      runs.forEach((run, k) => {
+        const clueEl = add(
           'text',
           {
             x: clueW + cc * cell + cell / 2,
@@ -377,25 +546,52 @@ export function mountPicture(host: HTMLElement, panel: Panel, hooks: PictureHook
             fill: tone(run, grey),
           },
           label(run),
-        ),
-      );
+        );
+        if (justMet) {
+          clueEl.setAttribute(
+            'style',
+            'transform-box: fill-box; transform-origin: center; animation: puzz-clue-met 0.32s cubic-bezier(0.22, 1.45, 0.36, 1) both;',
+          );
+        }
+      });
     });
     grid.forEach((row, r) =>
       row.forEach((v, cc) => {
         const x = clueW + cc * cell;
         const y = clueH + r * cell;
         const fill = v > 0 ? (PAINT[palette[v - 1] as string] as string) : '#fbf8f2';
-        add('rect', {
+        const isJustPainted = !done && lastPaintedCell === `${r},${cc}` && v > 0;
+        const rectEl = add('rect', {
           x: x + 0.5,
           y: y + 0.5,
           width: cell - 1,
           height: cell - 1,
+          rx: done && v > 0 ? 3 : 0,
           fill,
-          stroke: '#d9d0c0',
-          'stroke-width': 1,
+          stroke: done && v > 0 ? '#ffd54f' : '#d9d0c0',
+          'stroke-width': done && v > 0 ? 1.4 : 1,
         });
-        if (v === CROSS)
-          add(
+        if (isJustPainted) {
+          rectEl.setAttribute(
+            'style',
+            'transform-box: fill-box; transform-origin: center; animation: puzz-tap-pop 0.17s cubic-bezier(0.22, 1.5, 0.36, 1) both;',
+          );
+        } else if (done && v > 0) {
+          rectEl.setAttribute(
+            'style',
+            `transform-box: fill-box; transform-origin: center; animation: puzz-cell-pop 0.48s cubic-bezier(0.22, 1.35, 0.36, 1) ${(r + cc) * 28}ms both;`,
+          );
+          add('rect', {
+            x: x + 2.5,
+            y: y + 2.5,
+            width: Math.max(2, cell - 5),
+            height: Math.max(2, (cell - 5) * 0.32),
+            rx: 2,
+            fill: 'rgba(255, 255, 255, 0.22)',
+          });
+        }
+        if (!done && v === CROSS) {
+          const crossEl = add(
             'text',
             {
               x: x + cell / 2,
@@ -407,7 +603,13 @@ export function mountPicture(host: HTMLElement, panel: Panel, hooks: PictureHook
             },
             '✕',
           );
-        else if (isAutoX(r, cc))
+          if (lastPaintedCell === `${r},${cc}`) {
+            crossEl.setAttribute(
+              'style',
+              'transform-box: fill-box; transform-origin: center; animation: puzz-tap-pop 0.17s cubic-bezier(0.22, 1.5, 0.36, 1) both;',
+            );
+          }
+        } else if (!done && isAutoX(r, cc))
           add(
             'text',
             {
@@ -421,6 +623,7 @@ export function mountPicture(host: HTMLElement, panel: Panel, hooks: PictureHook
           );
       }),
     );
+    lastPaintedCell = null;
 
     // Snowflakes: frosty frame, mirror line with ❄, and ghost mirror squares
     if (panel.frame) {
@@ -599,6 +802,60 @@ export function mountPicture(host: HTMLElement, panel: Panel, hooks: PictureHook
               : '',
     );
   };
+  const giveHint = (): void => {
+    if (done) return;
+    const revealCell = (r: number, cc: number): void => {
+      const truth = solGrid[r]?.[cc] ?? 0;
+      (grid[r] as number[])[cc] = truth > 0 ? truth : CROSS;
+      lockedCells.add(`${r},${cc}`);
+      blip(640, 70, 10);
+      if (matches(panel, grid)) {
+        done = true;
+        [660, 880, 1100, 1320].forEach((f, k) => setTimeout(() => blip(f, 150), k * 110));
+        navigator.vibrate?.([20, 40, 20]);
+        drawNote();
+        drawPortionBar();
+        render();
+        launchBoardFireworks();
+        hooks.solved();
+        return;
+      }
+      drawPortionBar();
+      render();
+    };
+
+    // 1. Check if any cell is wrongly painted or wrongly X'd out
+    for (let r = 0; r < H; r++) {
+      for (let cc = 0; cc < W; cc++) {
+        const cur = grid[r]?.[cc] ?? 0;
+        const truth = solGrid[r]?.[cc] ?? 0;
+        if ((cur === CROSS && truth > 0) || (cur > 0 && cur !== truth)) {
+          revealCell(r, cc);
+          return;
+        }
+      }
+    }
+
+    // 2. Otherwise reveal and lock one unrevealed painted cell (or empty cell if all painted are filled)
+    for (let r = 0; r < H; r++) {
+      for (let cc = 0; cc < W; cc++) {
+        if ((grid[r]?.[cc] ?? 0) === 0 && (solGrid[r]?.[cc] ?? 0) > 0) {
+          revealCell(r, cc);
+          return;
+        }
+      }
+    }
+    for (let r = 0; r < H; r++) {
+      for (let cc = 0; cc < W; cc++) {
+        if ((grid[r]?.[cc] ?? 0) === 0 && !lockedCells.has(`${r},${cc}`)) {
+          revealCell(r, cc);
+          return;
+        }
+      }
+    }
+  };
+  host.addEventListener('puzz:hint', giveHint);
+
   drawNote();
   drawPortionBar();
   drawBar();

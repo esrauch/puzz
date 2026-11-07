@@ -274,7 +274,7 @@ const mountPanel: Parameters<typeof run<Panel>>[0]['mountPanel'] = (host, panel,
   mountHops(host, panel, { solved: () => hooks.solved(), status: hooks.status });
 
 const CONTROLS =
-  'Drag from the bunny through neighbouring spots (up, down, left, right) to lay its trail; drag back to rub it out. Tap the bunny to take a hop back. Visit every spot once; a numbered egg must be that hop. The panels teach the rules; open a panel number to jump about.';
+  'Drag from the bunny through neighboring spots (up, down, left, right) to lay its trail; drag back to rub it out. Tap the bunny to take a hop back. Visit every spot once; a numbered egg must be that hop. The panels teach the rules; open a panel number to jump about.';
 
 export const hutch = run({
   id: 'hutch',
@@ -293,7 +293,7 @@ export const flag = run({
   room: 'Easter',
   kind: 'stray',
   from: 'Hops; twist from the Fourth of July: Red, White and Blue',
-  rules: `${CONTROLS} (Twist: a red bunny and a blue bunny, each starting from its own 1 egg and stepping over its own colour; white squares go to either.)`,
+  rules: `${CONTROLS} (Twist: a red bunny and a blue bunny, each starting from its own 1 egg and stepping over its own color; white squares go to either.)`,
   panels: FLAG,
   mountPanel,
 });
@@ -313,9 +313,9 @@ export const eggtree = run({
   id: 'eggtree',
   title: 'The Egg Tree',
   room: 'Easter',
-  kind: 'centrepiece',
+  kind: 'centerpiece',
   from: "Hops on trees; Easter's own extra: Egg Hunt and burrows",
-  rules: `${CONTROLS} (Burrows: two burrows of a colour are joined underground; popping down one and up the other is a hop. The last egg is the Golden Egg at the top.)`,
+  rules: `${CONTROLS} (Burrows: two burrows of a color are joined underground; popping down one and up the other is a hop. The last egg is the Golden Egg at the top.)`,
   panels: EGGTREE,
   mountPanel,
 });

@@ -1,8 +1,8 @@
 /**
  * Net (Lights) rules: power spreading, loose ends, loop detection, and holiday twist verification.
  */
-import { segment, symmetricIn } from '../core/mirror';
-import { type Board, DIRS, E, OPP, S, STEP, type Spot, key, turn } from './model';
+import { type Frame, mirrorSquare, segment } from '../core/mirror';
+import { type Board, DIRS, E, OPP, S, STEP, type Spot, key, mirrorMask, turn } from './model';
 
 /** Two pieces' colours can join: the same colour, or either one white/uncoloured. */
 export const mix = (x: 'r' | 'b' | 'g' | undefined, y: 'r' | 'b' | 'g' | undefined): boolean =>
@@ -181,6 +181,20 @@ export function wiresOf(grid: number[][]): Set<string> {
   return wires;
 }
 
+/** True when every square inside `f` is the exact mirror reflection of its partner across `f.axis`. */
+export function piecesSymmetricIn(f: Frame, grid: number[][]): boolean {
+  for (let r = f.top; r <= f.bottom; r++) {
+    for (let c = f.left; c <= f.right; c++) {
+      const m = grid[r]?.[c] ?? -1;
+      const [mr, mc] = mirrorSquare(f, r, c);
+      const mm = grid[mr]?.[mc] ?? -1;
+      if (m < 0 !== mm < 0) return false;
+      if (m >= 0 && mm !== mirrorMask(m, f.axis)) return false;
+    }
+  }
+  return true;
+}
+
 /** Spell the message word from the letter bulbs' distances in `grid`. */
 export function spell(b: Board, grid: number[][]): string {
   const { dist } = light(b, grid);
@@ -244,11 +258,8 @@ export function solved(b: Board, grid: number[][], rules: Rules = {}): boolean {
     if (walls.length || [...feeds.values()].some((v) => v !== 1)) return false;
   }
 
-  // Snowflakes: inside the frame, wires must mirror across the axis
-  if (!rules.noSnow && b.frame) {
-    const wires = wiresOf(grid);
-    if (!symmetricIn(b.frame, wires)) return false;
-  }
+  // Snowflakes: inside the frame, every piece must be the exact mirror of its partner across the axis
+  if (!rules.noSnow && b.frame && !piecesSymmetricIn(b.frame, grid)) return false;
 
   // Letters for numbers: the letter bulbs must lie at the set of distances in `b.blanks`
   // (same letter = same distance, different letters = different distances).

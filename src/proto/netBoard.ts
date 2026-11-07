@@ -10,7 +10,7 @@
  * - red, white and blue (two strings from two plugs, white pieces take either);
  * - fair shares / slices (one serving wire from the middle per slice, no wires across slice walls).
  */
-import { inside, mirrorKey } from '../gen/core/mirror';
+import { inFrame, mirrorSquare } from '../gen/core/mirror';
 import { blip, h } from './kit';
 import {
   DIRS,
@@ -23,13 +23,13 @@ import {
   joinsAlong,
   key,
   light,
+  mirrorMask,
   parse,
   servings,
   solved,
   spell,
   startGrid,
   turn,
-  wiresOf,
 } from './net';
 
 const NS = 'http://www.w3.org/2000/svg';
@@ -70,47 +70,12 @@ export function mountLights(
   const pad = flagged ? cell * 0.8 : 0;
   const darkSet = b.dark;
   let done = false;
-  const revealed = (): Set<string> => (done ? darkSet : new Set<string>());
+  let lastTurnedKey: string | null = null;
+  let shakeTileKey: string | null = null;
+  const lockedTiles = new Set<string>();
+  const revealed = (): Set<string> => (done ? new Set([...darkSet, ...lockedTiles]) : lockedTiles);
   const W = b.width * cell + pad;
   const H = b.height * cell + pad;
-
-  const rules: string[] = [];
-  if (b.servings) {
-    rules.push(
-      'Each slice gets exactly one wire from the middle. No wire may cross a thick crust line.',
-    );
-  }
-  if (b.frame) {
-    rules.push(
-      '❄ Inside the frosty frame, the wires mirror across the icy line. Outside it, anything goes.',
-    );
-  }
-  if (b.bluePlug || b.greenPlug) {
-    const toneName = b.bluePlug ? 'blue' : 'green';
-    rules.push(
-      `Two strings: the red and ${toneName} strings never join; white pieces can belong to either.`,
-    );
-  }
-  if (b.eggs.length) {
-    rules.push(
-      'Numbered eggs: power must reach each egg in its exact number of steps from the plug.',
-    );
-  }
-  if (b.dark.size) {
-    rules.push(
-      'The dark: squares marked ? stay dark and turn blind until the whole panel is solved.',
-    );
-  }
-  for (const text of rules) {
-    const line = h(
-      'div',
-      {
-        style: { fontSize: '15px', fontWeight: '600', margin: '0 0 6px' },
-      },
-      text,
-    );
-    host.append(line);
-  }
 
   // Message blank tiles for Valentine's letters twist
   const note = b.blanks.length ? h('div', { style: { margin: '0 0 8px' } }) : null;
@@ -164,11 +129,129 @@ export function mountLights(
     const r = Math.floor(((e.clientY - box.top) * H) / box.height / cell);
     const c = Math.floor(((e.clientX - box.left) * W) / box.width / cell);
     if (!b.inside(r, c)) return;
+    if (lockedTiles.has(key(r, c))) {
+      shakeTileKey = key(r, c);
+      blip(180, 40, 6);
+      render();
+      return;
+    }
     const row = grid[r] as number[];
-    row[c] = turn(row[c] ?? 0);
+    const next = turn(row[c] ?? 0);
+    row[c] = next;
+    lastTurnedKey = key(r, c);
+    if (b.frame && inFrame(b.frame, r, c)) {
+      const [mr, mc] = mirrorSquare(b.frame, r, c);
+      if (b.inside(mr, mc) && (mr !== r || mc !== c)) {
+        (grid[mr] as number[])[mc] = mirrorMask(next, b.frame.axis);
+      }
+    }
     blip(520, 30, 6);
     settle();
   });
+
+  const launchLightsCelebration = (): void => {
+    if (typeof requestAnimationFrame !== 'function') return;
+    const { dist, string } = light(b, grid);
+    const secPlug = b.bluePlug ?? b.greenPlug;
+    const layer = document.createElementNS(NS, 'g');
+    layer.setAttribute('style', 'pointer-events: none');
+    svg.append(layer);
+
+    interface BulbBurst {
+      cx: number;
+      cy: number;
+      col: string;
+      delay: number;
+      dur: number;
+      ring: SVGCircleElement;
+      rays: SVGLineElement[];
+    }
+    const bursts: BulbBurst[] = [];
+
+    grid.forEach((row, r) =>
+      row.forEach((m, c) => {
+        if (m < 0) return;
+        let arms = 0;
+        for (const d of DIRS) if (m & d) arms++;
+        const isStar = panel.star !== undefined && panel.star[0] === r && panel.star[1] === c;
+        if (arms !== 1 && !isStar) return;
+        const dStep = dist.get(key(r, c)) ?? 0;
+        const own = b.colour(r, c);
+        const white = secPlug !== undefined && !own;
+        const reached = string.get(key(r, c));
+        const tone = own ?? (white && reached ? reached : 'w');
+        const col = isStar ? '#ffd54f' : (WIRE[tone] ?? '#ffe08a');
+        const cx = c * cell + cell / 2;
+        const cy = r * cell + (isStar ? cell * 0.24 : cell / 2);
+        const delay = dStep * 45 + 60;
+
+        const ring = document.createElementNS(NS, 'circle');
+        ring.setAttribute('cx', String(cx));
+        ring.setAttribute('cy', String(cy));
+        ring.setAttribute('r', '2');
+        ring.setAttribute('fill', 'none');
+        ring.setAttribute('stroke', col);
+        ring.setAttribute('stroke-width', isStar ? '2.5' : '1.8');
+        ring.setAttribute('opacity', '0');
+        layer.append(ring);
+
+        const rayCount = isStar ? 8 : 4;
+        const rays: SVGLineElement[] = [];
+        for (let k = 0; k < rayCount; k++) {
+          const ray = document.createElementNS(NS, 'line');
+          ray.setAttribute('stroke', k % 2 === 0 ? '#fffdf0' : col);
+          ray.setAttribute('stroke-width', isStar ? '2.4' : '1.8');
+          ray.setAttribute('stroke-linecap', 'round');
+          ray.setAttribute('opacity', '0');
+          layer.append(ray);
+          rays.push(ray);
+        }
+        bursts.push({ cx, cy, col, delay, dur: isStar ? 650 : 480, ring, rays });
+      }),
+    );
+
+    const t0 = performance.now();
+    const tick = (now: number): void => {
+      if (!svg.isConnected) return;
+      if (!layer.isConnected) svg.append(layer);
+      const elapsed = now - t0;
+      let active = false;
+      for (const bItem of bursts) {
+        const dt = elapsed - bItem.delay;
+        if (dt < 0) {
+          active = true;
+          continue;
+        }
+        if (dt > bItem.dur) {
+          bItem.ring.setAttribute('opacity', '0');
+          bItem.rays.forEach((ray) => ray.setAttribute('opacity', '0'));
+          continue;
+        }
+        active = true;
+        const p = dt / bItem.dur;
+        const ease = 1 - (1 - p) * (1 - p);
+        const alpha = 1 - p;
+        bItem.ring.setAttribute('r', String(cell * (0.16 + ease * 0.44)));
+        bItem.ring.setAttribute('opacity', String(alpha * 0.8));
+        bItem.rays.forEach((ray, k) => {
+          const angle = (k / bItem.rays.length) * Math.PI * 2 + Math.PI / 4;
+          const r1 = cell * (0.14 + ease * 0.18);
+          const r2 = cell * (0.26 + ease * 0.36);
+          ray.setAttribute('x1', String(bItem.cx + Math.cos(angle) * r1));
+          ray.setAttribute('y1', String(bItem.cy + Math.sin(angle) * r1));
+          ray.setAttribute('x2', String(bItem.cx + Math.cos(angle) * r2));
+          ray.setAttribute('y2', String(bItem.cy + Math.sin(angle) * r2));
+          ray.setAttribute('opacity', String(alpha));
+        });
+      }
+      if (active && elapsed < 1200) {
+        requestAnimationFrame(tick);
+      } else {
+        layer.remove();
+      }
+    };
+    requestAnimationFrame(tick);
+  };
 
   const settle = (): void => {
     if (solved(b, grid)) {
@@ -177,6 +260,7 @@ export function mountLights(
       navigator.vibrate?.([20, 40, 20]);
       drawNote();
       render();
+      launchLightsCelebration();
       hooks.solved();
     } else {
       drawNote();
@@ -221,19 +305,42 @@ export function mountLights(
       for (let c = 0; c < b.width; c++) {
         if (!b.inside(r, c)) continue;
         const s = b.slice(r, c);
+        const frosty = b.frame !== undefined && inFrame(b.frame, r, c);
         const shade =
-          s === '*' ? '#5a4a3a' : s ? (s.charCodeAt(0) % 2 ? '#3a2a22' : '#2e2420') : '#1f2636';
-        add('rect', {
+          s === '*'
+            ? '#5a4a3a'
+            : s
+              ? s.charCodeAt(0) % 2
+                ? '#3a2a22'
+                : '#2e2420'
+              : frosty
+                ? '#1c2e42'
+                : '#1f2636';
+        const isLocked = lockedTiles.has(key(r, c));
+        const tileEl = add('rect', {
           x: c * cell + 1,
           y: r * cell + 1,
           width: cell - 2,
           height: cell - 2,
           rx: 6,
           fill: shade,
-          stroke: plugTone(r, c) ?? 'none',
-          'stroke-width': plugTone(r, c) ? 3 : 1.5,
+          stroke: plugTone(r, c) ?? (isLocked ? '#68d391' : 'none'),
+          'stroke-width': plugTone(r, c) ? 3 : isLocked ? 2.2 : 1.5,
         });
+        if (!done && shakeTileKey === key(r, c)) {
+          tileEl.setAttribute(
+            'style',
+            'transform-box: fill-box; transform-origin: center; animation: puzz-error-shake 0.25s ease-in-out both;',
+          );
+        } else if (!done && lastTurnedKey === key(r, c)) {
+          tileEl.setAttribute(
+            'style',
+            'transform-box: fill-box; transform-origin: center; animation: puzz-tap-pop 0.16s cubic-bezier(0.22, 1.5, 0.36, 1) both;',
+          );
+        }
       }
+    lastTurnedKey = null;
+    shakeTileKey = null;
     // Slice walls (solid gold), and the middle's edge (dashed: a slice's serving comes in across it).
     if (b.servings)
       for (let r = 0; r < b.height; r++)
@@ -285,10 +392,15 @@ export function mountLights(
         const reached = string.get(key(r, c));
         const tone = own ?? (white && lit && reached ? reached : 'w');
         const colour = done
-          ? '#ffd54f'
+          ? own
+            ? (WIRE[own] ?? '#ffd54f')
+            : '#ffd54f'
           : lit
             ? (WIRE[tone] ?? '#ffe08a')
             : (DIM[tone] ?? '#55607a');
+        const surgeStyle = done
+          ? `animation: puzz-light-surge 0.55s cubic-bezier(0.22, 1.35, 0.36, 1) ${(dist.get(key(r, c)) ?? 0) * 45}ms both;`
+          : '';
         const wrongString = lit && own !== undefined && reached !== undefined && reached !== own;
         const across = (d: number): boolean => crossing.has(`${key(r, c)}:${d}`);
         const cx = c * cell + cell / 2;
@@ -298,7 +410,7 @@ export function mountLights(
           if (!(m & d)) continue;
           arms++;
           const [dr, dc] = STEP[d] as Spot;
-          add('line', {
+          const wireEl = add('line', {
             x1: cx,
             y1: cy,
             x2: cx + (dc * cell) / 2,
@@ -307,6 +419,7 @@ export function mountLights(
             'stroke-width': cell * 0.14,
             'stroke-linecap': 'round',
           });
+          if (surgeStyle) wireEl.setAttribute('style', surgeStyle);
           if (lit && sparks.has(`${key(r, c)}:${d}`))
             add('circle', {
               cx: cx + dc * cell * 0.42,
@@ -315,22 +428,35 @@ export function mountLights(
               fill: '#ff3b30',
             });
         }
-        if (arms === 1)
-          add('circle', {
+        if (arms === 1) {
+          if (done) {
+            const haloEl = add('circle', {
+              cx,
+              cy,
+              r: cell * 0.31,
+              fill: colour,
+              opacity: 0.24,
+            });
+            if (surgeStyle) haloEl.setAttribute('style', surgeStyle);
+          }
+          const bulbEl = add('circle', {
             cx,
             cy,
             r: cell * 0.2,
             fill: lit || done ? colour : '#2a3142',
-            stroke: white ? '#ffffff' : colour,
-            'stroke-width': white ? 3 : 2,
+            stroke: white || done ? '#ffffff' : colour,
+            'stroke-width': white || done ? 2.5 : 2,
           });
-        else
-          add('circle', {
+          if (surgeStyle) bulbEl.setAttribute('style', surgeStyle);
+        } else {
+          const jointEl = add('circle', {
             cx,
             cy,
             r: cell * (white ? 0.13 : 0.09),
             fill: white ? '#ffffff' : colour,
           });
+          if (surgeStyle) jointEl.setAttribute('style', surgeStyle);
+        }
         if (wrongString)
           add('circle', {
             cx,
@@ -343,7 +469,7 @@ export function mountLights(
       }),
     );
 
-    // Snowflakes: frosty frame, mirror line with ❄, and ghost mirror wires
+    // Snowflakes: frosty frame and mirror line with ❄ (pieces inside start mirrored and turn together)
     if (b.frame) {
       const f = b.frame;
       const [fx, fy] = [f.left * cell + 2, f.top * cell + 2];
@@ -354,7 +480,7 @@ export function mountLights(
         width: fw,
         height: fh,
         rx: 8,
-        fill: 'rgba(154, 215, 255, 0.08)',
+        fill: 'rgba(154, 215, 255, 0.06)',
         stroke: '#9ad7ff',
         'stroke-width': 2,
         'stroke-dasharray': '6 4',
@@ -387,28 +513,6 @@ export function mountLights(
           },
           '❄',
         );
-      }
-      // Ghost mirror wires for joined edges inside the frame
-      const visibleGrid = grid.map((row, r) =>
-        row.map((m, c) => (darkSet.has(key(r, c)) && !shownNow.has(key(r, c)) ? -1 : m)),
-      );
-      const drawn = wiresOf(visibleGrid);
-      for (const seg of drawn) {
-        if (!inside(f, seg)) continue;
-        const m = mirrorKey(f, seg);
-        if (drawn.has(m)) continue;
-        const [r1 = 0, c1 = 0, r2 = 0, c2 = 0] = m.slice(1).split(',').map(Number);
-        add('line', {
-          x1: c1 * cell + cell / 2,
-          y1: r1 * cell + cell / 2,
-          x2: c2 * cell + cell / 2,
-          y2: r2 * cell + cell / 2,
-          stroke: '#9ad7ff',
-          'stroke-width': cell * 0.12,
-          'stroke-dasharray': '4 4',
-          'stroke-linecap': 'round',
-          opacity: 0.7,
-        });
       }
     }
 
@@ -627,7 +731,7 @@ export function mountLights(
               : letterWrong
                 ? 'Everything’s lit, but a letter bulb is not on one of the message’s distances'
                 : wrongStrings
-                  ? 'Everything’s lit, but a light is on the wrong-coloured string'
+                  ? 'Everything’s lit, but a light is on the wrong-colored string'
                   : b.frame && !solved(b, grid)
                     ? 'Everything’s lit, but the wires inside the frosty frame don’t mirror yet'
                     : walls.length
@@ -636,6 +740,61 @@ export function mountLights(
           : `${dist.size} of ${total} lit`,
     );
   };
+  const giveHint = (): void => {
+    if (done) return;
+    const { dist } = light(b, grid);
+    const lockCell = (r: number, c: number): void => {
+      const solMask = b.solution[r]?.[c];
+      if (solMask === undefined || solMask < 0) return;
+      (grid[r] as number[])[c] = solMask;
+      lockedTiles.add(key(r, c));
+      if (b.frame && inFrame(b.frame, r, c)) {
+        const [mr, mc] = mirrorSquare(b.frame, r, c);
+        const mMask = b.solution[mr]?.[mc];
+        if (b.inside(mr, mc) && mMask !== undefined && mMask >= 0) {
+          (grid[mr] as number[])[mc] = mMask;
+          lockedTiles.add(key(mr, mc));
+        }
+      }
+      blip(640, 70, 10);
+      settle();
+    };
+
+    // Prefer a misoriented tile in or adjacent to the powered tree so light visibly extends
+    const cands: Spot[] = [];
+    for (let r = 0; r < b.height; r++) {
+      for (let c = 0; c < b.width; c++) {
+        if (!b.inside(r, c)) continue;
+        if ((grid[r]?.[c] ?? -1) !== (b.solution[r]?.[c] ?? -1)) {
+          cands.push([r, c]);
+        }
+      }
+    }
+    const nearLit = cands.find(([r, c]) => {
+      if (dist.has(key(r, c))) return true;
+      return DIRS.some((d) => {
+        const [dr, dc] = STEP[d] as Spot;
+        return dist.has(key(r + dr, c + dc));
+      });
+    });
+    const pick = nearLit ?? cands[0];
+    if (pick) {
+      lockCell(pick[0], pick[1]);
+      return;
+    }
+
+    // If all tiles already match solution (or only need locking), lock one unlocked tile
+    for (let r = 0; r < b.height; r++) {
+      for (let c = 0; c < b.width; c++) {
+        if (b.inside(r, c) && !lockedTiles.has(key(r, c))) {
+          lockCell(r, c);
+          return;
+        }
+      }
+    }
+  };
+  host.addEventListener('puzz:hint', giveHint);
+
   drawNote();
   render();
   return () => ({

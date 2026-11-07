@@ -24,39 +24,6 @@ export const WARMUP: Panel[] = [
 
 export const HOTDOG: Panel[] = [
   {
-    name: 'An egg and a carrot',
-    rows: ['🥚 🥕 4 . .', '3 🥚 🥕 . .', '🥕 🥚 . . .', '🥚 . . 🥕 🥚', '3 🥕 . 🥚 🥕'],
-  },
-  {
-    name: 'Three treats',
-    rows: [
-      '7 🥚 . 🥚 . 🥚 .',
-      '. 6 🥕 🍫 🍫 🥕 🥕',
-      '🥚 . . 🥕 🥚 . .',
-      '. 🍫 . . . . 🍫',
-      '🍫 . . 🍫 🍫 . 🥚',
-      '🥕 🥕 . 🥚 🥕 . .',
-      '. . . 🥚 🍫 . 🥕',
-    ],
-  },
-  {
-    name: 'The full basket',
-    rows: [
-      '. 🥕 🍫 . . 🍫 🥕 5 🥚',
-      '. . . . 🍫 . 🍫 🥚 🥕',
-      '🥚 . . 🥕 . . 🥚 . 🥕',
-      '🍫 🥕 🥚 . 🥕 . 🍫 . .',
-      '4 🍫 4 🥚 . 🥚 . 🍫 🥕',
-      '🥕 🥚 🍫 🍫 . 🥚 . . 🥕',
-      '🥚 🥕 . . 🥚 🍫 . 🥚 🍫',
-      '. 🍫 🥚 . . 🥕 . . .',
-      '. . 🥕 🥕 4 🥚 🍫 . .',
-    ],
-  },
-];
-
-export const STOCKING: Panel[] = [
-  {
     name: 'Red, white and blue',
     rows: ['. . 2 . .', '. 6 . . 4', '. . . 6 .', '. . . . .', '. 4 . 3 .'],
     colours: ['..rb.', 'b....', '.....', '.....', '.r.b.'],
@@ -75,7 +42,7 @@ export const STOCKING: Panel[] = [
     colours: ['b......', '....r..', 'r.....b', '.......', '...b...', '.......', '.br....'],
   },
   {
-    name: 'A full stocking',
+    name: 'The cookout',
     rows: [
       '. 3 . . . . . . .',
       '2 . . . 6 . 4 . 7',
@@ -98,6 +65,60 @@ export const STOCKING: Panel[] = [
       '.........',
       'r...b....',
     ],
+  },
+];
+
+export const STOCKING: Panel[] = [
+  {
+    name: 'A frosty window',
+    rows: ['. . 2 . .', '. 6 . . 4', '. . . 6 .', '. . . . .', '. 4 . 3 .'],
+    frame: {
+      top: 1,
+      left: 0,
+      bottom: 4,
+      right: 2,
+      axis: 'h',
+    },
+  },
+  {
+    name: 'Mirror cuts',
+    rows: [
+      '6 . . . . . 2',
+      '. . . 6 . . .',
+      '. . 3 . . 5 .',
+      '8 . . . 2 . 4',
+      '. . . . . . .',
+      '. . 2 . 2 . .',
+      '2 . . 3 2 . 2',
+    ],
+    frame: {
+      top: 2,
+      left: 2,
+      bottom: 4,
+      right: 5,
+      axis: 'v',
+    },
+  },
+  {
+    name: 'A full stocking',
+    rows: [
+      '. 3 . . . . . . .',
+      '2 . . . 6 . 4 . 7',
+      '. . . . . . . . .',
+      '6 . . . 5 . . 6 .',
+      '. . . . . 2 . . .',
+      '. . . . . . . . .',
+      '. 6 . . . 9 . . .',
+      '. . 8 . . . . . .',
+      '. 2 . 9 . . 4 . 2',
+    ],
+    frame: {
+      top: 2,
+      left: 0,
+      bottom: 7,
+      right: 3,
+      axis: 'v',
+    },
   },
 ];
 
@@ -187,11 +208,11 @@ export const breadboard = run({
 
 export const hotdog = run({
   id: 'hotdog',
-  title: 'The Easter Basket',
+  title: 'The Hot Dog',
   room: 'Thanksgiving',
   kind: 'stray',
-  from: 'Carving; twist from Easter: Egg Hunt',
-  rules: `${CONTROLS} (Twist: every portion gets the same fair share of treats shown above the board; a portion may hold a number too.)`,
+  from: 'Carving; twist from Fourth of July: Red, White and Blue',
+  rules: `${CONTROLS} (Twist: a portion takes the color of its red or blue mark; two portions of the same color may not share an edge, while plain portions can touch anything.)`,
   panels: HOTDOG,
   mountPanel,
 });
@@ -201,8 +222,8 @@ export const stocking = run({
   title: 'The Stocking',
   room: 'Thanksgiving',
   kind: 'stray',
-  from: 'Carving; twist from Fourth of July: Red, White and Blue',
-  rules: `${CONTROLS} (Twist: a portion takes the colour of its red or blue mark; two portions of the same colour may not share an edge, while plain portions can touch anything.)`,
+  from: 'Carving; twist from Christmas: Snowflakes',
+  rules: `${CONTROLS} (Twist: inside the frosty frame, the cuts between portions mirror across the icy line.)`,
   panels: STOCKING,
   mountPanel,
 });
@@ -211,7 +232,7 @@ export const feast = run({
   id: 'feast',
   title: 'The Feast',
   room: 'Thanksgiving',
-  kind: 'centrepiece',
+  kind: 'centerpiece',
   from: "Carving; Thanksgiving's own twist: Portions (fences no portion may cross)",
   rules: `${CONTROLS} (Twist: a portion may not cross a thick fence line between two squares.)`,
   panels: FEAST,

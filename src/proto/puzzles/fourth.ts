@@ -191,9 +191,9 @@ export const finale = run({
   id: 'finale',
   title: 'The Grand Finale',
   room: 'Fourth of July',
-  kind: 'centrepiece',
+  kind: 'centerpiece',
   from: "Fireworks; the Fourth of July's own twist: Red, White and Blue",
-  rules: `${CONTROLS} (Colour: pick a paint from the bar. Clues come in colours; two runs of the same colour need a gap between them, different colours can touch.)`,
+  rules: `${CONTROLS} (Color: pick a paint from the bar. Clues come in colors; two runs of the same color need a gap between them, different colors can touch.)`,
   panels: FINALE,
   mountPanel,
 });

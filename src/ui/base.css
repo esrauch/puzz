@@ -57,6 +57,433 @@ body {
   pointer-events: auto;
 }
 
+/* Hotspot pills projected over 3D diorama props */
+.hotspot-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(5px) scale(0.98);
+  transition:
+    opacity 0.22s ease-out,
+    transform 0.22s ease-out;
+}
+
+.hotspot-layer.settled {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.hotspot-pill {
+  position: absolute;
+  transform: translate(-50%, 0);
+  pointer-events: none;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0px;
+  padding: 2px 7px;
+  border-radius: 7px;
+  background: rgba(255, 252, 245, 0.94);
+  color: #1f2430;
+  border: 2px solid #2d3748;
+  box-shadow:
+    0 2px 0 #1f2430,
+    0 3px 8px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  font-family: system-ui, sans-serif;
+  transition:
+    transform 0.14s ease,
+    box-shadow 0.14s ease,
+    background 0.14s ease;
+  width: max-content;
+  max-width: 138px;
+  text-align: center;
+  line-height: 1.12;
+}
+
+.hotspot-layer.settled .hotspot-pill {
+  pointer-events: auto;
+}
+
+.hotspot-pill:hover {
+  transform: translate(-50%, -2px) scale(1.04);
+  background: #ffffff;
+}
+
+.hotspot-pill.locked {
+  background: rgba(237, 242, 247, 0.9);
+  color: #4a5568;
+  border-color: #718096;
+  box-shadow: 0 2px 0 #4a5568;
+}
+
+.hotspot-pill.done {
+  background: rgba(240, 255, 244, 0.95);
+  border-color: #2f855a;
+}
+
+.hotspot-pill.place {
+  background: #fefcbf;
+  border-color: #d69e2e;
+  animation: pulse-place 1.4s infinite ease-in-out;
+}
+
+@keyframes pulse-place {
+  0%,
+  100% {
+    transform: translate(-50%, 0) scale(1);
+  }
+  50% {
+    transform: translate(-50%, -2px) scale(1.05);
+  }
+}
+
+/* Modal card for puzzle runs and Calendar Desk */
+.puzz-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  pointer-events: auto;
+  background: rgba(16, 20, 30, 0.36);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  z-index: 30;
+  animation: puzz-backdrop-in 0.2s ease-out both;
+}
+
+@keyframes puzz-backdrop-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.puzz-modal-card {
+  --room-accent: #e0662d;
+  --room-tint: #f8f4ec;
+  width: min(620px, 96vw);
+  max-height: 92dvh;
+  overflow-y: auto;
+  touch-action: pan-y;
+  background: #fffdf9;
+  color: #1f2430;
+  border: 3px solid #1f2430;
+  border-radius: 18px;
+  box-shadow:
+    0 6px 0 #1f2430,
+    0 20px 44px rgba(0, 0, 0, 0.44);
+  padding: 0;
+  overflow-x: hidden;
+  animation: puzz-card-in 0.26s cubic-bezier(0.22, 1, 0.36, 1) 0.04s both;
+}
+
+@keyframes puzz-card-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.puzz-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 16px;
+  background: var(--room-tint, #f8f4ec);
+  border-bottom: 2.5px solid #1f2430;
+  box-shadow: inset 0 4px 0 var(--room-accent, #e0662d);
+}
+
+.puzz-modal-body {
+  padding: 12px 16px 14px;
+}
+
+.puzz-board-stage {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  background: var(--room-tint, #f8f4ec);
+  border: 2px solid #e2d9c8;
+  border-radius: 14px;
+  padding: 12px 10px;
+  box-shadow: inset 0 2px 5px rgba(31, 36, 48, 0.06);
+  transition: height 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.puzz-board-pane {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  will-change: transform, opacity;
+}
+
+.puzz-board-stage svg {
+  margin: 0 auto;
+  max-width: 100%;
+  height: auto;
+}
+
+.puzz-pane-enter-forward {
+  animation: puzz-pane-in-forward 0.25s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.puzz-pane-exit-forward {
+  animation: puzz-pane-out-forward 0.22s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.puzz-pane-enter-backward {
+  animation: puzz-pane-in-backward 0.25s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.puzz-pane-exit-backward {
+  animation: puzz-pane-out-backward 0.22s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.puzz-pane-enter-reset {
+  animation: puzz-pane-in-reset 0.22s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.puzz-pane-exit-reset {
+  animation: puzz-pane-out-reset 0.18s ease-out both;
+}
+
+@keyframes puzz-pane-in-forward {
+  from {
+    opacity: 0;
+    transform: translateX(22px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes puzz-pane-out-forward {
+  from {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-22px) scale(0.985);
+  }
+}
+
+@keyframes puzz-pane-in-backward {
+  from {
+    opacity: 0;
+    transform: translateX(-22px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes puzz-pane-out-backward {
+  from {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(22px) scale(0.985);
+  }
+}
+
+@keyframes puzz-pane-in-reset {
+  from {
+    opacity: 0;
+    transform: scale(0.965);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes puzz-pane-out-reset {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.02);
+  }
+}
+
+/* Signature Solved Celebrations (Pillar 2) */
+@keyframes puzz-cell-pop {
+  0% {
+    transform: scale(1);
+  }
+  45% {
+    transform: scale(1.16);
+    filter: brightness(1.22);
+  }
+  100% {
+    transform: scale(1);
+    filter: brightness(1.04);
+  }
+}
+
+@keyframes puzz-web-gold-pulse {
+  0% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+  40% {
+    transform: scale(1.18);
+    filter: brightness(1.35) drop-shadow(0 0 6px rgba(255, 213, 79, 0.85));
+  }
+  100% {
+    transform: scale(1);
+    filter: brightness(1.06) drop-shadow(0 0 3px rgba(255, 213, 79, 0.45));
+  }
+}
+
+@keyframes puzz-carve-pop {
+  0% {
+    transform: scale(0.92);
+    filter: brightness(0.96);
+  }
+  50% {
+    transform: scale(1.04);
+    filter: brightness(1.14);
+  }
+  100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+}
+
+@keyframes puzz-light-surge {
+  0% {
+    filter: brightness(1);
+  }
+  45% {
+    filter: brightness(1.55) drop-shadow(0 0 7px rgba(255, 230, 120, 0.95));
+  }
+  100% {
+    filter: brightness(1.15) drop-shadow(0 0 4px rgba(255, 213, 79, 0.65));
+  }
+}
+
+@keyframes puzz-strand-pop {
+  0% {
+    transform: scale(1);
+  }
+  45% {
+    transform: scale(1.22) translateY(-2px);
+    filter: brightness(1.15);
+  }
+  100% {
+    transform: scale(1) translateY(0);
+    filter: brightness(1);
+  }
+}
+
+@keyframes puzz-hop-ripple {
+  0% {
+    transform: scale(1);
+  }
+  45% {
+    transform: scale(1.1) translateY(-2px);
+    filter: brightness(1.15);
+  }
+  100% {
+    transform: scale(1) translateY(0);
+    filter: brightness(1);
+  }
+}
+
+@keyframes puzz-icon-bounce {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  40% {
+    transform: translateY(-4px) scale(1.18);
+  }
+  70% {
+    transform: translateY(1px) scale(0.96);
+  }
+}
+
+@keyframes puzz-pip-solved {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.25);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Tactile In-Game Micro-Animations (Pillar 3) */
+@keyframes puzz-tap-pop {
+  0% {
+    transform: scale(0.84);
+  }
+  60% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes puzz-clue-met {
+  0% {
+    transform: scale(1);
+  }
+  45% {
+    transform: scale(1.22);
+    filter: brightness(1.18);
+  }
+  100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+}
+
+@keyframes puzz-error-shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-4px);
+  }
+  50% {
+    transform: translateX(4px);
+  }
+  75% {
+    transform: translateX(-3px);
+  }
+}
+
 /* The placeholder title. */
 .title {
   position: fixed;

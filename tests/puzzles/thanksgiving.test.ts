@@ -18,8 +18,13 @@ describe('Thanksgiving carving run', () => {
     }
   });
 
-  it('the colours matter', () => {
-    for (const p of STOCKING) expect(count(p, 2, { noColours: true }), p.name).toBe(2);
+  it('the colours and snowflakes matter', () => {
+    for (const p of HOTDOG) expect(count(p, 2, { noColours: true }), p.name).toBe(2);
+    for (const p of STOCKING) {
+      const q = { ...p };
+      delete q.frame;
+      expect(count(q, 2), p.name).toBe(2);
+    }
   });
 
   it('shape matters: the 4s could each be a square, but only lines fit', () => {

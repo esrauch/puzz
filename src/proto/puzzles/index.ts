@@ -5,6 +5,7 @@ import { bow, broom, finale, sparklers } from './fourth';
 import { chocolates, cobwebs, starlights, web } from './halloween';
 import { fairylights, goldenegg, pumpkinpie, tree } from './christmas';
 import { breadboard, feast, hotdog, stocking } from './thanksgiving';
+import { tuesday } from './tuesday';
 import { basket, jack, lovenotes, mailbox } from './valentines';
 import {
   carvingWorkshop,
@@ -46,6 +47,8 @@ export const PROTOS: Proto[] = [
   goldenegg,
   pumpkinpie,
   tree,
+  // Finale
+  tuesday,
   // Generated in the browser
   webWorkshop,
   carvingWorkshop,

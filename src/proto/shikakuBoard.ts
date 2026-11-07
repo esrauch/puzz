@@ -19,6 +19,7 @@ import {
   lineCounts,
   parse,
   problem,
+  solve,
   solved,
 } from '../gen/carving';
 import { blip } from './kit';
@@ -51,29 +52,15 @@ export function mountCarving(host: HTMLElement, panel: Panel, hooks: CarveHooks)
   svg.setAttribute('height', String(H));
   svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
   Object.assign(svg.style, { touchAction: 'none', userSelect: 'none', display: 'block' });
-  // The twists' rules, one line each above the board.
-  const legend = (text: string): void => {
-    const line = document.createElement('div');
-    line.textContent = text;
-    Object.assign(line.style, { fontSize: '16px', fontWeight: '600', margin: '0 0 8px' });
-    host.append(line);
-  };
-  if (panel.colours?.some((row) => /[rb]/.test(row)))
-    legend('Portions take the colour of their marks; two of one colour never touch.');
-  if (b.walls.size) legend('No portion may cross a fence.');
-  if (b.frame)
-    legend(
-      '❄ Inside the frosty frame, the cuts are their own mirror image. Outside it, anything goes.',
-    );
   // Fair shares: the recipe every portion must get, spelled out above the board.
   if (b.dishes.length) {
     const recipe = document.createElement('div');
-    recipe.textContent = `Each portion gets: ${b.dishes
+    recipe.textContent = `Each portion: ${b.dishes
       .slice()
       .sort((x, y) => FOOD_ORDER.indexOf(x) - FOOD_ORDER.indexOf(y))
       .map((d) => DISH[d] ?? d)
       .join(' ')}`;
-    Object.assign(recipe.style, { fontSize: '18px', margin: '0 0 8px', fontWeight: '600' });
+    Object.assign(recipe.style, { fontSize: '14.5px', margin: '0 0 6px', fontWeight: '700' });
     host.append(recipe);
   }
   // A message's numbered blanks (coded sizes), filled in when the board's carved.
@@ -111,6 +98,10 @@ export function mountCarving(host: HTMLElement, panel: Panel, hooks: CarveHooks)
   let rects: Rect[] = [];
   let drag: { r: number; c: number; to: [number, number] } | null = null;
   let done = false;
+  let cachedSol: Rect[] | null = null;
+  let lastCarvedKey: string | null = null;
+  const lockedRectKeys = new Set<string>();
+  const rectKey = (x: Rect): string => `${x.r},${x.c},${x.h},${x.w}`;
   /** A flag being inspected (tapped): its skewer's line is counted out for a moment. */
   let inspect: { row: boolean; i: number } | null = null;
   let inspectTimer = 0;
@@ -187,14 +178,24 @@ export function mountCarving(host: HTMLElement, panel: Panel, hooks: CarveHooks)
     if (p[0] === r && p[1] === c) {
       const hit = rects.findIndex((x) => inside(x, r, c));
       if (hit >= 0) {
+        const hitRect = rects[hit];
+        if (hitRect && lockedRectKeys.has(rectKey(hitRect))) {
+          blip(180, 40, 8);
+          return render();
+        }
         rects.splice(hit, 1);
         blip(260, 50, 8);
         return settle();
       }
     }
     const x = span(r, c, p[0], p[1]);
+    if (rects.some((y) => lockedRectKeys.has(rectKey(y)) && overlaps(x, y))) {
+      blip(180, 50, 8);
+      return render();
+    }
     rects = rects.filter((y) => !overlaps(x, y));
     rects.push(x);
+    lastCarvedKey = rectKey(x);
     blip(problem(b, x) ? 200 : 600, 60, 8);
     settle();
   });
@@ -203,12 +204,104 @@ export function mountCarving(host: HTMLElement, panel: Panel, hooks: CarveHooks)
     render();
   });
 
+  const launchCarvingCelebration = (): void => {
+    if (typeof requestAnimationFrame !== 'function') return;
+    const layer = document.createElementNS(NS, 'g');
+    layer.setAttribute('style', 'pointer-events: none');
+    svg.append(layer);
+
+    interface Wisp {
+      cx: number;
+      cy: number;
+      amp: number;
+      freq: number;
+      phase: number;
+      rise: number;
+      delay: number;
+      dur: number;
+      el: SVGElement;
+    }
+    const wisps: Wisp[] = [];
+    const sorted = [...rects].sort((a, o) => a.r - o.r || a.c - o.c);
+    sorted.forEach((rect, rIdx) => {
+      const baseCx = (rect.c + rect.w / 2) * cell;
+      const baseCy = (rect.r + rect.h / 2) * cell;
+      const baseDelay = (rect.r + rect.c) * 40 + 80;
+      for (let k = 0; k < 3; k++) {
+        const offsetX = (k - 1) * (cell * 0.24);
+        const isStar = k === 1;
+        const el = document.createElementNS(NS, isStar ? 'text' : 'circle');
+        if (isStar) {
+          el.textContent = '✦';
+          el.setAttribute('text-anchor', 'middle');
+          el.setAttribute('font-size', String(cell * 0.28));
+          el.setAttribute('fill', '#e6a100');
+        } else {
+          el.setAttribute('r', String(cell * 0.075));
+          el.setAttribute('fill', k === 0 ? '#ffd54f' : '#ffab40');
+        }
+        el.setAttribute('opacity', '0');
+        layer.append(el);
+        wisps.push({
+          cx: baseCx + offsetX,
+          cy: baseCy,
+          amp: cell * (0.1 + (k % 2) * 0.06),
+          freq: 5 + k,
+          phase: rIdx * 0.9 + k * 1.4,
+          rise: cell * (0.75 + k * 0.14),
+          delay: baseDelay + k * 65,
+          dur: 680,
+          el,
+        });
+      }
+    });
+
+    const t0 = performance.now();
+    const tick = (now: number): void => {
+      if (!svg.isConnected) return;
+      if (!layer.isConnected) svg.append(layer);
+      const elapsed = now - t0;
+      let active = false;
+      for (const w of wisps) {
+        const dt = elapsed - w.delay;
+        if (dt < 0) {
+          active = true;
+          continue;
+        }
+        if (dt > w.dur) {
+          w.el.setAttribute('opacity', '0');
+          continue;
+        }
+        active = true;
+        const p = dt / w.dur;
+        const x = w.cx + Math.sin(p * w.freq + w.phase) * w.amp;
+        const y = w.cy - p * w.rise;
+        const alpha = p < 0.25 ? p / 0.25 : 1 - (p - 0.25) / 0.75;
+        if (w.el.tagName === 'text') {
+          w.el.setAttribute('x', String(x));
+          w.el.setAttribute('y', String(y));
+        } else {
+          w.el.setAttribute('cx', String(x));
+          w.el.setAttribute('cy', String(y));
+        }
+        w.el.setAttribute('opacity', String(alpha * 0.9));
+      }
+      if (active && elapsed < 1200) {
+        requestAnimationFrame(tick);
+      } else {
+        layer.remove();
+      }
+    };
+    requestAnimationFrame(tick);
+  };
+
   const settle = (): void => {
     if (solved(b, rects)) {
       done = true;
       [660, 880, 1100].forEach((f, i) => setTimeout(() => blip(f, 160), i * 110));
       navigator.vibrate?.([20, 40, 20]);
       render();
+      launchCarvingCelebration();
       drawNote(true);
       hooks.solved();
     } else render();
@@ -266,7 +359,7 @@ export function mountCarving(host: HTMLElement, panel: Panel, hooks: CarveHooks)
     rects.forEach((x, i) => {
       const bad = problem(b, x) !== null || clashing.has(i);
       const colour = colourOf(b, x);
-      add('rect', {
+      const platterEl = add('rect', {
         x: x.c * cell + 3,
         y: x.r * cell + 3,
         width: x.w * cell - 6,
@@ -277,7 +370,36 @@ export function mountCarving(host: HTMLElement, panel: Panel, hooks: CarveHooks)
         'stroke-width': 3,
         'stroke-dasharray': bad && !done ? '6 4' : '',
       });
+      if (done) {
+        const delay = (x.r + x.c) * 40;
+        platterEl.setAttribute(
+          'style',
+          `transform-box: fill-box; transform-origin: center; animation: puzz-carve-pop 0.48s cubic-bezier(0.22, 1.35, 0.36, 1) ${delay}ms both;`,
+        );
+        const rimEl = add('rect', {
+          x: x.c * cell + 6,
+          y: x.r * cell + 6,
+          width: Math.max(4, x.w * cell - 12),
+          height: Math.max(4, x.h * cell - 12),
+          rx: 5,
+          fill: 'none',
+          stroke: 'rgba(255, 255, 255, 0.65)',
+          'stroke-width': 1.5,
+        });
+        rimEl.setAttribute(
+          'style',
+          `transform-box: fill-box; transform-origin: center; animation: puzz-carve-pop 0.48s cubic-bezier(0.22, 1.35, 0.36, 1) ${delay}ms both;`,
+        );
+      } else if (lastCarvedKey === rectKey(x)) {
+        platterEl.setAttribute(
+          'style',
+          bad
+            ? 'transform-box: fill-box; transform-origin: center; animation: puzz-error-shake 0.28s ease-in-out both;'
+            : 'transform-box: fill-box; transform-origin: center; animation: puzz-tap-pop 0.2s cubic-bezier(0.22, 1.45, 0.36, 1) both;',
+        );
+      }
     });
+    lastCarvedKey = null;
     // Colour clashes: a thick red line along every edge where two portions of one colour meet.
     const clashes = colourClashes(b, rects);
     for (const [i, j] of clashes) {
@@ -325,18 +447,6 @@ export function mountCarving(host: HTMLElement, panel: Panel, hooks: CarveHooks)
         'stroke-width': 3,
         'stroke-dasharray': '5 4',
       });
-      add(
-        'text',
-        {
-          x: (x.c + x.w) * cell - 8,
-          y: (x.r + x.h) * cell - 8,
-          'text-anchor': 'end',
-          'font-size': cell * 0.3,
-          'font-weight': 700,
-          fill: '#b07800',
-        },
-        String(x.h * x.w),
-      );
     }
     b.cells.forEach((row, r) =>
       row.forEach((cl, c) => {
@@ -383,6 +493,25 @@ export function mountCarving(host: HTMLElement, panel: Panel, hooks: CarveHooks)
           );
       }),
     );
+    if (drag) {
+      const x = span(drag.r, drag.c, drag.to[0], drag.to[1]);
+      add(
+        'text',
+        {
+          x: (drag.c + 1) * cell - 6,
+          y: (drag.r + 1) * cell - 6,
+          'text-anchor': 'end',
+          'font-size': cell * 0.32,
+          'font-weight': 800,
+          fill: '#b07800',
+          stroke: '#fffaf2',
+          'stroke-width': 3.5,
+          'stroke-linejoin': 'round',
+          'paint-order': 'stroke',
+        },
+        String(x.h * x.w),
+      );
+    }
     // Cuts: fences on the squares' edges.
     for (const w of b.walls) {
       const [r, c, side] = w.split(',');
@@ -605,6 +734,35 @@ export function mountCarving(host: HTMLElement, panel: Panel, hooks: CarveHooks)
               : '',
     );
   };
+
+  const giveHint = (): void => {
+    if (done) return;
+    cachedSol ??= solve(b, 1)[0] ?? null;
+    if (!cachedSol) return;
+    const solSet = new Set(cachedSol.map(rectKey));
+
+    // 1. If any carved rectangle doesn't match the solution, remove one wrong rectangle
+    const wrongIdx = rects.findIndex((x) => !solSet.has(rectKey(x)));
+    if (wrongIdx !== -1) {
+      rects.splice(wrongIdx, 1);
+      blip(260, 60, 10);
+      settle();
+      return;
+    }
+
+    // 2. Otherwise carve and lock one missing solution rectangle
+    const currentSet = new Set(rects.map(rectKey));
+    const missing = cachedSol.find((s) => !currentSet.has(rectKey(s)));
+    if (missing) {
+      rects = rects.filter((y) => !overlaps(missing, y));
+      rects.push({ ...missing });
+      lockedRectKeys.add(rectKey(missing));
+      blip(640, 70, 10);
+      settle();
+    }
+  };
+  host.addEventListener('puzz:hint', giveHint);
+
   render();
   return () => ({
     done,

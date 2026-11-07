@@ -10,9 +10,9 @@ import {
 } from '../../src/proto/puzzles/halloween';
 
 const count = (p: Panel, limit = 2): number => countSolutions(parse(p), limit);
-const noColours = (p: Panel): Panel => {
+const noSnow = (p: Panel): Panel => {
   const q = { ...p };
-  delete q.colours;
+  delete q.frame;
   return q;
 };
 const lettersDark = (p: Panel): Panel => ({
@@ -33,9 +33,9 @@ describe('Halloween web run', () => {
     expect(countSolutions(parse(oneWeb), 2, { connected: false })).toBe(2);
   });
 
-  it('the letters and colours matter', () => {
+  it('the letters and snowflakes matter', () => {
     for (const p of CHOCOLATES) expect(count(lettersDark(p)), p.name).toBe(2);
-    for (const p of STAR) expect(count(noColours(p)), p.name).toBe(2);
+    for (const p of STAR) expect(count(noSnow(p)), p.name).toBe(2);
   });
 
   it('each message fills in from its web', () => {

@@ -16,8 +16,8 @@
 import * as THREE from 'three';
 import { cel } from '../content/palettes';
 
-/** Where the terminator sits, as the sun's angle cosine (0 = side-on). */
-const TERMINATOR = 0.12;
+/** Where the terminator sits, as the light's angle cosine (0 = side-on). */
+const TERMINATOR = 0.02;
 const STEPS = 32;
 
 function ramp(): THREE.DataTexture {
@@ -51,14 +51,14 @@ uniform float celShadeGamma;
 `;
 
 const SHADING = /* glsl */ `
-  // How much sun reached this pixel: 0 in shade, 1 fully lit.
-  vec3 fullSun = diffuseColor.rgb * celSun * RECIPROCAL_PI;
-  float lit = clamp(dot(reflectedLight.directDiffuse, vec3(1.0)) / max(dot(fullSun, vec3(1.0)), 1e-5), 0.0, 1.0);
-  // Snap shadow edges too (the shadow map filters them soft), keeping a pixel of antialiasing.
-  float edge = max(fwidth(lit) * 0.5, 1e-3);
-  lit = smoothstep(0.5 - edge, 0.5 + edge, lit);
+  // Moody shadow tone (ambient brought back up 1.5x so shadows and outer walls stay rich and readable).
   vec3 shade = pow(max(diffuseColor.rgb, 0.0), vec3(celShadeGamma)) * celShadeTint;
-  vec3 outgoingLight = mix(shade, diffuseColor.rgb * celLitTint, lit) + totalEmissiveRadiance;
+  // Extract the single diorama PointLight irradiance so each bay's light source casts a warm
+  // pool in front of it and crisp radial shadows, blending smoothly into the ambient shade.
+  vec3 lightIrradiance = reflectedLight.directDiffuse * PI / max(diffuseColor.rgb, vec3(0.06));
+  vec3 litSurface = diffuseColor.rgb * celLitTint * clamp(lightIrradiance * 1.05, 0.0, 1.45);
+  vec3 emissiveWash = lightIrradiance * 0.11;
+  vec3 outgoingLight = shade * 1.28 + litSurface + emissiveWash + totalEmissiveRadiance;
 `;
 
 export function toonMaterial(
